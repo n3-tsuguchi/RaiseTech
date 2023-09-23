@@ -6,7 +6,7 @@
 (https://imgur.com/a/1sqJEVB)
 (https://imgur.com/a/Gt6IC8N)
 - Railsの構成管理ツール　パッケージ管理ツール　gem
-!
+(https://imgur.com/a/P507dS4)
 - Webアプリの表示
 - /RaiseTech/2023-09-22_17h16_00.png
 ## 今回はかなり苦労しました。
