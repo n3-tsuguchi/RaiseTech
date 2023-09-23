@@ -3,7 +3,7 @@
 - APサーバーの名前とバージョン
 !(https://imgur.com/a/VB3qx1Q)
 - DBサーバーの名前　MySQL　Server version: 8.0.34 MySQL Community Server
-- /RaiseTech/2023-09-22_20h30_02.png
+!(https://imgur.com/a/1sqJEVB)
 - Railsの構成管理ツール　パッケージ管理ツール　gem
 - /RaiseTech/2023-09-22_20h33_03.png
 - Webアプリの表示
