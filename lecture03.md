@@ -6,5 +6,5 @@
 ## Railsの構成管理ツール
 - ![Railsの構成管理ツール　パッケージ管理ツール　gem](https://github.com/n3-tsuguchi/RaiseTech/blob/lecture03/2023-09-22_20h33_03.png)
 ## Webアプリの表示
-- ![Webアプリの表示](https://github.com/n3-tsuguchi/RaiseTech/blob/lecture03/Desktop/images/2023-09-22_17h16_00.png)
+- ![Webアプリの表示](Desktop/images/2023-09-22_17h16_00.png)
 ## 今回はかなり苦労しました。コマンドラインで画像をGitHubに格納するやり方を調べたらできるようになりました。
