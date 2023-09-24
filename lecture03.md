@@ -3,8 +3,8 @@
 ![APサーバーの名前とバージョン](Desktop/images/2023-unicorn.png)
 ## DBサーバーの名前とバージョン
 ![DBサーバーの名前　MySQL　Server version: 8.0.34 MySQL Community Server](Desktop/images/2023-09-22_20h30_02.png)
-## Railsの構成管理ツール
-![Railsの構成管理ツール　Bundker](Desktop/images/2023-09-22_20h33_03.png)
+## Railsの構成管理ツール Bundker
+![Railsの構成管理ツール　Bundler](Desktop/images/2023-09-22_20h33_03.png)
 ## Webアプリの表示
 ![Webアプリの表示](Desktop/images/2023-09-22_17h16_00.png)
 ## ブラウザからアプリケーションへのアクセス
