@@ -2,7 +2,7 @@
 ## 組み込みサーバーunicornのみで表示
 ![unicorn](2023-10-18_11h24_28.png)
 ## Nginxの表示
-![Nginx]()
+![Nginx](2023-10-18_11h30_18.png)
 ## unicornをNginxで表示
 ![unicornをNginxで表示]()
 ## NLBを追加して、ロードバランサーでの表示
