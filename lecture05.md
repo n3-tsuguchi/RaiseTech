@@ -4,7 +4,7 @@
 ## Nginxの表示
 ![Nginx](2023-10-18_11h30_18.png)
 ## unicornをNginxで表示
-![unicornをNginxで表示]()
+![unicornをNginxで表示](2023-10-18_11h50_19.png)
 ## NLBを追加して、ロードバランサーでの表示
 ![NLB]()
 ## S3の追加
