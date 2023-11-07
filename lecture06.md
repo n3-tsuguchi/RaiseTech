@@ -7,13 +7,13 @@
 - 発信元 IP アドレス
 ![CloudTrail](images/2023-11-01_19h10_00.png)
 ## マネジメントコンソールの現在の利用料
-![Belling](2023-10-26_19h08_42.png)
+![Belling](images/2023-10-26_19h08_42.png)
 ## CloudWatchの設定内容について
-![CloudWatch](2023-11-02_08h16_53.png)
+![CloudWatch](images/2023-11-02_08h16_53.png)
 ## アラームからの通知
-![アラーム](2023-11-02_08h21_56.png)
+![アラーム](images/2023-11-02_08h21_56.png)
 ## アラームからの警告
-![警告](2023-11-05_12h45_04.png)
+![警告](images/2023-11-05_12h45_04.png)
 
 ## AWSの見積もり　コストが安いプランを作成しました。
 [AWSの見積もりURL](https://calculator.aws/#/estimate?id=4cceb2677ac1b2cb7090b8f0c491875424ae40b8)
