@@ -16,7 +16,7 @@
 ![警告](2023-11-05_12h45_04.png)
 
 ## AWSの見積もり　コストが安いプランを作成しました。
-[AWSの見積もりURL](https://calculator.aws/#/estimate?id=1051e533e22d3c213aa213cf27e427ee0b87c9d5)
+[AWSの見積もりURL](https://calculator.aws/#/estimate?id=37f36dd342104c24af074227b4bf0c02a8bd775b)
 ### 今回の感想
 - 第６回課題演習はそんなに難しくない印象です。
 - 見積もりで意外と苦戦しました。
