@@ -16,7 +16,7 @@
 ![警告](2023-11-05_12h45_04.png)
 
 ## AWSの見積もり
-[AWSの見積もりURL](https://calculator.aws/#/estimate?id=1a0575186074f7c1ffd7f17a0a4c723dda75e9e6)
+[AWSの見積もりURL](https://calculator.aws/#/estimate?id=fe5b19dfd7b122880ab57efb3715f270ef8676a9)
 ### 今回の感想
 - 第６回課題演習はそんなに難しくない印象です。
 - 第５回課題演習で主にEC2の削除と再構築をやりまくって、AWSの請求金額が消費税込みで７６００円くらいまでいってしまいました・・・。
