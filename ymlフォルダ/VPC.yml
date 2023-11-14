@@ -10,43 +10,43 @@ Resources:
       EnableDnsHostnames: true
       InstanceTenancy: default
       Tags:
-        - Key: name
+        - Key: Name
           Value: SampleVPC
+
   PublicSubnet1a:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref SampleVPC
       CidrBlock: 10.0.0.0/24
       MapPublicIpOnLaunch: true
-      AvailabilityZone: ap-northeast-1a
       Tags:
       - Key: Name
-        Value: PublicSubnet1a
+        Value: SamplePublicSubnet1a
+
   PrivateSubnet1a:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref SampleVPC
       CidrBlock: 10.0.1.0/24
-      AvailabilityZone: ap-northeast-1a
       Tags:
       - Key: Name
         Value: PrivateSubnet1a
+
   PublicSubnet1c:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref SampleVPC
       CidrBlock: 10.0.3.0/24
       MapPublicIpOnLaunch: true
-      AvailabilityZone: ap-northeast-1c
       Tags:
       - Key: Name
         Value: PublicSubnet1c
+
   PrivateSubnet1c:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref SampleVPC
       CidrBlock: 10.0.2.0/24
-      AvailabilityZone: ap-northeast-1c
       Tags:
       - Key: Name
         Value: PrivateSubnet1c
@@ -58,13 +58,11 @@ Resources:
         - Key: Name
           Value: InternetGateway
 
-  # InternetGatewayとVPCの接続
   InternetGatewayAttachment:
     Type: AWS::EC2::VPCGatewayAttachment
     Properties:
       InternetGatewayId: !Ref InternetGateway
       VpcId: !Ref SampleVPC
-
 
   PublicRouteTable:
     Type: AWS::EC2::RouteTable
@@ -73,6 +71,7 @@ Resources:
       Tags:
         - Key: Name
           Value: PublicRouteTable
+
   PrivateRouteTable:
     Type: AWS::EC2::RouteTable
     Properties:
@@ -81,36 +80,36 @@ Resources:
         - Key: Name
           Value: PrivateRouteTable
 
-  # SubnetとRoutetableの関連付け
   PublicRouteTableAssociation1a:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
       RouteTableId: !Ref PublicRouteTable
       SubnetId: !Ref PublicSubnet1a
+
   PublicRouteTableAssociation1c:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
       RouteTableId: !Ref PublicRouteTable
       SubnetId: !Ref PublicSubnet1c
+
   PrivateRouteTableAssociation1a:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
       RouteTableId: !Ref PrivateRouteTable
       SubnetId: !Ref PrivateSubnet1a
+
   PrivateRouteTableAssociation1c:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
       RouteTableId: !Ref PrivateRouteTable
       SubnetId: !Ref PrivateSubnet1c
 
-  # Routeの指定
   PublicRoute:
     Type: AWS::EC2::Route
     Properties:
       DestinationCidrBlock: 0.0.0.0/0
       RouteTableId: !Ref PublicRouteTable
       GatewayId: !Ref InternetGateway
-
 
   VPCEndpoint:
     Type: AWS::EC2::VPCEndpoint
@@ -120,6 +119,21 @@ Resources:
       ServiceName: com.amazonaws.ap-northeast-1.s3
       VpcEndpointType: Gateway
       VpcId: !Ref SampleVPC
+
+  RoutePublicSubnet:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref SampleVPC
+      Tags:
+        - Key: Name
+          Value: rt-PublicSubnet
+
+  RoutePublic:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref RoutePublicSubnet
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
 
 
 Outputs:

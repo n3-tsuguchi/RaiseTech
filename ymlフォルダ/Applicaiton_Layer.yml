@@ -54,6 +54,17 @@ Resources:
       KeyName: RaiseTech
 
 
+  RDSMasterUserSecret:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Name: "RDSMasterUserSecret"
+      Description: "Secret for RDS Master User"
+      GenerateSecretString:
+        SecretStringTemplate: '{"username":"admin"}'
+        GenerateStringKey: "password"
+        PasswordLength: 16
+        ExcludeCharacters: '"@/\'
+
   SampleRDS:
     Type: AWS::RDS::DBInstance
     Properties:
@@ -63,21 +74,22 @@ Resources:
       StorageType: gp2
       BackupRetentionPeriod: 7
       MasterUsername: admin
-      MasterUserPassword: MyPassword
-      DBInstanceIdentifier: YourDBInstanceIdentifier
+      MasterUserPassword: '{{resolve:secretsmanager:RDSMasterUserSecret:SecretString:password}}'
+      DBInstanceIdentifier: RaiseTech-DB
       DBName: SampleRDS
       Engine: mysql
       EngineVersion: 8.0
-      DBSubnetGroupName: !Ref SampleRDSSubnetgroup
+      DBSubnetGroupName: !Ref SampleRDSSubnetGroup
       MultiAZ: true
       VPCSecurityGroups:
         - !ImportValue SecurityLayer-SecurityGroupRDS
 
-  SampleRDSSubnetgroup:
+
+  SampleRDSSubnetGroup:
     Type: AWS::RDS::DBSubnetGroup
     Properties:
-      DBSubnetGroupDescription: "YourDescriptionHere"
-      DBSubnetGroupName: SampleRDSSubnetgroup
+      DBSubnetGroupDescription: "RaiseTechRDSSubnetGroup"
+      DBSubnetGroupName: SampleRDSSubnetGroup
       SubnetIds:
         - !ImportValue NetworkLayer-PrivateSubnet1a
         - !ImportValue NetworkLayer-PrivateSubnet1c
