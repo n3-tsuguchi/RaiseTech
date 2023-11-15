@@ -21,7 +21,7 @@ Resources:
       MapPublicIpOnLaunch: true
       Tags:
       - Key: Name
-        Value: SamplePublicSubnet1a
+        Value: PublicSubnet1a
 
   PrivateSubnet1a:
     Type: AWS::EC2::Subnet
