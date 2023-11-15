@@ -9,13 +9,13 @@ Resources:
       GroupName: SecurityGroupEC2
       SecurityGroupIngress:
         - IpProtocol: tcp
-          FromPort: 80
+          FromPort: 0
           ToPort: 80
           SourceSecurityGroupId: !Ref SecurityGroupALB
         - IpProtocol: tcp
-          FromPort: 80
+          FromPort: 0
           ToPort: 80
-          CidrIp: 0.0.0.0/16
+          CidrIp: 0.0.0.0/0
       Tags:
         - Key: Name
           Value: SecurityGroupEC2
@@ -29,7 +29,7 @@ Resources:
         - IpProtocol: tcp
           FromPort: 3306
           ToPort: 3306
-          CidrIp: 0.0.0.0/16
+          CidrIp: 0.0.0.0/0
       Tags:
         - Key: Name
           Value: SecurityGroupRDS
@@ -42,9 +42,9 @@ Resources:
       GroupName: SecurityGroupALB
       SecurityGroupIngress:
         - IpProtocol: tcp
-          FromPort: 80
+          FromPort: 0
           ToPort: 80
-          CidrIp: 0.0.0.0/16
+          CidrIp: 0.0.0.0/0
       Tags:
         - Key: Name
           Value: SecurityGroupALB
