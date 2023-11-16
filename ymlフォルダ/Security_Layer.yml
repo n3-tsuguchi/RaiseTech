@@ -19,7 +19,8 @@ Resources:
       Tags:
         - Key: Name
           Value: SecurityGroupEC2
-      VpcId: !ImportValue NetworkLayer-SampleVPC
+      VpcId: !ImportValue SampleNetworkLayerVpcName
+
   SecurityGroupRDS:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -33,7 +34,8 @@ Resources:
       Tags:
         - Key: Name
           Value: SecurityGroupRDS
-      VpcId: !ImportValue NetworkLayer-SampleVPC
+      VpcId: !ImportValue SampleNetworkLayerVpcName
+
 
   SecurityGroupALB:
     Type: AWS::EC2::SecurityGroup
@@ -44,11 +46,12 @@ Resources:
         - IpProtocol: tcp
           FromPort: 0
           ToPort: 80
-          CidrIp: 0.0.0.0/0
+          CidrIp: 0.0.0.0/16
       Tags:
         - Key: Name
           Value: SecurityGroupALB
-      VpcId: !ImportValue NetworkLayer-SampleVPC
+      VpcId: !ImportValue SampleNetworkLayerVpcName
+
 
 Outputs:
   SecurityGroupEC2:

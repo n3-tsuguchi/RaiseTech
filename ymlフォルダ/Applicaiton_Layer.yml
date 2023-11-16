@@ -1,3 +1,4 @@
+# Application_Layer テンプレート
 AWSTemplateFormatVersion: 2010-09-09
 Description: Application_Layer Template
 
@@ -53,7 +54,6 @@ Resources:
           Value: SampleEC21c
       KeyName: RaiseTech
 
-
   RDSMasterUserSecret:
     Type: AWS::SecretsManager::Secret
     Properties:
@@ -84,17 +84,14 @@ Resources:
       VPCSecurityGroups:
         - !ImportValue SecurityLayer-SecurityGroupRDS
 
-
   SampleRDSSubnetGroup:
     Type: AWS::RDS::DBSubnetGroup
     Properties:
-      DBSubnetGroupDescription: "RaiseTechRDSSubnetGroup"
+      DBSubnetGroupDescription: "RaiseTech-DBSubnetGroup"
       DBSubnetGroupName: SampleRDSSubnetGroup
       SubnetIds:
         - !ImportValue NetworkLayer-PrivateSubnet1a
         - !ImportValue NetworkLayer-PrivateSubnet1c
-
-
 
   SampleALB:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
@@ -111,7 +108,6 @@ Resources:
         - Key: Name
           Value: SampleALB
 
-  # ALBのターゲットグループの指定
   ALBTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
@@ -125,9 +121,8 @@ Resources:
         - Id:
             Ref: SampleEC21c
           Port: 80
-      VpcId: !ImportValue NetworkLayer-SampleVPC
+      VpcId: !ImportValue SampleNetworkLayerVpcName
 
-  # ALBのリスナーの指定
   ALBListener:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
@@ -140,15 +135,3 @@ Resources:
       Port: 80
       Protocol: HTTP
 
-  SampleS3Bucket:
-    Type: AWS::S3::Bucket
-    Properties:
-      BucketName: tsuguchi-sample-s3-bucket
-      AccessControl: Private
-      PublicAccessBlockConfiguration:
-        BlockPublicAcls: True
-        BlockPublicPolicy: True
-        IgnorePublicAcls: True
-        RestrictPublicBuckets: True
-      VersioningConfiguration:
-        Status: Enabled

@@ -1,3 +1,4 @@
+# Network_Layer テンプレート
 AWSTemplateFormatVersion: 2010-09-09
 Description: Network_Layer Template
 
@@ -135,7 +136,6 @@ Resources:
       DestinationCidrBlock: 0.0.0.0/0
       GatewayId: !Ref InternetGateway
 
-
 Outputs:
   SampleVPC:
     Value: !Ref SampleVPC
@@ -144,16 +144,16 @@ Outputs:
   PublicSubnet1a:
     Value: !Ref PublicSubnet1a
     Export:
-      Name: NetworkLayerPublicSubnet1aName
+      Name: NetworkLayer-PublicSubnet1a
   PublicSubnet1c:
     Value: !Ref PublicSubnet1c
     Export:
-      Name: NetworkLayerPublicSubnet1cName
+      Name: NetworkLayer-PublicSubnet1c
   PrivateSubnet1a:
     Value: !Ref PrivateSubnet1a
     Export:
-      Name: NetworkLayerPrivateSubnet1aName
+      Name: NetworkLayer-PrivateSubnet1a
   PrivateSubnet1c:
     Value: !Ref PrivateSubnet1c
     Export:
-      Name: NetworkLayerPrivateSubnet1cName
+      Name: NetworkLayer-PrivateSubnet1c
