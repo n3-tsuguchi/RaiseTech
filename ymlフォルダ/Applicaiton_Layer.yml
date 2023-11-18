@@ -29,9 +29,9 @@ Resources:
     Type: AWS::EC2::Instance
     Properties:
       NetworkInterfaces:
-        - SubnetId: !ImportValue NetworkLayer-PublicSubnet1a
+        - SubnetId: !ImportValue PublicSubnet1a
           GroupSet:
-            - !ImportValue SecurityLayer-SecurityGroupEC2
+            - !ImportValue SecurityGroupEC2
           DeviceIndex: 0
       InstanceType: !Ref InstanceType
       ImageId: ami-0af1df87db7b650f4
@@ -43,9 +43,9 @@ Resources:
     Type: AWS::EC2::Instance
     Properties:
       NetworkInterfaces:
-        - SubnetId: !ImportValue NetworkLayer-PublicSubnet1c
+        - SubnetId: !ImportValue PublicSubnet1c
           GroupSet:
-            - !ImportValue SecurityLayer-SecurityGroupEC2
+            - !ImportValue SecurityGroupEC2
           DeviceIndex: 0
       InstanceType: !Ref InstanceType
       ImageId: ami-0af1df87db7b650f4
@@ -82,7 +82,7 @@ Resources:
       DBSubnetGroupName: !Ref SampleRDSSubnetGroup
       MultiAZ: true
       VPCSecurityGroups:
-        - !ImportValue SecurityLayer-SecurityGroupRDS
+        - !ImportValue SecurityGroupRDS
 
   SampleRDSSubnetGroup:
     Type: AWS::RDS::DBSubnetGroup
@@ -90,8 +90,8 @@ Resources:
       DBSubnetGroupDescription: "RaiseTech-DBSubnetGroup"
       DBSubnetGroupName: SampleRDSSubnetGroup
       SubnetIds:
-        - !ImportValue NetworkLayer-PrivateSubnet1a
-        - !ImportValue NetworkLayer-PrivateSubnet1c
+        - !ImportValue PrivateSubnet1a
+        - !ImportValue PrivateSubnet1c
 
   SampleALB:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
@@ -100,10 +100,10 @@ Resources:
       Name: SampleALB
       Scheme: internet-facing
       SecurityGroups:
-        - !ImportValue SecurityLayer-SecurityGroupALB
+        - !ImportValue SecurityGroupALB
       Subnets:
-        - !ImportValue NetworkLayer-PublicSubnet1a
-        - !ImportValue NetworkLayer-PublicSubnet1c
+        - !ImportValue PrivateSubnet1a
+        - !ImportValue PrivateSubnet1c
       Tags:
         - Key: Name
           Value: SampleALB
@@ -121,7 +121,7 @@ Resources:
         - Id:
             Ref: SampleEC21c
           Port: 80
-      VpcId: !ImportValue SampleNetworkLayerVpcName
+      VpcId: !ImportValue SampleVpc
 
   ALBListener:
     Type: AWS::ElasticLoadBalancingV2::Listener
