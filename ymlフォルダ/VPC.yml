@@ -22,7 +22,7 @@ Resources:
       MapPublicIpOnLaunch: true
       Tags:
       - Key: Name
-        Value: PublicSubnet1a
+        Value: RaiseTechPublicSubnet1a
 
   PrivateSubnet1a:
     Type: AWS::EC2::Subnet
@@ -31,7 +31,7 @@ Resources:
       CidrBlock: 10.0.1.0/24
       Tags:
       - Key: Name
-        Value: PrivateSubnet1a
+        Value: RaiseTechPrivateSubnet1a
 
   PublicSubnet1c:
     Type: AWS::EC2::Subnet
@@ -41,7 +41,7 @@ Resources:
       MapPublicIpOnLaunch: true
       Tags:
       - Key: Name
-        Value: PublicSubnet1c
+        Value: RaiseTechPublicSubnet1c
 
   PrivateSubnet1c:
     Type: AWS::EC2::Subnet
@@ -50,7 +50,7 @@ Resources:
       CidrBlock: 10.0.2.0/24
       Tags:
       - Key: Name
-        Value: PrivateSubnet1c
+        Value: RaiseTechPrivateSubnet1c
         
 
   InternetGateway:
