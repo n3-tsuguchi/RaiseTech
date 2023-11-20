@@ -141,7 +141,7 @@ Outputs:
   SampleVPC:
     Value: !Ref SampleVPC
     Export:
-      Name: SampleVpc
+      Name: SampleLayerVpc
   PublicSubnet1a:
     Value: !Ref PublicSubnet1a
     Export:
