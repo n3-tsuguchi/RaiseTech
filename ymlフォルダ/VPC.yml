@@ -18,7 +18,7 @@ Resources:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref RaiseTechVPC
-      CidrBlock: 10.0.0.0/28
+      CidrBlock: 10.0.0.0/24
       MapPublicIpOnLaunch: true
       Tags:
       - Key: Name
@@ -28,7 +28,7 @@ Resources:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref RaiseTechVPC
-      CidrBlock: 10.0.1.0/28
+      CidrBlock: 10.0.1.0/24
       Tags:
       - Key: Name
         Value: RaiseTechPrivateSubnet1a
@@ -37,7 +37,7 @@ Resources:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref RaiseTechVPC
-      CidrBlock: 10.0.3.0/28
+      CidrBlock: 10.0.3.0/24
       MapPublicIpOnLaunch: true
       Tags:
       - Key: Name
@@ -47,7 +47,7 @@ Resources:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref RaiseTechVPC
-      CidrBlock: 10.0.2.0/28
+      CidrBlock: 10.0.2.0/24
       Tags:
       - Key: Name
         Value: RaiseTechPrivateSubnet1c
