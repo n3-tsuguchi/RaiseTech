@@ -13,7 +13,7 @@ Resources:
           ToPort: 80
           SourceSecurityGroupId: !Ref SecurityGroupALB
         - IpProtocol: tcp
-          FromPort: 0
+          FromPort: 80
           ToPort: 80
           CidrIp: 10.0.0.0/24
       Tags:
@@ -44,7 +44,7 @@ Resources:
       GroupName: SecurityGroupALB
       SecurityGroupIngress:
         - IpProtocol: tcp
-          FromPort: 0
+          FromPort: 80
           ToPort: 80
           CidrIp: 0.0.0.0/16
       Tags:
