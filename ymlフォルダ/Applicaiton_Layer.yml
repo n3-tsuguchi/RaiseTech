@@ -25,7 +25,7 @@ Parameters:
     Type: String
 
 Resources:
-  SampleEC21a:
+  RaiseTechEC21a:
     Type: AWS::EC2::Instance
     Properties:
       NetworkInterfaces:
@@ -37,9 +37,9 @@ Resources:
       ImageId: ami-0af1df87db7b650f4
       Tags:
         - Key: Name
-          Value: SampleEC21a
+          Value: RaiseTechEC21a
       KeyName: RaiseTech
-  SampleEC21c:
+  RaiseTechEC21c:
     Type: AWS::EC2::Instance
     Properties:
       NetworkInterfaces:
@@ -51,7 +51,7 @@ Resources:
       ImageId: ami-0af1df87db7b650f4
       Tags:
         - Key: Name
-          Value: SampleEC21c
+          Value: RaiseTechEC21c
       KeyName: RaiseTech
 
   RDSMasterUserSecret:
@@ -65,7 +65,7 @@ Resources:
         PasswordLength: 16
         ExcludeCharacters: '"@/\'
 
-  SampleRDS:
+  RaiseTechRDS:
     Type: AWS::RDS::DBInstance
     Properties:
       AllocatedStorage : 20
@@ -76,28 +76,28 @@ Resources:
       MasterUsername: admin
       MasterUserPassword: '{{resolve:secretsmanager:RDSMasterUserSecret:SecretString:password}}'
       DBInstanceIdentifier: RaiseTech-DB
-      DBName: SampleRDS
+      DBName: RaiseTechRDS
       Engine: mysql
       EngineVersion: 8.0
-      DBSubnetGroupName: !Ref SampleRDSSubnetGroup
+      DBSubnetGroupName: !Ref RaiseTechRDSSubnetGroup
       MultiAZ: true
       VPCSecurityGroups:
         - !ImportValue SecurityGroupRDS
 
-  SampleRDSSubnetGroup:
+  RaiseTechRDSSubnetGroup:
     Type: AWS::RDS::DBSubnetGroup
     Properties:
-      DBSubnetGroupDescription: "RaiseTech-DBSubnetGroup"
-      DBSubnetGroupName: SampleRDSSubnetGroup
+      DBSubnetGroupDescription: "RaiseTechDBSubnetGroup"
+      DBSubnetGroupName: RaiseTechRDSSubnetGroup
       SubnetIds:
         - !ImportValue PrivateSubnet1a
         - !ImportValue PrivateSubnet1c
 
-  SampleALB:
+  RaiseTechALB:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
       IpAddressType: ipv4
-      Name: SampleALB
+      Name: RaiseTechALB
       Scheme: internet-facing
       SecurityGroups:
         - !ImportValue SecurityGroupALB
@@ -106,7 +106,7 @@ Resources:
         - !ImportValue PrivateSubnet1c
       Tags:
         - Key: Name
-          Value: SampleALB
+          Value: RaiseTechALB
 
   ALBTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
@@ -116,12 +116,12 @@ Resources:
       Protocol: HTTP
       Targets:
         - Id:
-            Ref: SampleEC21a
+            Ref: RaiseTechEC21a
           Port: 80
         - Id:
-            Ref: SampleEC21c
+            Ref: RaiseTechEC21c
           Port: 80
-      VpcId: !ImportValue SampleVpc
+      VpcId: !ImportValue RaiseTechVpc
 
   ALBListener:
     Type: AWS::ElasticLoadBalancingV2::Listener
@@ -131,7 +131,7 @@ Resources:
           TargetGroupArn:
             !Ref ALBTargetGroup
       LoadBalancerArn:
-        !Ref SampleALB
+        !Ref RaiseTechALB
       Port: 80
       Protocol: HTTP
 

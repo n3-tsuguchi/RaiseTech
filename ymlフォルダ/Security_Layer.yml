@@ -9,8 +9,8 @@ Resources:
       GroupName: SecurityGroupEC2
       SecurityGroupIngress:
         - IpProtocol: tcp
-          FromPort: 0
-          ToPort: 80
+          FromPort: 22
+          ToPort: 22
           SourceSecurityGroupId: !Ref SecurityGroupALB
         - IpProtocol: tcp
           FromPort: 80
@@ -19,7 +19,7 @@ Resources:
       Tags:
         - Key: Name
           Value: SecurityGroupEC2
-      VpcId: !ImportValue SampleVpc
+      VpcId: !ImportValue RaiseTechVpc
 
   SecurityGroupRDS:
     Type: AWS::EC2::SecurityGroup
@@ -34,7 +34,7 @@ Resources:
       Tags:
         - Key: Name
           Value: SecurityGroupRDS
-      VpcId: !ImportValue SampleVpc
+      VpcId: !ImportValue RaiseTechVpc
 
 
   SecurityGroupALB:
@@ -50,7 +50,7 @@ Resources:
       Tags:
         - Key: Name
           Value: SecurityGroupALB
-      VpcId: !ImportValue SampleVpc
+      VpcId: !ImportValue RaiseTechVpc
 
 
 Outputs:
