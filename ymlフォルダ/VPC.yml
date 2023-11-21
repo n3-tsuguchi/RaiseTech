@@ -3,7 +3,7 @@ AWSTemplateFormatVersion: 2010-09-09
 Description: Network_Layer Template
 
 Resources:
-  SampleVPC:
+  RaiseTechVPC:
     Type: AWS::EC2::VPC
     Properties:
       CidrBlock: 10.0.0.0/16
@@ -12,13 +12,13 @@ Resources:
       InstanceTenancy: default
       Tags:
         - Key: Name
-          Value: SampleVPC
+          Value: RaiseTechVPC
 
   PublicSubnet1a:
     Type: AWS::EC2::Subnet
     Properties:
-      VpcId: !Ref SampleVPC
-      CidrBlock: 10.0.0.0/24
+      VpcId: !Ref RaiseTechVPC
+      CidrBlock: 10.0.0.0/28
       MapPublicIpOnLaunch: true
       Tags:
       - Key: Name
@@ -27,8 +27,8 @@ Resources:
   PrivateSubnet1a:
     Type: AWS::EC2::Subnet
     Properties:
-      VpcId: !Ref SampleVPC
-      CidrBlock: 10.0.1.0/24
+      VpcId: !Ref RaiseTechVPC
+      CidrBlock: 10.0.1.0/28
       Tags:
       - Key: Name
         Value: RaiseTechPrivateSubnet1a
@@ -36,8 +36,8 @@ Resources:
   PublicSubnet1c:
     Type: AWS::EC2::Subnet
     Properties:
-      VpcId: !Ref SampleVPC
-      CidrBlock: 10.0.3.0/24
+      VpcId: !Ref RaiseTechVPC
+      CidrBlock: 10.0.3.0/28
       MapPublicIpOnLaunch: true
       Tags:
       - Key: Name
@@ -46,8 +46,8 @@ Resources:
   PrivateSubnet1c:
     Type: AWS::EC2::Subnet
     Properties:
-      VpcId: !Ref SampleVPC
-      CidrBlock: 10.0.2.0/24
+      VpcId: !Ref RaiseTechVPC
+      CidrBlock: 10.0.2.0/28
       Tags:
       - Key: Name
         Value: RaiseTechPrivateSubnet1c
@@ -64,12 +64,12 @@ Resources:
     Type: AWS::EC2::VPCGatewayAttachment
     Properties:
       InternetGatewayId: !Ref InternetGateway
-      VpcId: !Ref SampleVPC
+      VpcId: !Ref RaiseTechVPC
 
   PublicRouteTable:
     Type: AWS::EC2::RouteTable
     Properties:
-      VpcId: !Ref SampleVPC
+      VpcId: !Ref RaiseTechVPC
       Tags:
         - Key: Name
           Value: PublicRouteTable
@@ -77,7 +77,7 @@ Resources:
   PrivateRouteTable:
     Type: AWS::EC2::RouteTable
     Properties:
-      VpcId: !Ref SampleVPC
+      VpcId: !Ref RaiseTechVPC
       Tags:
         - Key: Name
           Value: PrivateRouteTable
@@ -120,12 +120,12 @@ Resources:
         - !Ref PrivateRouteTable
       ServiceName: com.amazonaws.ap-northeast-1.s3
       VpcEndpointType: Gateway
-      VpcId: !Ref SampleVPC
+      VpcId: !Ref RaiseTechVPC
 
   RoutePublicSubnet:
     Type: AWS::EC2::RouteTable
     Properties:
-      VpcId: !Ref SampleVPC
+      VpcId: !Ref RaiseTechVPC
       Tags:
         - Key: Name
           Value: rt-PublicSubnet
@@ -138,10 +138,10 @@ Resources:
       GatewayId: !Ref InternetGateway
 
 Outputs:
-  SampleVPC:
-    Value: !Ref SampleVPC
+  RaiseTechVPC:
+    Value: !Ref RaiseTechVPC
     Export:
-      Name: SampleLayerVpc
+      Name: RaiseTechVpc
   PublicSubnet1a:
     Value: !Ref PublicSubnet1a
     Export:
