@@ -1,6 +1,11 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: Security_Layer Template
 
+Parameters:
+  CIDRIP:
+    Type: String
+    Description: The CIDR IP for SecurityGroupEC2
+
 Resources:
   SecurityGroupEC2:
     Type: AWS::EC2::SecurityGroup
@@ -15,7 +20,7 @@ Resources:
         - IpProtocol: tcp
           FromPort: 22
           ToPort: 22
-          CidrIp: 14.10.3.225/32
+          CidrIp: !Ref CIDRIP
       Tags:
         - Key: Name
           Value: SecurityGroupEC2
@@ -30,7 +35,7 @@ Resources:
         - IpProtocol: tcp
           FromPort: 3306
           ToPort: 3306
-          CidrIp: 14.10.3.225/32
+          CidrIp: 0.0.0.0/32
       Tags:
         - Key: Name
           Value: SecurityGroupRDS
@@ -46,7 +51,7 @@ Resources:
         - IpProtocol: tcp
           FromPort: 80
           ToPort: 80
-          CidrIp: 14.10.3.225/32
+          CidrIp: !Ref CIDRIP
       Tags:
         - Key: Name
           Value: SecurityGroupALB
