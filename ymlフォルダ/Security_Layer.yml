@@ -63,14 +63,14 @@ Outputs:
   SecurityGroupEC2:
     Value: !Ref SecurityGroupEC2
     Export:
-      Name: SecurityGroupEC2
+      Name: SG-EC2
 
   SecurityGroupRDS:
     Value: !Ref SecurityGroupRDS
     Export:
-      Name: SecurityGroupRDS
+      Name: SG-RDS
 
   SecurityGroupALB:
     Value: !Ref SecurityGroupALB
     Export:
-      Name: SecurityGroupALB
+      Name: SG-ALB
