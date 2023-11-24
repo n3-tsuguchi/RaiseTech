@@ -3,7 +3,7 @@ Description: Security_Layer Template
 
 Parameters:
   CIDRIP: 
-    Default: MyIPS
+    Default: MyIP
     Type: String
     Description: The CIDR IP for SecurityGroupEC2
 
