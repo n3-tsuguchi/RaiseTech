@@ -4,16 +4,16 @@ Description: Application_Layer Template
 
 Parameters:
   InstanceType:
-    Type: String
+    Type: EC2::Instance::Type
     Default: t2.micro
     AllowedValues:
       - t2.micro
       - m1.small
       - m1.large
   DBInstanceIdentifier:
-    Type: String
+    Type: DB::Instance::Identifier
   DBInstanceType:
-    Type: String
+    Type: RDS::DB::Instance::Type
     Default: db.t2.micro
     AllowedValues:
       - db.t2.micro
