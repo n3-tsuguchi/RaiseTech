@@ -2,7 +2,6 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: Application_Layer Template
 
-
 Parameters:
   InstanceType:
     Type: String
