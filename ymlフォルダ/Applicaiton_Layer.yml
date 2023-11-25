@@ -21,7 +21,8 @@ Parameters:
       - db.t2.medium
   DBSubnetGroupDescription:
     Type: String
-    Default: RaiseTechDBSubnetGroup
+  S3BucketName:
+    Type: String
 
 Resources:
   RaiseTechEC21a:
@@ -37,6 +38,7 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub "RaiseTechEC21a"
+
       KeyName: RaiseTech
   RaiseTechEC21c:
     Type: AWS::EC2::Instance
@@ -51,6 +53,7 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub "RaiseTechEC21c"
+
       KeyName: RaiseTech
 
   RDSMasterUserSecret:
