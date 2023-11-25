@@ -4,16 +4,16 @@ Description: Application_Layer Template
 
 Parameters:
   InstanceType:
-    Type: EC2::Instance::Type
+    Type: String
     Default: t2.micro
     AllowedValues:
       - t2.micro
       - m1.small
       - m1.large
   DBInstanceIdentifier:
-    Type: DB::Instance::Identifier
+    Type: String
   DBInstanceType:
-    Type: RDS::DB::Instance::Type
+    Type: String
     Default: db.t2.micro
     AllowedValues:
       - db.t2.micro
@@ -21,8 +21,7 @@ Parameters:
       - db.t2.medium
   DBSubnetGroupDescription:
     Type: String
-  S3BucketName:
-    Type: String
+    Default: RaiseTechDBSubnetGroup
 
 Resources:
   RaiseTechEC21a:
@@ -37,7 +36,7 @@ Resources:
       ImageId: ami-0af1df87db7b650f4
       Tags:
         - Key: Name
-          Value: RaiseTechEC21a
+          Value: !Sub "RaiseTechEC21a"
       KeyName: RaiseTech
   RaiseTechEC21c:
     Type: AWS::EC2::Instance
@@ -51,7 +50,7 @@ Resources:
       ImageId: ami-0af1df87db7b650f4
       Tags:
         - Key: Name
-          Value: RaiseTechEC21c
+          Value: !Sub "RaiseTechEC21c"
       KeyName: RaiseTech
 
   RDSMasterUserSecret:
