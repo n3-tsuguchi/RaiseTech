@@ -5,23 +5,23 @@ Description: Application_Layer Template
 
 Parameters:
   InstanceType:
-    Type: String
+    Type: AWS::EC2::Instance::Type
     Default: t2.micro
     AllowedValues:
       - t2.micro
       - m1.small
       - m1.large
   DBInstanceIdentifier:
-    Type: String
+    Type: AWS::RDS::DBInstance::DBInstanceIdentifier
   DBInstanceType:
-    Type: String
+    Type: AWS::RDS::DBInstance::DBInstanceType
     Default: db.t2.micro
     AllowedValues:
       - db.t2.micro
       - db.t2.small
       - db.t2.medium
   DBSubnetGroupDescription:
-    Type: String
+    Type: AWS::RDS::DBSubnetGroup::DBSubnetGroupDescription
     Default: RaiseTechDBSubnetGroup
 
 Resources:

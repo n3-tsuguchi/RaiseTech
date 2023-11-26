@@ -1,11 +1,10 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: Security_Layer Template
 
-
 Parameters:
   CIDRIP: 
     Default: MyIP
-    Type: String
+    Type: MyIP
     Description: The CIDR IP for SecurityGroupEC2
 
 Resources:
