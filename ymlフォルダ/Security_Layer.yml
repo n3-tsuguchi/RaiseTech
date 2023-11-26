@@ -4,7 +4,7 @@ Description: Security_Layer Template
 Parameters:
   CIDRIP:
     Type: String
-    Description: The CIDR IP for SecurityGroupEC2
+    Description: The CIDR IP for MyIP
 
 Resources:
   SecurityGroupEC2:
