@@ -2,9 +2,8 @@ AWSTemplateFormatVersion: 2010-09-09
 Description: Security_Layer Template
 
 Parameters:
-  CIDRIP: 
-    Default: MyIP
-    Type: MyIP
+  CIDRIP:
+    Type: String
     Description: The CIDR IP for SecurityGroupEC2
 
 Resources:
@@ -63,14 +62,14 @@ Outputs:
   SecurityGroupEC2:
     Value: !Ref SecurityGroupEC2
     Export:
-      Name: SG-EC2
+      Name: SGID-EC2
 
   SecurityGroupRDS:
     Value: !Ref SecurityGroupRDS
     Export:
-      Name: SG-RDS
+      Name: SGID-RDS
 
   SecurityGroupALB:
     Value: !Ref SecurityGroupALB
     Export:
-      Name: SG-ALB
+      Name: SGID-ALB

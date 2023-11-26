@@ -45,7 +45,7 @@ Resources:
       NetworkInterfaces:
         - SubnetId: !ImportValue PublicSubnet1c
           GroupSet:
-            - !ImportValue SG-EC2
+            - !ImportValue SGID-EC2
           DeviceIndex: 0
       InstanceType: !Ref InstanceType
       ImageId: ami-0af1df87db7b650f4
@@ -82,7 +82,7 @@ Resources:
       DBSubnetGroupName: !Ref RaiseTechRDSSubnetGroup
       MultiAZ: true
       VPCSecurityGroups:
-        - !ImportValue SG-RDS
+        - !ImportValue SGID-RDS
 
   RaiseTechRDSSubnetGroup:
     Type: AWS::RDS::DBSubnetGroup
@@ -100,7 +100,7 @@ Resources:
       Name: RaiseTechALB
       Scheme: internet-facing
       SecurityGroups:
-        - !ImportValue SG-ALB
+        - !ImportValue SGID-ALB
       Subnets:
         - !ImportValue PrivateSubnet1a
         - !ImportValue PrivateSubnet1c
