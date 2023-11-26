@@ -2,6 +2,7 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: Network_Layer Template
 
+
 Resources:
   RaiseTechVPC:
     Type: AWS::EC2::VPC
