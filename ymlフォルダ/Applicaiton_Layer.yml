@@ -2,27 +2,27 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: Application_Layer Template
 
+
 Parameters:
   InstanceType:
-    Type: String
+    Type: AWS::EC2::Instance::Type
     Default: t2.micro
     AllowedValues:
       - t2.micro
       - m1.small
       - m1.large
   DBInstanceIdentifier:
-    Type: String
+    Type: AWS::RDS::DBInstance::DBInstanceIdentifier
   DBInstanceType:
-    Type: String
+    Type: AWS::RDS::DBInstance::DBInstanceType
     Default: db.t2.micro
     AllowedValues:
       - db.t2.micro
       - db.t2.small
       - db.t2.medium
   DBSubnetGroupDescription:
-    Type: String
-  S3BucketName:
-    Type: String
+    Type: AWS::RDS::DBSubnetGroup::DBSubnetGroupDescription
+    Default: RaiseTechDBSubnetGroup
 
 Resources:
   RaiseTechEC21a:
@@ -31,13 +31,17 @@ Resources:
       NetworkInterfaces:
         - SubnetId: !ImportValue PublicSubnet1a
           GroupSet:
+<<<<<<< HEAD
             - !ImportValue SecurityGroupEC2
+=======
+            - !ImportValue SG-EC2
+>>>>>>> e830fd1699ecd785a92183f4c736d169b99df643
           DeviceIndex: 0
       InstanceType: !Ref InstanceType
       ImageId: ami-0af1df87db7b650f4
       Tags:
         - Key: Name
-          Value: RaiseTechEC21a
+          Value: !Sub "RaiseTechEC21a"
       KeyName: RaiseTech
   RaiseTechEC21c:
     Type: AWS::EC2::Instance
@@ -45,13 +49,17 @@ Resources:
       NetworkInterfaces:
         - SubnetId: !ImportValue PublicSubnet1c
           GroupSet:
+<<<<<<< HEAD
             - !ImportValue SecurityGroupEC2
+=======
+            - !ImportValue SGID-EC2
+>>>>>>> e830fd1699ecd785a92183f4c736d169b99df643
           DeviceIndex: 0
       InstanceType: !Ref InstanceType
       ImageId: ami-0af1df87db7b650f4
       Tags:
         - Key: Name
-          Value: RaiseTechEC21c
+          Value: !Sub "RaiseTechEC21c"
       KeyName: RaiseTech
 
   RDSMasterUserSecret:
@@ -82,7 +90,11 @@ Resources:
       DBSubnetGroupName: !Ref RaiseTechRDSSubnetGroup
       MultiAZ: true
       VPCSecurityGroups:
+<<<<<<< HEAD
         - !ImportValue SecurityGroupRDS
+=======
+        - !ImportValue SGID-RDS
+>>>>>>> e830fd1699ecd785a92183f4c736d169b99df643
 
   RaiseTechRDSSubnetGroup:
     Type: AWS::RDS::DBSubnetGroup
@@ -100,7 +112,11 @@ Resources:
       Name: RaiseTechALB
       Scheme: internet-facing
       SecurityGroups:
+<<<<<<< HEAD
         - !ImportValue SecurityGroupALB
+=======
+        - !ImportValue SGID-ALB
+>>>>>>> e830fd1699ecd785a92183f4c736d169b99df643
       Subnets:
         - !ImportValue PrivateSubnet1a
         - !ImportValue PrivateSubnet1c
@@ -134,4 +150,5 @@ Resources:
         !Ref RaiseTechALB
       Port: 80
       Protocol: HTTP
+
 
