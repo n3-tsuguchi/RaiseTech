@@ -12,7 +12,9 @@ Resources:
       EnableDnsHostnames: true
       InstanceTenancy: default
       Tags:
-        - Key: Name
+        - Key: !Sub
+            - Name
+            - {Env: RaiseTechVPC}
           Value: RaiseTechVPC
 
   PublicSubnet1a:
@@ -22,7 +24,9 @@ Resources:
       CidrBlock: 10.0.0.0/24
       MapPublicIpOnLaunch: true
       Tags:
-      - Key: Name
+      - Key: !Sub
+          - Name
+          - {Env: RaiseTechPublicSubnet1a}
         Value: RaiseTechPublicSubnet1a
 
   PrivateSubnet1a:
@@ -31,7 +35,9 @@ Resources:
       VpcId: !Ref RaiseTechVPC
       CidrBlock: 10.0.1.0/24
       Tags:
-      - Key: Name
+      - Key: !Sub
+          - Name
+          - {Env: RaiseTechPrivateSubnet1a}
         Value: RaiseTechPrivateSubnet1a
 
   PublicSubnet1c:
@@ -41,7 +47,9 @@ Resources:
       CidrBlock: 10.0.3.0/24
       MapPublicIpOnLaunch: true
       Tags:
-      - Key: Name
+      - Key: !Sub
+          - Name
+          - {Env: RaiseTechPublicSubnet1c}
         Value: RaiseTechPublicSubnet1c
 
   PrivateSubnet1c:
@@ -50,7 +58,9 @@ Resources:
       VpcId: !Ref RaiseTechVPC
       CidrBlock: 10.0.2.0/24
       Tags:
-      - Key: Name
+      - Key: !Sub
+          - Name
+          - {Env: RaiseTechPrivateSubnet1c}
         Value: RaiseTechPrivateSubnet1c
         
 
@@ -58,12 +68,10 @@ Resources:
     Type: AWS::EC2::InternetGateway
     Properties:
       Tags:
-        - Key: Name
-<<<<<<< HEAD
-          Value: InternetGateway
-=======
+        - Key: !Sub
+            - Name
+            - {Env: RaiseTechInternetGateway}
           Value: RaiseTechInternetGateway
->>>>>>> e830fd1699ecd785a92183f4c736d169b99df643
 
   InternetGatewayAttachment:
     Type: AWS::EC2::VPCGatewayAttachment
@@ -76,24 +84,20 @@ Resources:
     Properties:
       VpcId: !Ref RaiseTechVPC
       Tags:
-        - Key: Name
-<<<<<<< HEAD
-          Value: PublicRouteTable
-=======
+        - Key: !Sub
+            - Name
+            - {Env: RaiseTechPublicRouteTable}
           Value: RaiseTechPublicRouteTable
->>>>>>> e830fd1699ecd785a92183f4c736d169b99df643
 
   PrivateRouteTable:
     Type: AWS::EC2::RouteTable
     Properties:
       VpcId: !Ref RaiseTechVPC
       Tags:
-        - Key: Name
-<<<<<<< HEAD
-          Value: PrivateRouteTable
-=======
+        - Key: !Sub
+            - Name
+            - {Env: RaiseTechPrivateRouteTable}
           Value: RaiseTechPrivateRouteTable
->>>>>>> e830fd1699ecd785a92183f4c736d169b99df643
 
   PublicRouteTableAssociation1a:
     Type: AWS::EC2::SubnetRouteTableAssociation
@@ -140,7 +144,9 @@ Resources:
     Properties:
       VpcId: !Ref RaiseTechVPC
       Tags:
-        - Key: Name
+        - Key: !Sub
+            - Name
+            - {Env: rt-PublicSubnet}
           Value: rt-PublicSubnet
 
   RoutePublic:

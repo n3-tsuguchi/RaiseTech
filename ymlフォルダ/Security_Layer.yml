@@ -14,13 +14,8 @@ Resources:
       GroupName: SecurityGroupEC2
       SecurityGroupIngress:
         - IpProtocol: tcp
-<<<<<<< HEAD
-          FromPort: 22
-          ToPort: 22
-=======
           FromPort: 80
           ToPort: 80
->>>>>>> e830fd1699ecd785a92183f4c736d169b99df643
           SourceSecurityGroupId: !Ref SecurityGroupALB
         - IpProtocol: tcp
           FromPort: 22
@@ -40,11 +35,12 @@ Resources:
         - IpProtocol: tcp
           FromPort: 3306
           ToPort: 3306
-<<<<<<< HEAD
-          CidrIp: 0.0.0.0/32
-=======
-          CidrIp: 0.0.0.0/0
->>>>>>> e830fd1699ecd785a92183f4c736d169b99df643
+          SourceSecurityGroupId: !Ref SecurityGroupEC2
+      SecurityGroupEgress:
+        - IpProtocol: tcp
+          FromPort: 3306
+          ToPort: 3306
+          SourceSecurityGroupId: !Ref SecurityGroupEC2
       Tags:
         - Key: Name
           Value: SecurityGroupRDS
@@ -71,26 +67,14 @@ Outputs:
   SecurityGroupEC2:
     Value: !Ref SecurityGroupEC2
     Export:
-<<<<<<< HEAD
-      Name: SecurityGroupEC2
-=======
       Name: SGID-EC2
->>>>>>> e830fd1699ecd785a92183f4c736d169b99df643
 
   SecurityGroupRDS:
     Value: !Ref SecurityGroupRDS
     Export:
-<<<<<<< HEAD
-      Name: SecurityGroupRDS
-=======
       Name: SGID-RDS
->>>>>>> e830fd1699ecd785a92183f4c736d169b99df643
 
   SecurityGroupALB:
     Value: !Ref SecurityGroupALB
     Export:
-<<<<<<< HEAD
-      Name: SecurityGroupALB
-=======
       Name: SGID-ALB
->>>>>>> e830fd1699ecd785a92183f4c736d169b99df643
