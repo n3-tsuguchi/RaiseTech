@@ -12,9 +12,7 @@ Resources:
       EnableDnsHostnames: true
       InstanceTenancy: default
       Tags:
-        - Key: !Sub
-            - Name
-            - {Env: RaiseTechVPC}
+        - Key: Name
           Value: RaiseTechVPC
 
   PublicSubnet1a:
@@ -24,9 +22,7 @@ Resources:
       CidrBlock: 10.0.0.0/24
       MapPublicIpOnLaunch: true
       Tags:
-      - Key: !Sub
-          - Name
-          - {Env: RaiseTechPublicSubnet1a}
+      - Key: Name
         Value: RaiseTechPublicSubnet1a
 
   PrivateSubnet1a:
@@ -35,9 +31,7 @@ Resources:
       VpcId: !Ref RaiseTechVPC
       CidrBlock: 10.0.1.0/24
       Tags:
-      - Key: !Sub
-          - Name
-          - {Env: RaiseTechPrivateSubnet1a}
+      - Key: Name
         Value: RaiseTechPrivateSubnet1a
 
   PublicSubnet1c:
@@ -47,9 +41,7 @@ Resources:
       CidrBlock: 10.0.3.0/24
       MapPublicIpOnLaunch: true
       Tags:
-      - Key: !Sub
-          - Name
-          - {Env: RaiseTechPublicSubnet1c}
+      - Key: Name
         Value: RaiseTechPublicSubnet1c
 
   PrivateSubnet1c:
@@ -58,9 +50,7 @@ Resources:
       VpcId: !Ref RaiseTechVPC
       CidrBlock: 10.0.2.0/24
       Tags:
-      - Key: !Sub
-          - Name
-          - {Env: RaiseTechPrivateSubnet1c}
+      - Key: Name
         Value: RaiseTechPrivateSubnet1c
         
 
@@ -68,9 +58,7 @@ Resources:
     Type: AWS::EC2::InternetGateway
     Properties:
       Tags:
-        - Key: !Sub
-            - Name
-            - {Env: RaiseTechInternetGateway}
+        - Key: Name
           Value: RaiseTechInternetGateway
 
   InternetGatewayAttachment:
@@ -84,9 +72,7 @@ Resources:
     Properties:
       VpcId: !Ref RaiseTechVPC
       Tags:
-        - Key: !Sub
-            - Name
-            - {Env: RaiseTechPublicRouteTable}
+        - Key: Name
           Value: RaiseTechPublicRouteTable
 
   PrivateRouteTable:
@@ -94,9 +80,7 @@ Resources:
     Properties:
       VpcId: !Ref RaiseTechVPC
       Tags:
-        - Key: !Sub
-            - Name
-            - {Env: RaiseTechPrivateRouteTable}
+        - Key: Name
           Value: RaiseTechPrivateRouteTable
 
   PublicRouteTableAssociation1a:
@@ -144,9 +128,7 @@ Resources:
     Properties:
       VpcId: !Ref RaiseTechVPC
       Tags:
-        - Key: !Sub
-            - Name
-            - {Env: rt-PublicSubnet}
+        - Key: Name
           Value: rt-PublicSubnet
 
   RoutePublic:
@@ -164,16 +146,16 @@ Outputs:
   PublicSubnet1a:
     Value: !Ref PublicSubnet1a
     Export:
-      Name: PublicSubnet1a
+      Name: PublicSubnet1a-R-table
   PublicSubnet1c:
     Value: !Ref PublicSubnet1c
     Export:
-      Name: PublicSubnet1c
+      Name: PublicSubnet1c-R-table
   PrivateSubnet1a:
     Value: !Ref PrivateSubnet1a
     Export:
-      Name: PrivateSubnet1a
+      Name: PrivateSubnet1a-R-table
   PrivateSubnet1c:
     Value: !Ref PrivateSubnet1c
     Export:
-      Name: PrivateSubnet1c
+      Name: PrivateSubnet1c-R-table

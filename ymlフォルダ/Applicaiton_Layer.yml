@@ -2,66 +2,40 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: Application_Layer Template
 
-
 Parameters:
-  InstanceType:
+  RaiseTech:
     Type: String
-    Default: t2.micro
-    AllowedValues:
-      - t2.micro
-      - m1.small
-      - m1.large
-    ConstraintDescription: must be a valid EC2 instance type.
-  DBInstanceIdentifier:
-    Type: String
-    ConstraintDescription: must begin with a letter and contain only
-      alphanumeric characters.
-  DBInstanceType:
-    Type: String
-    Default: db.t2.micro
-    AllowedValues:
-      - db.t2.micro
-      - db.t2.small
-      - db.t2.medium
-    ConstraintDescription: must select a valid database instance type.
-  DBSubnetGroupDescription:
-    Type: String
-    Default: RaiseTechDBSubnetGroup
-    ConstraintDescription: must begin with a letter and contain only
-      alphanumeric characters.
+    Default: RaiseTech
+    Description: RaiseTech
 
 Resources:
   RaiseTechEC21a:
     Type: AWS::EC2::Instance
     Properties:
       NetworkInterfaces:
-        - SubnetId: !ImportValue PublicSubnet1a
+        - SubnetId: !ImportValue PublicSubnet1a-R-table
           GroupSet:
             - !ImportValue SGID-EC2
           DeviceIndex: 0
-      InstanceType: !Ref InstanceType
+      InstanceType: t2.micro
       ImageId: ami-0af1df87db7b650f4
       Tags:
-        - Key: !Sub
-            - Name
-            - {Env: RaiseTechEC21a}
-          Value: "RaiseTechEC21a"
+        - Key: Name
+          Value: !Sub ${RaiseTech}EC21a
       KeyName: RaiseTech
   RaiseTechEC21c:
     Type: AWS::EC2::Instance
     Properties:
       NetworkInterfaces:
-        - SubnetId: !ImportValue PublicSubnet1c
+        - SubnetId: !ImportValue PublicSubnet1c-R-table
           GroupSet:
             - !ImportValue SGID-EC2
           DeviceIndex: 0
-      InstanceType: !Ref InstanceType
+      InstanceType: t2.micro
       ImageId: ami-0af1df87db7b650f4
       Tags:
-        - Key: !Sub
-            - Name
-            - {Env: RaiseTechEC21c}
-          Value: "RaiseTechEC21c"
+        - Key: Name
+          Value: !Sub ${RaiseTech}EC21c
       KeyName: RaiseTech
 
   RDSMasterUserSecret:
@@ -79,7 +53,7 @@ Resources:
     Type: AWS::RDS::DBInstance
     Properties:
       AllocatedStorage : 20
-      DBInstanceClass: !Ref DBInstanceType
+      DBInstanceClass: db.t2.micro
       Port: 3306
       StorageType: gp2
       BackupRetentionPeriod: 7
@@ -100,8 +74,8 @@ Resources:
       DBSubnetGroupDescription: "RaiseTechDBSubnetGroup"
       DBSubnetGroupName: RaiseTechRDSSubnetGroup
       SubnetIds:
-        - !ImportValue PrivateSubnet1a
-        - !ImportValue PrivateSubnet1c
+        - !ImportValue PrivateSubnet1a-R-table
+        - !ImportValue PrivateSubnet1c-R-table
 
   RaiseTechALB:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
@@ -112,13 +86,11 @@ Resources:
       SecurityGroups:
         - !ImportValue SGID-ALB
       Subnets:
-        - !ImportValue PrivateSubnet1a
-        - !ImportValue PrivateSubnet1c
+        - !ImportValue PrivateSubnet1a-R-table
+        - !ImportValue PrivateSubnet1c-R-table
       Tags:
-        - Key: !Sub
-            - Name
-            - {Env: RaiseTechALB}
-          Value: RaiseTechALB
+        - Key: Name
+          Value: !Sub ${RaiseTech}ALB
 
   ALBTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
