@@ -13,7 +13,7 @@ Resources:
     Type: AWS::EC2::Instance
     Properties:
       NetworkInterfaces:
-        - SubnetId: !ImportValue PublicSubnet1a-R-table
+        - SubnetId: !ImportValue PublicSubnet1a-RaiseTech
           GroupSet:
             - !ImportValue SGID-EC2
           DeviceIndex: 0
@@ -27,7 +27,7 @@ Resources:
     Type: AWS::EC2::Instance
     Properties:
       NetworkInterfaces:
-        - SubnetId: !ImportValue PublicSubnet1c-R-table
+        - SubnetId: !ImportValue PublicSubnet1c-RaiseTech
           GroupSet:
             - !ImportValue SGID-EC2
           DeviceIndex: 0
@@ -74,8 +74,8 @@ Resources:
       DBSubnetGroupDescription: "RaiseTechDBSubnetGroup"
       DBSubnetGroupName: RaiseTechRDSSubnetGroup
       SubnetIds:
-        - !ImportValue PrivateSubnet1a-R-table
-        - !ImportValue PrivateSubnet1c-R-table
+        - !ImportValue PrivateSubnet1a-RaiseTechVPC
+        - !ImportValue PrivateSubnet1c-RaiseTechVPC
 
   RaiseTechALB:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
@@ -86,8 +86,8 @@ Resources:
       SecurityGroups:
         - !ImportValue SGID-ALB
       Subnets:
-        - !ImportValue PrivateSubnet1a-R-table
-        - !ImportValue PrivateSubnet1c-R-table
+        - !ImportValue PrivateSubnet1a-RaiseTechVPC
+        - !ImportValue PrivateSubnet1c-RaiseTechVPC
       Tags:
         - Key: Name
           Value: !Sub ${RaiseTech}ALB

@@ -146,16 +146,16 @@ Outputs:
   PublicSubnet1a:
     Value: !Ref PublicSubnet1a
     Export:
-      Name: PublicSubnet1a-R-table
+      Name: PublicSubnet1a-RaiseTechVPC
   PublicSubnet1c:
     Value: !Ref PublicSubnet1c
     Export:
-      Name: PublicSubnet1c-R-table
+      Name: PublicSubnet1c-RaiseTechVPC
   PrivateSubnet1a:
     Value: !Ref PrivateSubnet1a
     Export:
-      Name: PrivateSubnet1a-R-table
+      Name: PrivateSubnet1a-RaiseTechVPC
   PrivateSubnet1c:
     Value: !Ref PrivateSubnet1c
     Export:
-      Name: PrivateSubnet1c-R-table
+      Name: PrivateSubnet1c-RaiseTechVPC
