@@ -13,7 +13,7 @@ Resources:
     Type: AWS::EC2::Instance
     Properties:
       NetworkInterfaces:
-        - SubnetId: !ImportValue PublicSubnet1a-RaiseTech
+        - SubnetId: !ImportValue PublicSubnet1a-SubnetID
           GroupSet:
             - !ImportValue SGID-EC2
           DeviceIndex: 0
@@ -27,7 +27,7 @@ Resources:
     Type: AWS::EC2::Instance
     Properties:
       NetworkInterfaces:
-        - SubnetId: !ImportValue PublicSubnet1c-RaiseTech
+        - SubnetId: !ImportValue PublicSubnet1c-SubnetID
           GroupSet:
             - !ImportValue SGID-EC2
           DeviceIndex: 0
@@ -74,8 +74,8 @@ Resources:
       DBSubnetGroupDescription: "RaiseTechDBSubnetGroup"
       DBSubnetGroupName: RaiseTechRDSSubnetGroup
       SubnetIds:
-        - !ImportValue PrivateSubnet1a-RaiseTechVPC
-        - !ImportValue PrivateSubnet1c-RaiseTechVPC
+        - !ImportValue PrivateSubnet1a-SubnetID
+        - !ImportValue PrivateSubnet1c-SubnetID
 
   RaiseTechALB:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
@@ -86,8 +86,8 @@ Resources:
       SecurityGroups:
         - !ImportValue SGID-ALB
       Subnets:
-        - !ImportValue PrivateSubnet1a-RaiseTechVPC
-        - !ImportValue PrivateSubnet1c-RaiseTechVPC
+        - !ImportValue PrivateSubnet1a-SubnetID
+        - !ImportValue PrivateSubnet1c-SubnetID
       Tags:
         - Key: Name
           Value: !Sub ${RaiseTech}ALB
@@ -105,7 +105,7 @@ Resources:
         - Id:
             Ref: RaiseTechEC21c
           Port: 80
-      VpcId: !ImportValue RaiseTechVpc
+      VpcId: !ImportValue RaiseTechVPC-VPCID
 
   ALBListener:
     Type: AWS::ElasticLoadBalancingV2::Listener
