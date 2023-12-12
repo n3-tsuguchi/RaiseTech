@@ -12,7 +12,7 @@ Resources:
       EnableDnsHostnames: true
       InstanceTenancy: default
       Tags:
-        - Key: Name-VPC
+        - Key: Name
           Value: RaiseTechVPC
 
   PublicSubnet1a:
@@ -22,7 +22,7 @@ Resources:
       CidrBlock: 10.0.0.0/24
       MapPublicIpOnLaunch: true
       Tags:
-      - Key: Name-Subnet
+      - Key: Name
         Value: PublicSubnet1a
 
   PrivateSubnet1a:
@@ -31,7 +31,7 @@ Resources:
       VpcId: !Ref RaiseTechVPC
       CidrBlock: 10.0.1.0/24
       Tags:
-      - Key: Name-Subnet
+      - Key: Name
         Value: PrivateSubnet1a
 
   PublicSubnet1c:
@@ -41,7 +41,7 @@ Resources:
       CidrBlock: 10.0.3.0/24
       MapPublicIpOnLaunch: true
       Tags:
-      - Key: Name-Subnet
+      - Key: Name
         Value: PublicSubnet1c
 
   PrivateSubnet1c:
@@ -50,7 +50,7 @@ Resources:
       VpcId: !Ref RaiseTechVPC
       CidrBlock: 10.0.2.0/24
       Tags:
-      - Key: Name-Subnet
+      - Key: Name
         Value: PrivateSubnet1c
         
 
@@ -58,7 +58,7 @@ Resources:
     Type: AWS::EC2::InternetGateway
     Properties:
       Tags:
-        - Key: Name-IGW
+        - Key: Name
           Value: InternetGateway
 
   InternetGatewayAttachment:
@@ -72,7 +72,7 @@ Resources:
     Properties:
       VpcId: !Ref RaiseTechVPC
       Tags:
-        - Key: Name-RouteTable
+        - Key: Name
           Value: PublicRouteTable
 
   PrivateRouteTable:
@@ -80,7 +80,7 @@ Resources:
     Properties:
       VpcId: !Ref RaiseTechVPC
       Tags:
-        - Key: Name-RouteTable
+        - Key: Name
           Value: PrivateRouteTable
 
   PublicRouteTableAssociation1a:
@@ -128,7 +128,7 @@ Resources:
     Properties:
       VpcId: !Ref RaiseTechVPC
       Tags:
-        - Key: Name-RouteTable
+        - Key: Name
           Value: rt-PublicSubnet
 
   RoutePublic:
@@ -140,22 +140,22 @@ Resources:
 
 Outputs:
   RaiseTechVPC:
-    Value: !Sub ${RaiseTechVPC}
+    Value: !Ref RaiseTechVPC
     Export:
-      Name: RaiseTechVpc
+      Name: RaiseTechVPC-VPCID
   PublicSubnet1a:
-    Value: !Sub ${PublicSubnet1a}
+    Value: !Ref PublicSubnet1a
     Export:
-      Name: PublicSubnet1a-RaiseTechVPC
+      Name: PublicSubnet1a-SubnetID
   PublicSubnet1c:
-    Value: !Sub ${PublicSubnet1c}
+    Value: !Ref PublicSubnet1c
     Export:
-      Name: PublicSubnet1c-RaiseTechVPC
+      Name: PublicSubnet1c-SubnetID
   PrivateSubnet1a:
-    Value: !Sub ${PrivateSubnet1a}
+    Value: !Ref PrivateSubnet1a
     Export:
-      Name: PrivateSubnet1a-RaiseTechVPC
+      Name: PrivateSubnet1a-SubnetID
   PrivateSubnet1c:
-    Value: !Sub ${PrivateSubnet1c}
+    Value: !Ref PrivateSubnet1c
     Export:
-      Name: PrivateSubnet1c-RaiseTechVPC
+      Name: PrivateSubnet1c-SubnetID
