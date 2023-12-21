@@ -3,13 +3,13 @@ Description: Sample S3 Bucket Template
 
 Parameters:
   S3BucketName:
-    Type: AWS::S3::Bucket
+    Type: String
     Description: Name for the S3 bucket
     MinLength: 3
     Default: your-default-bucket-name
 
 Resources:
-  SampleS3Bucket:
+  RaiseTechS3Bucket:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: !Ref S3BucketName
@@ -21,3 +21,31 @@ Resources:
         RestrictPublicBuckets: True
       VersioningConfiguration:
         Status: Enabled
+  BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref RaiseTechS3Bucket
+      PolicyDocument:
+        Statement:
+          - Action:
+              - s3:*
+            Effect: Deny
+            Principal: "*"
+            Resource:
+              - !Join
+                - ""
+                - - "arn:aws:s3:::"
+                  - !Ref RaiseTechS3Bucket
+                  - "/*"
+            Sid: DenyPublicAccessToAllObjectsInBucket
+          - Action:
+              - s3:GetObject
+            Effect: Allow
+            Principal: "*"
+            Resource:
+              - !Join
+                - ""
+                - - "arn:aws:s3:::"
+                  - !Ref RaiseTechS3Bucket
+                  - "/*"
+            Sid: AllowPublicReadAccessToAllObjectsInBucket

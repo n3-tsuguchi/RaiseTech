@@ -3,9 +3,9 @@ AWSTemplateFormatVersion: 2010-09-09
 Description: Application_Layer Template
 
 Parameters:
-  FunctionName:
+  Prefix:
     Type: String
-    Description: The name of the RaiseTech
+    Description: The prefix name of the RaiseTech
 
 Resources:
   RaiseTechEC21a:
@@ -20,7 +20,7 @@ Resources:
       ImageId: ami-0af1df87db7b650f4
       Tags:
         - Key: Name
-          Value: !Sub ${FunctionName}EC21a
+          Value: !Sub ${Prefix}EC21a
       KeyName: RaiseTech
   RaiseTechEC21c:
     Type: AWS::EC2::Instance
@@ -34,7 +34,7 @@ Resources:
       ImageId: ami-0af1df87db7b650f4
       Tags:
         - Key: Name
-          Value: !Sub ${FunctionName}EC21c
+          Value: !Sub ${Prefix}EC21c
       KeyName: RaiseTech
 
   RDSMasterUserSecret:
