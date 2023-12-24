@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: Sample S3 Bucket Template
+Description: S3 Bucket Template
 
 Parameters:
   S3BucketName:
@@ -38,14 +38,3 @@ Resources:
                   - !Ref RaiseTechS3Bucket
                   - "/*"
             Sid: DenyPublicAccessToAllObjectsInBucket
-          - Action:
-              - s3:GetObject
-            Effect: Allow
-            Principal: "*"
-            Resource:
-              - !Join
-                - ""
-                - - "arn:aws:s3:::"
-                  - !Ref RaiseTechS3Bucket
-                  - "/*"
-            Sid: AllowPublicReadAccessToAllObjectsInBucket
