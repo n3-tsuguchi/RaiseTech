@@ -26,15 +26,17 @@ Resources:
     Properties:
       Bucket: !Ref RaiseTechS3Bucket
       PolicyDocument:
+        Version: "2012-10-17"
         Statement:
           - Action:
-              - s3:*
-            Effect: Deny
-            Principal: "*"
+              - s3:GetObject
+              - s3:PutObject
+              - s3:DeleteObject
+            Effect: "Allow"
+            Principal:
+              AWS:
+                - !Sub "arn:aws:iam::${AWS::AccountId}:root"
             Resource:
-              - !Join
-                - ""
-                - - "arn:aws:s3:::"
-                  - !Ref RaiseTechS3Bucket
-                  - "/*"
-            Sid: DenyPublicAccessToAllObjectsInBucket
+              - !Sub "arn:aws:s3:::${RaiseTechS3Bucket}"
+              - !Sub "arn:aws:s3:::${RaiseTechS3Bucket}/*"
+            Sid: "AllowPublicAccessToAllObjectsInBucket"
