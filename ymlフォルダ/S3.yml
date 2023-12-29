@@ -21,22 +21,23 @@ Resources:
         RestrictPublicBuckets: True
       VersioningConfiguration:
         Status: Enabled
-  BucketPolicy:
-    Type: AWS::S3::BucketPolicy
+
+  S3FullAccessRole:
+    Type: AWS::IAM::Role
     Properties:
-      Bucket: !Ref RaiseTechS3Bucket
-      PolicyDocument:
-        Version: "2012-10-17"
+      RoleName: S3FullAccessRole
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
         Statement:
-          - Action:
-              - s3:GetObject
-              - s3:PutObject
-              - s3:DeleteObject
-            Effect: "Allow"
+          - Effect: Allow
             Principal:
-              AWS:
-                - !Sub "arn:aws:iam::${AWS::AccountId}:root"
-            Resource:
-              - !Sub "arn:aws:s3:::${RaiseTechS3Bucket}"
-              - !Sub "arn:aws:s3:::${RaiseTechS3Bucket}/*"
-            Sid: "AllowPublicAccessToAllObjectsInBucket"
+              Service: s3.amazonaws.com
+            Action: sts:AssumeRole
+      Policies: 
+        - PolicyName: S3FullAccessPolicy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action: s3:* 
+                Resource: "*"
