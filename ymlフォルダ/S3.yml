@@ -1,4 +1,4 @@
-AWSTemplateFormatVersion: 2010-09-09
+AWSTemplateFormatVersion: '2010-09-09'
 Description: S3 Bucket Template
 
 Parameters:
@@ -31,13 +31,33 @@ Resources:
         Statement:
           - Effect: Allow
             Principal:
-              Service: s3.amazonaws.com
+              Service: ec2.amazonaws.com
             Action: sts:AssumeRole
-      Policies: 
+      Policies:
         - PolicyName: S3FullAccessPolicy
           PolicyDocument:
             Version: 2012-10-17
             Statement:
               - Effect: Allow
-                Action: s3:* 
+                Action: s3:*
                 Resource: "*"
+  
+  S3FullAccessPolicies:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: S3FullAccessPolicies
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action: s3:*
+            Resource: "arn:aws:s3:::your-default-bucket-name/*"
+      Roles:
+        - !Ref S3FullAccessRole
+
+  S3FullAccessInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      InstanceProfileName: S3FullAccessInstanceProfile
+      Roles:
+        - !Ref S3FullAccessRole
