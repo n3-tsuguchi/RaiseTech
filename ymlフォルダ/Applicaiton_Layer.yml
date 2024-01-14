@@ -8,14 +8,21 @@ Parameters:
     Description: The prefix name of the RaiseTech
 
 Resources:
-  S3FullAccessEC2InstanceProfile:
-    Type: AWS::IAM::InstanceProfile
+  RaiseTechManagedPolicy:
+    Type: AWS::IAM::ManagedPolicy
     Properties:
       Path: /
-      Roles:
-        - !Ref s3FullAccess
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Sid: AllowS3FullAccess
+            Effect: Allow
+            Action:
+              - secretsmanager:*
+              - s3:*
+            Resource: "*"
 
-  s3FullAccess:
+  RootRole:
     Type: AWS::IAM::Role
     Properties:
       Path: /
@@ -29,14 +36,21 @@ Resources:
             Action:
               - sts:AssumeRole
       Policies:
-        - PolicyName: AmazonS3FullAccess
+        - PolicyName: RaiseTechManagedPolicy
           PolicyDocument:
             Version: 2012-10-17
             Statement:
-              - Effect: Allow
+              - Sid: AllowS3FullAccess
+                Effect: Allow
                 Action:
                   - s3:*
                 Resource: "*"
+  IamInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: /
+      Roles:
+        - !Ref RootRole
   RaiseTechEC21a:
     Type: AWS::EC2::Instance
     Properties:
@@ -47,7 +61,7 @@ Resources:
           DeviceIndex: 0
       InstanceType: t2.micro
       ImageId: ami-0af1df87db7b650f4
-      IamInstanceProfile: !Ref S3FullAccessEC2InstanceProfile
+      IamInstanceProfile: !Ref IamInstanceProfile
       Tags:
         - Key: Name
           Value: !Sub ${Prefix}EC21a
@@ -62,7 +76,7 @@ Resources:
           DeviceIndex: 0
       InstanceType: t2.micro
       ImageId: ami-0af1df87db7b650f4
-      IamInstanceProfile: !Ref S3FullAccessEC2InstanceProfile
+      IamInstanceProfile: !Ref IamInstanceProfile
       Tags:
         - Key: Name
           Value: !Sub ${Prefix}EC21c
