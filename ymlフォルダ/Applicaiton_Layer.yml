@@ -6,22 +6,11 @@ Parameters:
   Prefix:
     Type: String
     Description: The prefix name of the RaiseTech
+  awsExampleManagedPolicyParameterOne:
+    Type: String
+    Description: ARN of the first IAM Managed Policy to add to the role
 
 Resources:
-  RaiseTechManagedPolicy:
-    Type: AWS::IAM::ManagedPolicy
-    Properties:
-      Path: /
-      PolicyDocument:
-        Version: 2012-10-17
-        Statement:
-          - Sid: AllowS3FullAccess
-            Effect: Allow
-            Action:
-              - secretsmanager:*
-              - s3:*
-            Resource: "*"
-
   RootRole:
     Type: AWS::IAM::Role
     Properties:
@@ -35,22 +24,16 @@ Resources:
                 - ec2.amazonaws.com
             Action:
               - sts:AssumeRole
-      Policies:
-        - PolicyName: RaiseTechManagedPolicy
-          PolicyDocument:
-            Version: 2012-10-17
-            Statement:
-              - Sid: AllowS3FullAccess
-                Effect: Allow
-                Action:
-                  - s3:*
-                Resource: "*"
+      ManagedPolicyArns:
+        - !Ref awsExampleManagedPolicyParameterOne
+
   IamInstanceProfile:
     Type: AWS::IAM::InstanceProfile
     Properties:
       Path: /
       Roles:
         - !Ref RootRole
+
   RaiseTechEC21a:
     Type: AWS::EC2::Instance
     Properties:
