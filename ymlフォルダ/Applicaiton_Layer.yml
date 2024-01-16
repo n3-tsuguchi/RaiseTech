@@ -6,9 +6,10 @@ Parameters:
   Prefix:
     Type: String
     Description: The prefix name of the RaiseTech
-  awsExampleManagedPolicyParameterOne:
+  AWSManagedPolicyParameter01:
     Type: String
-    Description: ARN of the first IAM Managed Policy to add to the role
+    Description: ARN of IAM Managed Policy to add to the role
+    Default: arn:aws:iam::aws:policy/AmazonS3FullAccess
 
 Resources:
   RootRole:
@@ -25,7 +26,7 @@ Resources:
             Action:
               - sts:AssumeRole
       ManagedPolicyArns:
-        - !Ref awsExampleManagedPolicyParameterOne
+        - !Ref AWSManagedPolicyParameter01
 
   IamInstanceProfile:
     Type: AWS::IAM::InstanceProfile

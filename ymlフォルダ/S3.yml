@@ -6,7 +6,7 @@ Parameters:
     Type: String
     Description: Name for the S3 bucket
     MinLength: 3
-    Default: your-default-bucket-name
+    Default: raise-tech-s3-bucket
 
 Resources:
   RaiseTechS3Bucket:
@@ -22,42 +22,19 @@ Resources:
       VersioningConfiguration:
         Status: Enabled
 
-  S3FullAccessRole:
-    Type: AWS::IAM::Role
+
+  BucketPolicy:
+    Type: AWS::S3::BucketPolicy
     Properties:
-      RoleName: S3FullAccessRole
-      AssumeRolePolicyDocument:
-        Version: 2012-10-17
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: ec2.amazonaws.com
-            Action: sts:AssumeRole
-      Policies:
-        - PolicyName: S3FullAccessPolicy
-          PolicyDocument:
-            Version: 2012-10-17
-            Statement:
-              - Effect: Allow
-                Action: s3:*
-                Resource: "*"
-  
-  S3FullAccessPolicies:
-    Type: AWS::IAM::Policy
-    Properties:
-      PolicyName: S3FullAccessPolicies
+      Bucket: !Ref RaiseTechS3Bucket
       PolicyDocument:
         Version: 2012-10-17
         Statement:
           - Effect: Allow
-            Action: s3:*
-            Resource: "arn:aws:s3:::your-default-bucket-name/*"
-      Roles:
-        - !Ref S3FullAccessRole
+            Principal:
+              AWS: !Sub "arn:aws:iam::${AWS::AccountId}:root"
+            Action: s3:GetObject
+            Resource:
+              - !Sub "arn:aws:s3:::${S3BucketName}/*"
+              - !Sub "arn:aws:s3:::${S3BucketName}"
 
-  S3FullAccessInstanceProfile:
-    Type: AWS::IAM::InstanceProfile
-    Properties:
-      InstanceProfileName: S3FullAccessInstanceProfile
-      Roles:
-        - !Ref S3FullAccessRole
