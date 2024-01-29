@@ -1,0 +1,40 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: S3 Bucket Template
+
+Parameters:
+  S3BucketName:
+    Type: String
+    Description: Name for the S3 bucket
+    MinLength: 3
+    Default: raise-tech-s3-bucket
+
+Resources:
+  RaiseTechS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref S3BucketName
+      AccessControl: Private
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: True
+        BlockPublicPolicy: True
+        IgnorePublicAcls: True
+        RestrictPublicBuckets: True
+      VersioningConfiguration:
+        Status: Enabled
+
+
+  BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref RaiseTechS3Bucket
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !Sub "arn:aws:iam::${AWS::AccountId}:root"
+            Action: s3:GetObject
+            Resource:
+              - !Sub "arn:aws:s3:::${S3BucketName}/*"
+              - !Sub "arn:aws:s3:::${S3BucketName}"
+
