@@ -11,8 +11,8 @@ jobs:
           name: run cfn-lint
           command: |
             cfn-lint -i W3002 -t tmp/CloudFormation/*.yml
-
 workflows:
   raisetech:
     jobs:
       - cfn-lint
+\n:
