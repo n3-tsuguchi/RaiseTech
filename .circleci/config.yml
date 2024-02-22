@@ -19,6 +19,6 @@ jobs:
             aws cloudformation deploy --template-file cloudformation/service.yml --stack-name sampleStack
 
 workflows:
-  RaiseTech-workflow:
+  RaiseTech:
     jobs:
       - execute-cloud-formation
