@@ -16,7 +16,7 @@ jobs:
           name: Deploy cloudformation
           command: |
             set -x
-            aws cloudformation deploy --template-file cloudformation/service.yml --stack-name sampleStack
+            aws cloudformation deploy --template-file cloudformation/service.yml --stack-name sampleStack --parameter-overrides IPParameter=<value> Prefix=<value> AWSManagedPolicyParameter01=<value> S3BucketName=<value> --capabilities CAPABILITY_NAMED_IAM
 
 workflows:
   RaiseTech:
