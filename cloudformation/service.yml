@@ -7,7 +7,7 @@ Parameters:
   IPParameter:
     Type: AWS::EC2::EIP
   Prefix:
-    Type: RaiseTech
+    Type: String
     Description: The prefix name of the RaiseTech
   AWSManagedPolicyParameter01:
     Type: String
