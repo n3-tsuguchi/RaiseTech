@@ -19,6 +19,9 @@ Parameters:
     Description: Name for the S3 bucket
     MinLength: 3
     Default: raise-tech-s3-bucket
+  EC2InstanceAMI:
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+    Default: "/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2"
 
 
 Resources:
@@ -39,12 +42,21 @@ Resources:
       VpcId: !Ref RaiseTechVPC
       CidrBlock: 10.0.0.0/24
       MapPublicIpOnLaunch: true
-      AvailabilityZone: ap-northeast-1a
+      AvailabilityZone: us-east-1a
       Tags:
         - Key: Name
           Value: PublicSubnet1a
 
-
+  PublicSubnet1c:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref RaiseTechVPC
+      CidrBlock: 10.0.3.0/24
+      MapPublicIpOnLaunch: true
+      AvailabilityZone: us-east-1c
+      Tags:
+        - Key: Name
+          Value: PublicSubnet1c
 
   PrivateSubnet1a:
     Type: AWS::EC2::Subnet
@@ -109,7 +121,7 @@ Resources:
     Properties:
       RouteTableIds:
         - !Ref PrivateRouteTable
-      ServiceName: com.amazonaws.ap-northeast-1.s3
+      ServiceName: com.amazonaws.us-east-1.s3
       VpcEndpointType: Gateway
       VpcId: !Ref RaiseTechVPC
 
@@ -213,7 +225,7 @@ Resources:
             - !Ref SecurityGroupEC2
           DeviceIndex: 0
       InstanceType: t2.micro
-      ImageId: ami-0af1df87db7b650f4
+      ImageId: !Ref EC2InstanceAMI
       IamInstanceProfile: !Ref IamInstanceProfile
       Tags:
         - Key: Name
@@ -221,7 +233,21 @@ Resources:
       KeyName: RaiseTech
 
 
-
+  RaiseTechEC21c:
+    Type: AWS::EC2::Instance
+    Properties:
+      NetworkInterfaces:
+        - SubnetId: !Ref PublicSubnet1a
+          GroupSet:
+            - !Ref SecurityGroupEC2
+          DeviceIndex: 0
+      InstanceType: t2.micro
+      ImageId: !Ref EC2InstanceAMI
+      IamInstanceProfile: !Ref IamInstanceProfile
+      Tags:
+        - Key: Name
+          Value: !Sub ${Prefix}EC21c
+      KeyName: RaiseTech
 
 
 
