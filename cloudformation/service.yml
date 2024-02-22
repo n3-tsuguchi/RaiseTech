@@ -5,7 +5,7 @@ Description: |
 
 Parameters:
   CIDRIP:
-    Type: "10.0.0.0/32"
+    Type: "10.0.0.0/24"
     Description: The CIDR IP for MyIP
   Prefix:
     Type: String
