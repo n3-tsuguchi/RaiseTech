@@ -44,16 +44,7 @@ Resources:
         - Key: Name
           Value: PublicSubnet1a
 
-  PublicSubnet1c:
-    Type: AWS::EC2::Subnet
-    Properties:
-      VpcId: !Ref RaiseTechVPC
-      CidrBlock: 10.0.3.0/24
-      MapPublicIpOnLaunch: true
-      AvailabilityZone: ap-northeast-1c
-      Tags:
-        - Key: Name
-          Value: PublicSubnet1c
+
 
   PrivateSubnet1a:
     Type: AWS::EC2::Subnet
@@ -230,21 +221,7 @@ Resources:
       KeyName: RaiseTech
 
 
-  RaiseTechEC21c:
-    Type: AWS::EC2::Instance
-    Properties:
-      NetworkInterfaces:
-        - SubnetId: !Ref PublicSubnet1a
-          GroupSet:
-            - !Ref SecurityGroupEC2
-          DeviceIndex: 0
-      InstanceType: t2.micro
-      ImageId: ami-0af1df87db7b650f4
-      IamInstanceProfile: !Ref IamInstanceProfile
-      Tags:
-        - Key: Name
-          Value: !Sub ${Prefix}EC21c
-      KeyName: RaiseTech
+
 
 
 
