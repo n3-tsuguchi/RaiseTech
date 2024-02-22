@@ -5,10 +5,10 @@ Description: |
 
 Parameters:
   CIDRIP:
-    Type: String
+    Type: 14.10.3.225/32
     Description: The CIDR IP for MyIP
   Prefix:
-    Type: String
+    Type: RaiseTech
     Description: The prefix name of the RaiseTech
   AWSManagedPolicyParameter01:
     Type: String
