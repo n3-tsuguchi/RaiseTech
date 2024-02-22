@@ -16,7 +16,7 @@ jobs:
           name: Deploy cloudformation
           command: |
             set -x
-            aws cloudformation deploy --template-file cloudformation/service.yml --stack-name sampleStack --parameter-overrides IPParameter=14.10.3.225/32 Prefix=RaiseTech 
+            aws cloudformation deploy --template-file cloudformation/service.yml --stack-name sampleStack --parameter-overrides Prefix=sample
 
 workflows:
   RaiseTech:
