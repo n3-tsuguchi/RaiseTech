@@ -16,7 +16,7 @@ jobs:
           name: Deploy cloudformation
           command: |
             set -x
-            aws cloudformation deploy --template-file cloudformation/service.yml --stack-name sampleStack --parameter-overrides
+            aws cloudformation deploy --template-file cloudformation/service.yml --stack-name sampleStack
 
 workflows:
   RaiseTech:
