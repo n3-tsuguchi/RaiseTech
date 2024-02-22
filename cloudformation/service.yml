@@ -4,9 +4,8 @@ Description: |
   route tables, security groups, and VPC endpoints.
 
 Parameters:
-  CIDRIP:
-    Type: 14.10.3.225/32
-    Description: The CIDR IP for MyIP
+  IPParameter:
+    Type: AWS::EC2::EIP
   Prefix:
     Type: RaiseTech
     Description: The prefix name of the RaiseTech
