@@ -2,6 +2,7 @@ version: 2.1
 
 orbs:
   aws-cli: circleci/aws-cli@4.1.2
+  ansible-playbook: orbss/ansible-playbook@0.0.5
 
 jobs:
   execute-cloud-formation:
@@ -18,7 +19,22 @@ jobs:
             set -x
             aws cloudformation deploy --template-file cloudformation/service.yml --stack-name sample-Stack --parameter-overrides CIDRIP=10.0.0.0/24 Prefix=YourPrefix --capabilities CAPABILITY_IAM
 
+  execute-ansible:
+    executor: ansible-playbook/default
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - "SHA256:ZcPWdzOE2zdPrzEERDYkmgBJAHZwQgBDS4ZLSRHYUvM"
+      - ansible-playbook/install:
+            version: 2.16.3
+      - ansible-playbook/playbook:
+            playbook: ansible/playbook.yml
+            playbook-options: '-i ansible/inventory'
 workflows:
   RaiseTech:
     jobs:
       - execute-cloud-formation
+      - execute-ansible:
+         requires:
+           - execute-cloud-formation
