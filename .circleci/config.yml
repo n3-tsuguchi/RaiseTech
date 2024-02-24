@@ -6,7 +6,9 @@ orbs:
 jobs:
   execute-cloud-formation:
     executor: aws-cli/default
+
     steps:
+      # Checkout the code as the first step.
       - checkout
       - aws-cli/setup:
           aws_access_key_id: AWS_ACCESS_KEY_ID
@@ -22,3 +24,4 @@ workflows:
   RaiseTech:
     jobs:
       - execute-cloud-formation
+
