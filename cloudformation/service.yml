@@ -42,7 +42,7 @@ Resources:
       VpcId: !Ref RaiseTechVPC
       CidrBlock: 10.0.0.0/24
       MapPublicIpOnLaunch: true
-      AvailabilityZone: us-east-1a
+      AvailabilityZone: ap-northeast-1a
       Tags:
         - Key: Name
           Value: PublicSubnet1a
@@ -53,7 +53,7 @@ Resources:
       VpcId: !Ref RaiseTechVPC
       CidrBlock: 10.0.3.0/24
       MapPublicIpOnLaunch: true
-      AvailabilityZone: us-east-1c
+      AvailabilityZone: ap-northeast-1c
       Tags:
         - Key: Name
           Value: PublicSubnet1c
