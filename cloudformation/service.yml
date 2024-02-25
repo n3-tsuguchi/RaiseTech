@@ -153,7 +153,7 @@ Resources:
         - IpProtocol: tcp
           FromPort: 22
           ToPort: 22
-          CidrIp: !Ref CIDRIP
+          CidrIp: 52.189.98.213/32
       VpcId: !Ref RaiseTechVPC
       Tags:
         - Key: Name
