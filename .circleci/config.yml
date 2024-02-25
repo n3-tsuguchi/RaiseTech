@@ -17,7 +17,7 @@ jobs:
           name: Deploy cloudformation
           command: |
             set -x
-            aws cloudformation deploy --template-file cloudformation/service.yml --stack-name sample-Stack --parameter-overrides CIDRIP=10.0.0.0/24 Prefix=YourPrefix --capabilities CAPABILITY_IAM
+            aws cloudformation deploy --template-file cloudformation/service.yml --stack-name sample-Stack --parameter-overrides CIDRIP=10.0.0.0/24 Prefix=RaiseTech --capabilities CAPABILITY_IAM
 
   execute-ansible:
     executor: ansible-playbook/default
