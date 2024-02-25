@@ -1,5 +1,5 @@
 ---
-- hosts: 13.113.85.101
+- hosts: all
   become: yes
   tasks:
     - name: Install git
