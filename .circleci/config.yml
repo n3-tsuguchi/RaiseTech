@@ -24,7 +24,13 @@ jobs:
     executor: ansible-playbook/default
     steps:
       - checkout
-      - ansible-ssh/ansible-playbook
+      - ansible-ssh/ansible-playbook playbook.yml:
+          inventory: ansible/inventory
+          playbook: ansible/playbook.yml
+          private-key: $PRIVATE_KEY
+          user: ec2-user
+          extra-vars: --extra-vars "ansible_ssh_private_key_file=$PRIVATE_KEY"
+
       - add_ssh_keys:
           fingerprints:
             - "SHA256:ZcPWdzOE2zdPrzEERDYkmgBJAHZwQgBDS4ZLSRHYUvM"
