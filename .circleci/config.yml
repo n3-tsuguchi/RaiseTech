@@ -24,14 +24,12 @@ jobs:
     executor: ansible-playbook/default
     steps:
       - checkout
+      - ansible-ssh/ansible-playbook
       - add_ssh_keys:
           fingerprints:
             - "SHA256:ZcPWdzOE2zdPrzEERDYkmgBJAHZwQgBDS4ZLSRHYUvM"
       - ansible-playbook/install:
             version: 2.10.7
-      - ansible-ssh/ansible-ssh:
-          user: ec2-user
-          host: 43.207.150.3
       - ansible-playbook/playbook:
             playbook: ansible/playbook.yml
             playbook-options: '-i ansible/inventory --private-key'
