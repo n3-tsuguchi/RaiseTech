@@ -2,7 +2,6 @@ version: 2.1
 
 orbs:
   aws-cli: circleci/aws-cli@4.1.2
-  ansible-ssh: orbss/ansible-ssh@0.7.4
   ansible-playbook: orbss/ansible-playbook@0.0.5
 
 jobs:
@@ -24,7 +23,6 @@ jobs:
     executor: ansible-playbook/default
     steps:
       - checkout
-
       - add_ssh_keys:
           fingerprints:
             - "SHA256:ZcPWdzOE2zdPrzEERDYkmgBJAHZwQgBDS4ZLSRHYUvM"
@@ -32,7 +30,7 @@ jobs:
             version: 2.10.7
       - ansible-playbook/playbook:
             playbook: ansible/playbook.yml
-            playbook-options: '-i ansible/inventory --private-key'
+            playbook-options: '-i ansible/inventory'
 workflows:
   RaiseTech:
     jobs:
