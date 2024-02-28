@@ -30,7 +30,8 @@ jobs:
             version: 2.10.7
       - ansible-playbook/playbook:
             playbook: ansible/playbook.yml
-            playbook-options: '-i ansible/inventory'
+            inventory: ansible/inventory
+            extra_vars: '{"user": "CircleCI_SSH_USER", "host": "CircleCI_TARGET_HOST"}'
 workflows:
   RaiseTech:
     jobs:
