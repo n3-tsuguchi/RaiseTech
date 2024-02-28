@@ -25,13 +25,13 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints:
-            - "SHA256:ZcPWdzOE2zdPrzEERDYkmgBJAHZwQgBDS4ZLSRHYUvM"
+            - 'SHA256:ZcPWdzOE2zdPrzEERDYkmgBJAHZwQgBDS4ZLSRHYUvM'
       - ansible-playbook/install:
             version: 2.10.7
       - ansible-playbook/playbook:
             playbook: ansible/playbook.yml
-            inventory: ansible/inventory
-            extra_vars: '{"user": "'${CircleCI_SSH_USER}'", "host": "'${CircleCI_TARGET_HOST}'"}'
+            playbook-options: 'u ec2-user -i ansible/inventory --private-key ~/.ssh/id_rsa'
+
 workflows:
   RaiseTech:
     jobs:
