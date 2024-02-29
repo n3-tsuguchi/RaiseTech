@@ -1,6 +1,10 @@
 require 'spec_helper'
 
-describe service('ansible') do
-  it { should be_enabled }
-  it { should be_running }
+describe package('git') do
+  it { should be_installed }
 end
+
+describe package('nginx') do
+  it { should be_installed }
+end
+
