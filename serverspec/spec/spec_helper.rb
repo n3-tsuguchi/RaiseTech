@@ -14,7 +14,7 @@ else
   set :sudo_password, ENV['SUDO_PASSWORD']
 end
 
-host = ENV['TARGET_HOST']
+host = ENV['web_server']
 
 options = Net::SSH::Config.for(host)
 
