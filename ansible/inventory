@@ -1,4 +1,2 @@
 [web_server]
 43.207.150.3
-[all:vars]
-ansible_ssh_user=ansible
