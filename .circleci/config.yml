@@ -43,7 +43,7 @@ jobs:
       - ruby/install-deps:
           app-dir: serverspec
       - run:
-          name: execute rspec
+          name: execute serverspec
           command: |
             set -x
             bundle exec rake spec
