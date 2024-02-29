@@ -38,9 +38,12 @@ jobs:
     executor: ruby/default
     steps:
       - checkout
-      - add_ssh_keys:
-          fingerprints:
-            - 'SHA256:ZcPWdzOE2zdPrzEERDYkmgBJAHZwQgBDS4ZLSRHYUvM'
+      - attach_workspace:
+          at: /home/circleci
+      - run:
+          name: set hosts
+          command: |
+              echo ec1-user@$(cat /home/circleci/ansible/inventory | grep web_server | awk '{print $1}') > /home/circleci/serverspec/hosts
       - ruby/install:
           version: 3.1.2
       - ruby/install-deps:
