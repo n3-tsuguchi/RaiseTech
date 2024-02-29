@@ -45,7 +45,7 @@ jobs:
       - run:
           name: execute serverspec
           command: |
-            set -x
+            cd serverspec
             bundle exec rake spec
 
 workflows:
