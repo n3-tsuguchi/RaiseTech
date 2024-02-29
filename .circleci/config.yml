@@ -43,7 +43,7 @@ jobs:
       - run:
           name: set hosts
           command: |
-              echo ec1-user@$(cat /home/circleci/ansible/inventory | grep web_server | awk '{print $1}') > /home/circleci/serverspec/hosts
+              echo "
       - ruby/install:
           version: 3.1.2
       - ruby/install-deps:
