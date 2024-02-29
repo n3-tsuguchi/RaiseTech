@@ -45,6 +45,8 @@ jobs:
           command: |
             echo "[web_server]" > serverspec/hosts
             echo "localhost" >> serverspec/hosts
+            CircleCI_TARGET_HOST = $(cat /home/circleci/serverspec/hosts)
+            cat ~/.ssh/config >> serverspec/hosts
       - ruby/install:
           version: 3.1.2
       - ruby/install-deps:
