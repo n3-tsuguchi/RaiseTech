@@ -27,7 +27,7 @@ set :ssh_options, options
 # set :disable_sudo, true
 
 
- Set environment variables
+# Set environment variables
 # set :env, :LANG => 'C', :LC_MESSAGES => 'C'
 
 # Set PATH
