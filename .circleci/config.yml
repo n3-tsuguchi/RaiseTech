@@ -37,16 +37,16 @@ jobs:
   execute-serverspec:
     executor: ruby/default
     steps:
-      - checkout:
+      - checkout
       - ruby/install:
           version: '3.1.2'
       - ruby/install-deps:
           app-dir: serverspec
       - run:
-          name: execute serverspec
+          name: 'execute serverspec'
           command: |
             cd serverspec
-            bundle exec rake spec
+            bundle exec rspec
 
 workflows:
   RaiseTech:
