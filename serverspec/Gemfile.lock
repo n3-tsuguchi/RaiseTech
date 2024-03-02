@@ -39,11 +39,14 @@ GEM
 
 PLATFORMS
   ruby
+  x64-mingw-ucrt
   x86_64-linux
 
 DEPENDENCIES
   bcrypt_pbkdf
   ed25519
+  net-scp
+  net-ssh
   serverspec
 
 BUNDLED WITH
