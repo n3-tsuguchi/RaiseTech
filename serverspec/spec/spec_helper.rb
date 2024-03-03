@@ -1,6 +1,9 @@
 require 'serverspec'
 require 'net/ssh'
 
+host = ENV['TARGET_HOST']
+set_property properties[host]
+
 set :backend, :ssh
 
 if ENV['ASK_SUDO_PASSWORD']
