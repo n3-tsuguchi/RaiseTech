@@ -45,7 +45,7 @@ jobs:
       - run:
           name: Deploy Over SSH
           command: |
-            ssh -i ~/.ssh/RaiseTech.pem
+            ssh -i ~/.ssh/RaiseTech.pem ec2-user@$(cat ansible/inventory | grep ansible_host | awk '{print $2}') 'sudo yum install -y git'
       - run:
           name: 'execute serverspec'
           command: |
