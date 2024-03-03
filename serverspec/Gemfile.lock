@@ -4,6 +4,7 @@ GEM
     bcrypt_pbkdf (1.1.0)
     diff-lcs (1.5.1)
     ed25519 (1.3.0)
+    highline (3.0.1)
     multi_json (1.15.0)
     net-scp (4.0.0)
       net-ssh (>= 2.6.5, < 8.0.0)
@@ -38,9 +39,7 @@ GEM
       sfl
 
 PLATFORMS
-  ruby
   x64-mingw-ucrt
-  x86_64-linux
 
 DEPENDENCIES
   bcrypt_pbkdf
