@@ -45,8 +45,7 @@ PLATFORMS
 DEPENDENCIES
   bcrypt_pbkdf
   ed25519
-  net-scp
-  net-ssh
+  highline
   serverspec
 
 BUNDLED WITH
