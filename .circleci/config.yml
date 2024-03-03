@@ -38,14 +38,13 @@ jobs:
     executor: ruby/default
     steps:
       - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - 'SHA256:w3P2dfM0AbOXBQMV+fJ+WWCGoovKgVJUFoopmLlh+w4'
       - ruby/install:
           version: '3.1.2'
       - ruby/install-deps:
           app-dir: serverspec
-      - run:
-          name: Deploy Over SSH
-          command: |
-            ssh -i ~/.ssh/id_rsa
       - run:
           name: 'execute serverspec'
           command: |
