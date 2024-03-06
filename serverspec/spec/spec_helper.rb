@@ -18,12 +18,6 @@ host = ENV['TARGET_HOST']
 
 options = Net::SSH::Config.for(host)
 
-unless ENV['SSH_CONFIG_FILE']
-  options[:keys] = Net::SSH::Config.for(host)
-else
-  options = Net::SSH::Config.for(host, fails=[ENV['SSH_CONFIG_FILE']])
-end
-
 options[:user] ||= 'ec2-user'
 
 set :host,        options[:host_name] || host
