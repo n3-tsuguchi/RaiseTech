@@ -20,13 +20,6 @@ options = Net::SSH::Config.for(host)
 
 options[:user] ||= Etc.getlogin
 
-########## パスワードを聞くかどうか
-if ENV['ASK_LOGIN_PASSWORD']
-  options[:password] = ask("\nEnter login password: ") { |q| q.echo = false }
-else
-  options[:password] = ENV['LOGIN_PASSWORD']
-end
-########## ここまで
 set :host,        options[:host_name] || host
 set :ssh_options, options
 
