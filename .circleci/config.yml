@@ -41,7 +41,8 @@ jobs:
       - run:
           name: ~/.ssh/config
           command: |
-            echo -e "Host target\n HostName $AWS_EC2_PUBLIC_IP\n User ec2-user\n StrictHostKeyChecking no" > ~/.ssh/config
+            AWS_EC2_PUBLIC_IP=$AWS_EC2_PUBLIC_IP
+            echo -e "Host target\n HostName $AWS_EC2_PUBLIC_IP\n User ec2-user\n StrictHostKeyChecking no" >> ~/.ssh/config
             cat ~/.ssh/config
       - ruby/install:
           version: '3.1.2'
