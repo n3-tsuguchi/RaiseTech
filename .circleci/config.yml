@@ -46,12 +46,12 @@ jobs:
       - run:
           name: Set environment variables
           command: |
-            echo "export AWS_EC2_PUBLIC_IP=$(grep '^AWS_EC2_PUBLIC_IP=' /home/circleci/env_var.txt | cut -d'=' -f2-)" >> $BASH_ENV
+            echo "export AWS_EC2_PUBLIC_IP=$(grep '^AWS_EC2_PUBLIC_IP=' /home/circleci/env_var.txt | cut -d '=' -f 2-)" >> $BASH_ENV
       - run:
           name: ~/.ssh/config
           command: |
             AWS_EC2_PUBLIC_IP=$AWS_EC2_PUBLIC_IP
-            echo -e "Host target\n HostName $AWS_EC2_PUBLIC_IP\n User ec2-user\n StrictHostKeyChecking no" >> ~/.ssh/config
+            echo -e "Host target\n  HostName $AWS_EC2_PUBLIC_IP\n  User ec2-user\n  StrictHostKeyChecking no" >> ~/.ssh/config
             cat ~/.ssh/config
       - ruby/install:
           version: '3.1.2'
