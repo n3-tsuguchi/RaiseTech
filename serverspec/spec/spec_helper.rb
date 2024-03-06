@@ -3,8 +3,6 @@ require 'net/ssh'
 
 set :backend, :ssh
 
-host = ENV['TARGET_HOST']
-
 if ENV['ASK_SUDO_PASSWORD']
   begin
     require 'highline/import'
