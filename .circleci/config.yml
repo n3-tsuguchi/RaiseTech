@@ -37,6 +37,9 @@ jobs:
   execute-serverspec:
     executor: ruby/default
     steps:
+      - add_ssh_keys:
+          fingerprints:
+            - 'SHA256:ZcPWdzOE2zdPrzEERDYkmgBJAHZwQgBDS4ZLSRHYUvM'
       - checkout
       - attach_workspace:
           at: /home/circleci
