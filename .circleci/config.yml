@@ -35,24 +35,23 @@ jobs:
           playbook-options: '-u ec2-user -i ansible/inventory'
 
   execute-serverspec:
-    docker:
-      - image: cimg/ruby:3.1.2
+    executor: ruby/default
     steps:
       - checkout
-      - add_ssh_keys:
-          fingerprints:
-            - 'SHA256:ZcPWdzOE2zdPrzEERDYkmgBJAHZwQgBDS4ZLSRHYUvM'
       - run:
-          name: install serverspec
+          name: ~/.ssh/config
           command: |
-            gem install serverspec;
-            gem install rake;
-            gem install highline;
+            echo -e "Host target\n HostName $AWS_EC2_PUBLIC_IP\n User ec2-user\n StrictHostKeyChecking no" > ~/.ssh/config
+            cat ~/.ssh/config
+      - ruby/install:
+          version: '3.1.2'
+      - ruby/install-deps:
+          app-dir: serverspec
       - run:
           name: 'execute serverspec'
           command: |
             cd serverspec
-            rake spec;
+            bundle exec rspec
 
 workflows:
   RaiseTech:
