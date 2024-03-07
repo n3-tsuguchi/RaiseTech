@@ -38,6 +38,8 @@ jobs:
     executor: ruby/default
     steps:
       - checkout
+      - add_ssh_keys
+      - run: ssh 18.181.172.178
       - ruby/install:
           version: '3.1.2'
       - ruby/install-deps:
