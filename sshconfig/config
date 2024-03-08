@@ -1,0 +1,5 @@
+Host
+    HostName: 18.181.172.178
+    Port 22
+    User ec2-user
+    StrictHostKeyChecking no
