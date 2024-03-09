@@ -40,8 +40,10 @@ jobs:
       - checkout
       - run:
           name: Deploy Over SSH
-          command: |
-            ssh $SSH_USER@$TARGET_HOST "severspec"
+          command:
+            add_ssh_keys:
+              fingerprints:
+                - 'SHA256:ZcPWdzOE2zdPrzEERDYkmgBJAHZwQgBDS4ZLSRHYUvM'
       - ruby/install:
           version: '3.1.2'
       - ruby/install-deps:
