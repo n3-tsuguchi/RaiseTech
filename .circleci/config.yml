@@ -38,12 +38,8 @@ jobs:
     executor: ruby/default
     steps:
       - checkout
-      - run:
-          name: Deploy Over SSH
-            add_ssh_keys:
-              fingerprints:
-                - 'SHA256:ZcPWdzOE2zdPrzEERDYkmgBJAHZwQgBDS4ZLSRHYUvM'
-      - ruby/install:
+      - add_ssh_keys:
+      - run: ssh ${SSH_USER}@${TARGET_HOST}
           version: '3.1.2'
       - ruby/install-deps:
           app-dir: serverspec
