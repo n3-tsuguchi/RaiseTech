@@ -38,6 +38,10 @@ jobs:
     executor: ruby/default
     steps:
       - checkout
+      - run:
+          name: Deploy Over SSH
+          command: |
+            ssh  -i ~/.ssh/RaiseTech.pem
       - ruby/install:
           version: '3.1.2'
       - ruby/install-deps:
