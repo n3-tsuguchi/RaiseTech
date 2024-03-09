@@ -41,9 +41,9 @@ jobs:
     executor: ruby/default
     steps:
       - checkout
-      - add_ssh_keys:
+      - add_ssh_keys
       - run: ssh ${SSH_USER}@${TARGET_HOST}
-          version: '3.1.2'
+          version '3.1.2'
       - ruby/install-deps:
           app-dir: serverspec
       - run:
