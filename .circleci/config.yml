@@ -38,6 +38,7 @@ jobs:
     executor: ruby/default
     steps:
       - checkout
+      - ruby/install:
           version: '3.1.2'
       - ruby/install-deps:
           app-dir: serverspec
