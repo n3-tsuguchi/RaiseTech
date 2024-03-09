@@ -41,7 +41,7 @@ jobs:
       - run:
           name: Deploy Over SSH
           command: |
-            ssh  -i ~/.ssh/RaiseTech.pem ec2-user@18.181.172.178
+            ssh　-i ~/.ssh/RaiseTech.pem ec2-user@18.181.172.178
       - ruby/install:
           version: '3.1.2'
       - ruby/install-deps:
