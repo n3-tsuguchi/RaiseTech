@@ -41,7 +41,7 @@ jobs:
       - run:
           name: Deploy Over SSH
           command: |
-            ssh　-i ~/.ssh/RaiseTech.pem ec2-user@18.181.172.178
+            ssh $SSH_USER@$TARGET_HOST "severspec"
       - ruby/install:
           version: '3.1.2'
       - ruby/install-deps:
