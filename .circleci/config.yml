@@ -36,7 +36,7 @@ jobs:
 
   execute-serverspec:
     docker:
-      - image: circleci/ruby:3.1.2
+      - image: circleci/ruby:3.0.2
     steps:
       - checkout
       - add_ssh_keys:
