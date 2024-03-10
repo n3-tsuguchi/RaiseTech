@@ -52,6 +52,7 @@ jobs:
           name: 'execute test'
           command: |
             cd serverspec
+            bundle install --path vendor/bundle
             bundle exec rspec spec
 
 workflows:
