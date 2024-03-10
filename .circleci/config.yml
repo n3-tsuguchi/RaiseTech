@@ -35,11 +35,13 @@ jobs:
           playbook-options: '-u ec2-user -i ansible/inventory'
 
   execute-serverspec:
-    executor: ruby/default
+    docker:
+      - image: circleci/ruby:3.1.2
     steps:
       - checkout
-      - add_ssh_keys
-      - run: ssh -i ~/.ssh/RaiseTech.pem $SSH_USER@$TARGET_HOST
+      - add_ssh_keys:
+          fingerprints:
+            - 'SHA256:ZcPWdzOE2zdPrzEERDYkmgBJAHZwQgBDS4ZLSRHYUvM'
       - ruby/install:
           version: '3.1.2'
       - ruby/install-deps:
