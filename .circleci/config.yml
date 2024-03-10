@@ -39,7 +39,7 @@ jobs:
     steps:
       - checkout
       - add_ssh_keys
-      - run: ssh -o StrictHostKeyChecking=no $SSH_USER@$TARGET_HOST 'echo "SSH connection is successful"'
+      - run: ssh -o StrictHostKeyChecking=no ec2-user@$(cat ansible/inventory | grep ansible_host | awk '{print $2}') 'echo "SSH connection is successful"'
       - ruby/install:
           version: '3.1.2'
       - ruby/install-deps:
