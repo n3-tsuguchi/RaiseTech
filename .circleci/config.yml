@@ -50,6 +50,7 @@ jobs:
             gem install highline;
       - run:
           name: 'execute test'
+          command: |
             cd serverspec
             bundle exec rspec spec
 
