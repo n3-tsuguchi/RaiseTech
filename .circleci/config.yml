@@ -38,6 +38,8 @@ jobs:
     executor: ruby/default
     steps:
       - checkout
+      - add_ssh_keys
+      - run: ssh -o StrictHostKeyChecking=no $SSH_USER@TARGET_HOST 'echo "SSH connection is successful"'
       - ruby/install:
           version: '3.1.2'
       - ruby/install-deps:
