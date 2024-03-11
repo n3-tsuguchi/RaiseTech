@@ -44,7 +44,7 @@ jobs:
       - run:
           name: 'SSH Setting'
           command: |
-            ssh -i ansible/RaiseTech.pem ec2-user@$(cat ansible/inventory | grep ansible_host | awk '{print $2}' | sed -e 's/ansible_host=//g') -o StrictHostKeyChecking=no
+            ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa
       - ruby/install:
           version: '3.1.2'
       - ruby/install-deps:
