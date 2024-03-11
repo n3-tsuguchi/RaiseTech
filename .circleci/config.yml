@@ -43,7 +43,7 @@ jobs:
           fingerprints:
             - 'SHA256:AbdtCdB4jOhCWUPHfqmAbQ3+SiQvgnj14EQoq3wVbek'
       - run:
-          name: Run Serverspec
+          name: SSH to TARGET_HOST
           command: |
             set -x
             ssh -i ~/.ssh/RaiseTech.pem ec2-user@$TARGET_HOST
