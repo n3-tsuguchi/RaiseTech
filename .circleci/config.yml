@@ -36,6 +36,7 @@ jobs:
 
   execute-serverspec:
     executor: ruby/default
+    circleci_ip_ranges: true
     steps:
       - checkout
       - add_ssh_keys:
@@ -44,7 +45,7 @@ jobs:
       - run:
           name: 'SSH Setting'
           command: |
-            ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ec2-user@18.181.172.178
+            ssh -o StrictHostKeyChecking=no -i ~/.ssh/RaiseTech.pem ec2-user@18.181.172.178
       - ruby/install:
           version: '3.1.2'
       - ruby/install-deps:
