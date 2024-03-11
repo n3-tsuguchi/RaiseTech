@@ -38,10 +38,13 @@ jobs:
     executor: ruby/default
     steps:
       - checkout
-      - add_ssh_keys:
-          fingerprints:
-            - 'SHA256:ZcPWdzOE2zdPrzEERDYkmgBJAHZwQgBDS4ZLSRHYUvM'
-            - ssh $SSH_USER@$SSH_HOSTNAME -o StrictHostKeyChecking=no
+      - run:
+          name: 'SSH Setting'
+          command: |
+            echo $SSH_PRIVATE_KEY | base64 --decode > ~/.ssh/id_rsa
+            chmod 600 ~/.ssh/id_rsa
+            echo -e "Host $SSH_HOSTNAME\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+          - ssh $SSH_USER@$SSH_HOSTNAME -o StrictHostKeyChecking=no
       - ruby/install:
           version: '3.1.2'
       - ruby/install-deps:
@@ -50,7 +53,7 @@ jobs:
           name: 'execute serverspec'
           command: |
             cd serverspec
-            bundle exec rspec spec KEY=~/.ssh/id_rsa
+            bundle exec rspec spec
 
 workflows:
   RaiseTech:
