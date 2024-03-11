@@ -46,7 +46,7 @@ jobs:
           name: Run Serverspec
           command: |
             set -x
-            ssh -i ~/.ssh/RaiseTech.pem ec2-user@$TARGET_HOST
+            ssh -i ansible/ssh_key ec2-user@$(cat ansible/inventory | grep ansible_host | awk '{print $2}') 'sudo yum install -y ruby-devel gcc gcc-c++'
       - ruby/install:
           version: '3.1.2'
       - ruby/install-deps:
