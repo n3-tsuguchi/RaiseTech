@@ -41,9 +41,7 @@ jobs:
       - run:
           name: 'SSH Setting'
           command: |
-            echo $SSH_USER | base64 --decode > ~/.ssh/id_rsa
-            chmod 600 ~/.ssh/id_rsa
-            echo -e "Host $SSH_HOST\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+            echo -e "Host target\n HostName $HOST_TARGET\n User ec2-user\n IdentityFile ~/.ssh/id_rsa\n StrictHostKeyChecking no" > ~/.ssh/config
       - ruby/install:
           version: '3.1.2'
       - ruby/install-deps:
