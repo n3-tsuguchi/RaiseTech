@@ -42,7 +42,7 @@ jobs:
       - run:
           name: 'SSH Setting'
           command: |
-            echo -e "Host target\n  HostName $TARGET_HOST\n  User ec2-user\n  Port 22\n  StrictHostKeyChecking no\n  UserKnownHostsFile /dev/null\n  IdentityFile ~/.ssh/id_rsa" > ~/.ssh/config
+            echo -e "Host target\n  HostName $TARGET_HOST\n  User ec2-user\n  Port 22\n  StrictHostKeyChecking no\n  UserKnownHostsFile /dev/null\n  IdentityFile ~/.ssh/RaiseTech.pem" > ~/.ssh/config
       - ruby/install:
           version: '3.1.2'
       - ruby/install-deps:
