@@ -50,7 +50,7 @@ jobs:
           name: 'execute serverspec'
           command: |
             cd serverspec
-            bundle exec rspec spec
+            bundle exec rspec spec --trace KEY=~/.ssh/id_rsa
 
 workflows:
   RaiseTech:
