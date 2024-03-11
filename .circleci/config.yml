@@ -41,7 +41,7 @@ jobs:
           - add_ssh_keys:
               fingerprints:
                 - 'SHA256:ZcPWdzOE2zdPrzEERDYkmgBJAHZwQgBDS4ZLSRHYUvM'
-            - run: ssh $SSH_USER@$SSH_HOST -o StrictHostKeyChecking=no
+                - ssh $SSH_USER@$SSH_HOSTNAME -o StrictHostKeyChecking=no
       - ruby/install:
           version: '3.1.2'
       - ruby/install-deps:
