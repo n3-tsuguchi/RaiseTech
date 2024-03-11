@@ -41,9 +41,9 @@ jobs:
       - run:
           name: 'SSH Setting'
           command: |
-            echo $SSH_PRIVATE_KEY | base64 --decode > ~/.ssh/id_rsa
+            echo $SSH_USER | base64 --decode > ~/.ssh/id_rsa
             chmod 600 ~/.ssh/id_rsa
-            echo -e "Host $SSH_HOSTNAME\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+            echo -e "Host $SSH_HOST\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
       - ruby/install:
           version: '3.1.2'
       - ruby/install-deps:
