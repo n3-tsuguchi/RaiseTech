@@ -1,3 +1,5 @@
+# Use the latest 2.1 version of CircleCI pipeline process engine.
+# See: https://circleci.com/docs/configuration-reference
 version: 2.1
 
 orbs:
@@ -9,6 +11,7 @@ jobs:
   execute-cloud-formation:
     executor: aws-cli/default
     steps:
+      # Checkout the code as the first step.
       - checkout
       - aws-cli/setup:
           aws_access_key_id: AWS_ACCESS_KEY_ID
@@ -62,4 +65,3 @@ workflows:
       - execute-serverspec:
           requires:
             - execute-ansible
-
