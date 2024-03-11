@@ -41,7 +41,7 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints:
-            - 'SHA256:ZcPWdzOE2zdPrzEERDYkmgBJAHZwQgBDS4ZLSRHYUvM'
+            - 'SHA256:AbdtCdB4jOhCWUPHfqmAbQ3+SiQvgnj14EQoq3wVbek'
       - run:
           name: Run Serverspec
           command: |
