@@ -38,10 +38,13 @@ jobs:
     executor: ruby/default
     steps:
       - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - 'SHA256:AbdtCdB4jOhCWUPHfqmAbQ3+SiQvgnj14EQoq3wVbek'
       - run:
           name: 'SSH Setting'
           command: |
-            echo -e "Host target\n HostName $HOST_TARGET\n User ec2-user\n IdentityFile ~/.ssh/id_rsa\n StrictHostKeyChecking no" > ~/.ssh/config
+            ssh -i ~/.ssh/id_rsa ec2-user@$TARGET_HOST
       - ruby/install:
           version: '3.1.2'
       - ruby/install-deps:
