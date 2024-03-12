@@ -59,10 +59,7 @@ workflows:
   RaiseTech:
     jobs:
       - execute-cloud-formation
-      - execute-ansible:
-          requires:
-            - execute-cloud-formation
-      - execute-serverspec:
+      - execute-serverspec
 #          requires:
 #            - execute-ansible
 
