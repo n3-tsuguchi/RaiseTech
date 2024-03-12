@@ -39,9 +39,6 @@ jobs:
     circleci_ip_ranges: true
     steps:
       - checkout
-      - add_ssh_keys:
-          fingerprints:
-            - 'SHA256:pnpKfoKDXiSeE2egoHIZbe02OKvlhu+fVoiLgxEDhf0'
       - ruby/install:
           version: '3.1.2'
       - ruby/install-deps:
