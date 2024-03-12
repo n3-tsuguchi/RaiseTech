@@ -39,9 +39,6 @@ jobs:
     circleci_ip_ranges: true
     steps:
       - checkout
-      - run:
-          name: Copy SSH Config
-          command: cp sshconfig/config ~/.ssh/
       - ruby/install:
           version: '3.1.2'
       - ruby/install-deps:
