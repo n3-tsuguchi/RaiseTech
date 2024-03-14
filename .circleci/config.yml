@@ -39,13 +39,11 @@ jobs:
     circleci_ip_ranges: true
     steps:
       - checkout
-      - add_ssh_keys:
-          fingerprints:
-            - 'SHA256:ZcPWdzOE2zdPrzEERDYkmgBJAHZwQgBDS4ZLSRHYUvM'
       - run:
           name: SSH Setthing
           command: |
-            ssh ec2-user@$TARGET_HOST 
+            echo -e "Host target\n  HostName $TARGET_HOST\n  User ec2-user\n  Port 22\n  StrictHostKeyChecking no\n  UserKnownHostsFile /dev/null\n" > ~/.ssh/config
+            cat ~/.ssh/config
       - ruby/install:
           version: '3.1.2'
       - ruby/install-deps:
