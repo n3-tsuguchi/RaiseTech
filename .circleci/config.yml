@@ -39,6 +39,13 @@ jobs:
     circleci_ip_ranges: true
     steps:
       - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - 'SHA256:ZcPWdzOE2zdPrzEERDYkmgBJAHZwQgBDS4ZLSRHYUvM'
+      - run:
+          name: SSH Setthing
+          command: |
+            ssh -i ~/.ssh/RaiseTech.pem ec2-user@$TARGET_HOST 
       - ruby/install:
           version: '3.1.2'
       - ruby/install-deps:
