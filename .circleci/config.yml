@@ -45,7 +45,7 @@ jobs:
       - run:
           name: SSH Setthing
           command: |
-            ssh -i ~/.ssh/RaiseTech.pem ec2-user@$TARGET_HOST 
+            ssh ec2-user@$TARGET_HOST 
       - ruby/install:
           version: '3.1.2'
       - ruby/install-deps:
