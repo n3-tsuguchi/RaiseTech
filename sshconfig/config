@@ -1,5 +1,5 @@
 Host target
-    HostName: 52.194.248.224
+    HostName: 18.183.91.27
     Port 22
     User ec2-user
     StrictHostKeyChecking no
