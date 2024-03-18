@@ -41,7 +41,7 @@ jobs:
       - checkout
       - run:
           name:  SSH Conneciton
-          command: ssh -i ~/.ssh/circleci_key_for_connect_ec2 ec2-user@18.183.91.27 "echo 'SSH Connection Success'"
+          command: ssh -i ~/.ssh/kawakami.pem ec2-user@18.183.91.27 "echo 'SSH Connection Success'"
       - ruby/install:
           version: '3.1.2'
       - ruby/install-deps:
