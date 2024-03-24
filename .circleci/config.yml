@@ -25,9 +25,6 @@ jobs:
     circleci_ip_ranges: true
     steps:
       - checkout
-      - add_ssh_keys:
-          fingerprints:
-            - '10:3a:69:ba:f3:55:2b:12:b4:58:2e:fb:7d:97:30:8c:93:09:73:ca'
       - ansible-playbook/install:
           version: 2.10.7
       - ansible-playbook/playbook:
@@ -39,6 +36,9 @@ jobs:
     circleci_ip_ranges: true
     steps:
       - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - '10:3a:69:ba:f3:55:2b:12:b4:58:2e:fb:7d:97:30:8c:93:09:73:ca'
       - ruby/install:
           version: '3.2.3'
       - ruby/install-deps:
