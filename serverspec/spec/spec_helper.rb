@@ -16,11 +16,7 @@ end
 
 host = ENV['TARGET_HOST']
 
-unless ENV['SSH_CONFIG_FILE']
-  options = Net::SSH::Config.for(host)
-else
-  options = Net::SSH::Config.for(host, files=[ENV['SSH_CONFIG_FILE']])
-end
+options = Net::SSH::Config.for(host)
 
 options[:user] ||= Etc.getlogin
 
