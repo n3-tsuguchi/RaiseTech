@@ -1,4 +1,12 @@
 require 'spec_helper'
+require 'net/ssh'
+
+set :host, '43.207.83.40'
+set :ssh_options, :user => 'ec2-user', :port => 2222
+
+describe 'Example tests' do
+  # テストコードを記述する
+end
 
 describe package('git') do
   it { should be_installed }
