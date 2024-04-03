@@ -2,10 +2,10 @@
 ## AnsibleとServerSpecへのSSH接続テスト成功のエビデンス
 
 ## CircleCIからAnsibleの疎通
-![](image/2024-02-28_20h51_05.png)
+![](2024-02-28_20h51_05.png)
 
 ## CircleCIからServerSpecへのテスト実行
-![](image/2024-04-03_14h54_09.png)
+![](2024-04-03_14h54_09.png)
 
 ### CircleCIからAnsibleの疎通とServerSpecへのテスト実行について
 - AnsibleとServerSpec単体はそんなに難しくなかったです。
