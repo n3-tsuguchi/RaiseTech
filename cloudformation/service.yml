@@ -279,7 +279,7 @@ Resources:
        DBSubnetGroupName: !Ref RaiseTechRDSSubnetGroup
        MultiAZ: true
        VPCSecurityGroups:
-         - !ImportValue SGID-RDS
+         - !Ref SecurityGroupRDS
 
   RaiseTechRDSSubnetGroup:
      Type: AWS::RDS::DBSubnetGroup
