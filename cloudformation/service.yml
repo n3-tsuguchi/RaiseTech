@@ -278,6 +278,7 @@ Resources:
        EngineVersion: 8.0
        DBSubnetGroupName: !Ref RaiseTechRDSSubnetGroup
        MultiAZ: true
+
       
 
   RaiseTechRDSSubnetGroup:
@@ -287,6 +288,7 @@ Resources:
        DBSubnetGroupName: RaiseTechRDSSubnetGroup
        SubnetIds:
          - !Ref PrivateSubnet1a
+         - !Ref PrivateSubnet1c
 
   RaiseTechALB:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
