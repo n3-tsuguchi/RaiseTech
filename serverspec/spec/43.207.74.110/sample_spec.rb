@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 set :backend, :ssh
-set :host, '43.207.164.203'
+set :host, '43.207.74.110'
 set :ssh_options, :user => 'ec2-user', :keys => ['kawakami.pem']
 
 describe package('git') do
