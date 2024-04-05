@@ -251,43 +251,43 @@ Resources:
 
 
 
-  #  RDSMasterUserSecret:
-  #    Type: AWS::SecretsManager::Secret
-  #    Properties:
-  #      Name: "RDSMasterUserSecret"
-  #      Description: "Secret for RDS Master User"
-  #      GenerateSecretString:
-  #        SecretStringTemplate: '{"username":"admin"}'
-  #        GenerateStringKey: "password"
-  #        PasswordLength: 16
-  #        ExcludeCharacters: '"@/\'
+  RDSMasterUserSecret:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+       Name: "RDSMasterUserSecret"
+       Description: "Secret for RDS Master User"
+       GenerateSecretString:
+         SecretStringTemplate: '{"username":"admin"}'
+         GenerateStringKey: "password"
+         PasswordLength: 16
+         ExcludeCharacters: '"@/\'
 
-  #  RaiseTechRDS:
-  #    Type: AWS::RDS::DBInstance
-  #    Properties:
-  #      AllocatedStorage: 20
-  #      DBInstanceClass: db.t2.micro
-  #      Port: 3306
-  #      StorageType: gp2
-  #      BackupRetentionPeriod: 7
-  #      MasterUsername: admin
-  #      MasterUserPassword: '{{resolve:secretsmanager:RDSMasterUserSecret:SecretString:password}}'
-  #      DBInstanceIdentifier: RaiseTech-DB
-  #      DBName: RaiseTechRDS
-  #      Engine: mysql
-  #      EngineVersion: 8.0
-  #      DBSubnetGroupName: !Ref RaiseTechRDSSubnetGroup
-  #      MultiAZ: true
-  #      VPCSecurityGroups:
-  #        - !ImportValue SGID-RDS
+  RaiseTechRDS:
+     Type: AWS::RDS::DBInstance
+     Properties:
+       AllocatedStorage: 20
+       DBInstanceClass: db.t2.micro
+       Port: 3306
+       StorageType: gp2
+       BackupRetentionPeriod: 7
+       MasterUsername: admin
+       MasterUserPassword: '{{resolve:secretsmanager:RDSMasterUserSecret:SecretString:password}}'
+       DBInstanceIdentifier: RaiseTech-DB
+       DBName: RaiseTechRDS
+       Engine: mysql
+       EngineVersion: 8.0
+       DBSubnetGroupName: !Ref RaiseTechRDSSubnetGroup
+       MultiAZ: true
+       VPCSecurityGroups:
+         - !ImportValue SGID-RDS
 
-  #  RaiseTechRDSSubnetGroup:
-  #    Type: AWS::RDS::DBSubnetGroup
-  #    Properties:
-  #      DBSubnetGroupDescription: "RaiseTechDBSubnetGroup"
-  #      DBSubnetGroupName: RaiseTechRDSSubnetGroup
-  #      SubnetIds:
-  #        - !Ref PrivateSubnet1a
+  RaiseTechRDSSubnetGroup:
+     Type: AWS::RDS::DBSubnetGroup
+     Properties:
+       DBSubnetGroupDescription: "RaiseTechDBSubnetGroup"
+       DBSubnetGroupName: RaiseTechRDSSubnetGroup
+       SubnetIds:
+         - !Ref PrivateSubnet1a
 
   RaiseTechALB:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
