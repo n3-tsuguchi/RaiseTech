@@ -289,6 +289,7 @@ Resources:
        SubnetIds:
          - !Ref PrivateSubnet1a
          - !Ref PublicSubnet1a
+         - !Ref PublicSubnet1c
 
   RaiseTechALB:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
