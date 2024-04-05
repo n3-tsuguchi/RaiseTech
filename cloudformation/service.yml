@@ -262,34 +262,7 @@ Resources:
          PasswordLength: 16
          ExcludeCharacters: '"@/\'
 
-  RaiseTechRDS:
-     Type: AWS::RDS::DBInstance
-     Properties:
-       AllocatedStorage: 20
-       DBInstanceClass: db.t3.micro
-       Port: 3306
-       StorageType: gp2
-       BackupRetentionPeriod: 7
-       MasterUsername: admin
-       MasterUserPassword: '{{resolve:secretsmanager:RDSMasterUserSecret:SecretString:password}}'
-       DBInstanceIdentifier: RaiseTech-DB
-       DBName: RaiseTechRDS
-       Engine: mysql
-       EngineVersion: 8.0
-       DBSubnetGroupName: !Ref RaiseTechRDSSubnetGroup
-       MultiAZ: true
-
-      
-
-  RaiseTechRDSSubnetGroup:
-     Type: AWS::RDS::DBSubnetGroup
-     Properties:
-       DBSubnetGroupDescription: "RaiseTechDBSubnetGroup"
-       DBSubnetGroupName: RaiseTechRDSSubnetGroup
-       SubnetIds:
-         - !Ref PrivateSubnet1a
-         - !Ref PublicSubnet1a
-         - !Ref PublicSubnet1c
+  
 
   RaiseTechALB:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
