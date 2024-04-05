@@ -278,8 +278,7 @@ Resources:
        EngineVersion: 8.0
        DBSubnetGroupName: !Ref RaiseTechRDSSubnetGroup
        MultiAZ: true
-       VPCSecurityGroups:
-         - !Ref SecurityGroupRDS
+      
 
   RaiseTechRDSSubnetGroup:
      Type: AWS::RDS::DBSubnetGroup
