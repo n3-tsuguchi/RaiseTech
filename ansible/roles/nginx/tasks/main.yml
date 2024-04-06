@@ -26,3 +26,4 @@
   ansible.builtin.template:
     src: roles/nginx/templates/rails_conf.j2
     dest: /etc/nginx/conf.d/rails.conf
+    
