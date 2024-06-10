@@ -1,0 +1,75 @@
+- name: Check if apt-get is available
+  command: which apt-get
+  register: apt_get_path
+  ignore_errors: true
+
+- name: Update apt cache if apt-get is available
+  apt:
+    update_cache: yes
+  when: apt_get_path.rc == 0
+
+- name: Install dependencies for rbenv using apt
+  apt:
+    name: 
+      - git
+      - build-essential
+      - libssl-dev
+      - libreadline-dev
+      - zlib1g-dev
+    state: present
+  when: apt_get_path.rc == 0
+
+- name: Clone rbenv repository
+  git:
+    repo: 'https://github.com/rbenv/rbenv.git'
+    dest: /usr/local/rbenv
+    version: master
+    force: yes
+
+- name: Clone ruby-build repository
+  git:
+    repo: 'https://github.com/rbenv/ruby-build.git'
+    dest: /usr/local/rbenv/plugins/ruby-build
+    version: master
+    force: yes
+
+- name: Add rbenv to PATH
+  lineinfile:
+    path: /etc/profile.d/rbenv.sh
+    line: 'export PATH="/usr/local/rbenv/bin:$PATH"'
+    create: yes
+    state: present
+
+- name: Initialize rbenv
+  lineinfile:
+    path: /etc/profile.d/rbenv.sh
+    line: 'eval "$(rbenv init -)"'
+    create: yes
+    state: present
+
+- name: Ensure profile.d scripts are executable
+  file:
+    path: /etc/profile.d/rbenv.sh
+    mode: '0755'
+    state: file
+
+- name: Install Ruby 3.2.3 using rbenv
+  command: bash -lc 'rbenv install 3.2.3 --skip-existing'
+  environment:
+    PATH: "/usr/local/rbenv/bin:{{ ansible_env.PATH }}"
+
+- name: Set Ruby 3.2.3 as global default
+  command: bash -lc 'rbenv global 3.2.3'
+  environment:
+    PATH: "/usr/local/rbenv/bin:{{ ansible_env.PATH }}"
+
+- name: Rehash rbenv
+  command: bash -lc 'rbenv rehash'
+  environment:
+    PATH: "/usr/local/rbenv/bin:{{ ansible_env.PATH }}"
+
+- name: Ensure rbenv global Ruby version is set
+  become: true
+  shell: /usr/local/rbenv/bin/rbenv global 3.2.3
+  environment:
+    RBENV_ROOT: /usr/local/rbenv
