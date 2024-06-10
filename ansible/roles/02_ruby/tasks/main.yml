@@ -68,6 +68,10 @@
   environment:
     PATH: "/usr/local/rbenv/bin:{{ ansible_env.PATH }}"
 
-
+- name: Ensure rbenv global Ruby version is set
+  become: true
+  shell: /usr/local/rbenv/bin/rbenv global 3.2.3
+  environment:
+    RBENV_ROOT: /usr/local/rbenv
 
     
