@@ -73,3 +73,4 @@
   shell: /usr/local/rbenv/bin/rbenv global 3.2.3
   environment:
     RBENV_ROOT: /usr/local/rbenv
+    
