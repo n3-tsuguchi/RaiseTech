@@ -16,7 +16,7 @@
 
   vars:
     ansible_become_method: sudo
-    ruby_version: 3.1.2
+    ruby_version: 3.2.3
     bundler_version: 2.3.14
     rails_version: 7.1.3.2
     sample_app_dir: /var/www/raisetech-live8-sample-app
