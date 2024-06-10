@@ -58,15 +58,15 @@
   environment:
     PATH: "/usr/local/rbenv/bin:{{ ansible_env.PATH }}"
 
-- name: Set Ruby 3.2.3 as global default
-  command: bash -lc 'rbenv global 3.2.3'
+- name: Install Ruby 3.2.3 using rbenv
+  command: /usr/local/rbenv/bin/rbenv install 3.2.3 --skip-existing
   environment:
-    PATH: "/usr/local/rbenv/bin:{{ ansible_env.PATH }}"
+    RBENV_ROOT: /usr/local/rbenv
 
 - name: Rehash rbenv
-  command: bash -lc 'rbenv rehash'
+  command: /usr/local/rbenv/bin/rbenv rehash
   environment:
-    PATH: "/usr/local/rbenv/bin:{{ ansible_env.PATH }}"
+    RBENV_ROOT: /usr/local/rbenv
 
 - name: Ensure rbenv global Ruby version is set
   become: true
