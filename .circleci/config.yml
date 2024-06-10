@@ -6,23 +6,29 @@ orbs:
   ruby: circleci/ruby@2.1.1
 
 jobs:
-  execute-cloud-formation:
-    executor: aws-cli/default
+  test:
+    docker:
+      - image: circleci/ruby:3.1.2
     steps:
       - checkout
-      - aws-cli/setup:
-          aws_access_key_id: AWS_ACCESS_KEY_ID
-          aws_secret_access_key: AWS_SECRET_ACCESS_KEY
-          region: AWS_DEFAULT_REGION
       - run:
-          name: Deploy cloudformation
-          command: |
-            set -x
-            aws cloudformation deploy --template-file cloudformation/service.yml --stack-name sample-Stack --parameter-overrides CIDRIP=10.0.0.0/24 Prefix=RaiseTech --capabilities CAPABILITY_IAM
-
+          name: Install Bundler
+          command: gem install bundler -v 2.3.14
+      - run:
+          name: Install Rails
+          command: gem install rails -v 7.1.3.2
+      - run:
+          name: Install Unicorn
+          command: gem install unicorn
+      - run:
+          name: Start Unicorn
+          command: bundle exec unicorn -c config/unicorn.rb -E production -D
+      - run:
+          name: Run Tests
+          command: bundle exec rspec
+          
   execute-ansible:
     executor: ansible-playbook/default
-    circleci_ip_ranges: true
     steps:
       - checkout
       - add_ssh_keys:
@@ -51,11 +57,7 @@ jobs:
 workflows:
   RaiseTech:
     jobs:
-      - execute-cloud-formation
-      - execute-ansible:
-          requires:
-            - execute-cloud-formation
+      - execute-ansible
       - execute-serverspec:
           requires:
             - execute-ansible
-
