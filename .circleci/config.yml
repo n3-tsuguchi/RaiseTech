@@ -36,7 +36,6 @@ jobs:
 
   execute-serverspec:
     executor: ruby/default
-    circleci_ip_ranges: true
     steps:
       - checkout
       - ruby/install:
