@@ -3,6 +3,92 @@
   remote_user: ec2-user
   become: yes
 
+- name: Setup Ruby environment and install gems
+  hosts: all
+  become: yes
+  tasks:
+    - name: Check if apt-get is available
+      command: which apt-get
+      register: apt_get_path
+      ignore_errors: true
+
+    - name: Update apt cache if apt-get is available
+      apt:
+        update_cache: yes
+      when: apt_get_path.rc == 0
+
+    - name: Install dependencies for rbenv using apt
+      apt:
+        name: 
+          - git
+          - build-essential
+          - libssl-dev
+          - libreadline-dev
+          - zlib1g-dev
+        state: present
+      when: apt_get_path.rc == 0
+
+    - name: Clone rbenv repository
+      git:
+        repo: 'https://github.com/rbenv/rbenv.git'
+        dest: /usr/local/rbenv
+        version: master
+        force: yes
+
+    - name: Clone ruby-build repository
+      git:
+        repo: 'https://github.com/rbenv/ruby-build.git'
+        dest: /usr/local/rbenv/plugins/ruby-build
+        version: master
+        force: yes
+
+    - name: Add rbenv to PATH
+      lineinfile:
+        path: /etc/profile.d/rbenv.sh
+        line: 'export PATH="/usr/local/rbenv/bin:$PATH"'
+        create: yes
+        state: present
+
+    - name: Initialize rbenv
+      lineinfile:
+        path: /etc/profile.d/rbenv.sh
+        line: 'eval "$(rbenv init -)"'
+        create: yes
+        state: present
+
+    - name: Ensure profile.d scripts are executable
+      file:
+        path: /etc/profile.d/rbenv.sh
+        mode: '0755'
+        state: file
+
+    - name: Install Ruby 3.2.3 using rbenv
+      command: bash -lc 'rbenv install 3.2.3 --skip-existing'
+      environment:
+        PATH: "/usr/local/rbenv/bin:{{ ansible_env.PATH }}"
+
+    - name: Set Ruby 3.2.3 as global default
+      command: bash -lc 'rbenv global 3.2.3'
+      environment:
+        PATH: "/usr/local/rbenv/bin:{{ ansible_env.PATH }}"
+
+    - name: Rehash rbenv
+      command: bash -lc 'rbenv rehash'
+      environment:
+        PATH: "/usr/local/rbenv/bin:{{ ansible_env.PATH }}"
+
+    - name: Install Rails and Unicorn gems
+      gem:
+        name: "{{ item.name }}"
+        version: "{{ item.version }}"
+        executable: /usr/local/rbenv/shims/gem
+        user_install: no
+      loop:
+        - { name: 'rails', version: '7.1.3.2' }
+        - { name: 'unicorn', version: '6.0.0' }
+      environment:
+        PATH: "/usr/local/rbenv/shims:/usr/local/rbenv/bin:{{ ansible_env.PATH }}"
+
   roles:
     - { role: 01_yum, tags: yum }
     - { role: 02_ruby, tags: ruby }
