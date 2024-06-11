@@ -1,17 +1,21 @@
 - name: Install specific version of Rails
   gem:
     name: rails
-    version: "{{ rails_version }}"
-    state: present
+    version: "7.1.3.2"
+    executable: /home/ec2-user/.rbenv/shims/gem
+    user_install: no
   environment:
-    PATH: "/usr/local/rbenv/shims:/usr/local/rbenv/bin:{{ ansible_env.PATH }}"
+    PATH: "/home/ec2-user/.rbenv/shims:/usr/local/rbenv/bin:{{ ansible_env.PATH }}"
 
-- name: Install Unicorn
+
+- name: Install Unicorn gem
   gem:
     name: unicorn
-    state: present
+    executable: /home/ec2-user/.rbenv/shims/gem
+    user_install: no
   environment:
-    PATH: "/usr/local/rbenv/shims:/usr/local/rbenv/bin:{{ ansible_env.PATH }}"
+    PATH: "/home/ec2-user/.rbenv/shims:/usr/local/rbenv/bin:{{ ansible_env.PATH }}"
+
 
 - name: Check Ruby version
   command: bash -lc 'ruby -v'
