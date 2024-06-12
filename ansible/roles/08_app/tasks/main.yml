@@ -4,12 +4,12 @@
     repo: https://github.com/yuta-ushijima/raisetech-live8-sample-app.git
     dest: "{{ sample_app_dir }}"
     version: feature/unicorn
-    single_branch: yes
+    depth: 1
     force: yes
   register: git_clone
 
 - name: change owner /var/www/raisetech-live8-sample-app
-  become_user: root
+  become: yes
   file:
     path: "{{ sample_app_dir }}"
     state: directory
