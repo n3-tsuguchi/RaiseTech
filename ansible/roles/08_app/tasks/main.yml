@@ -1,8 +1,10 @@
-- name: git clone app
+- name: Clone the specific branch
   become_user: root
   git: 
     repo: https://github.com/yuta-ushijima/raisetech-live8-sample-app.git
     dest: "{{ sample_app_dir }}"
+    version: "{{ feature/unicorn }}"
+    single_branch: yes
     force: yes
   register: git_clone
 
