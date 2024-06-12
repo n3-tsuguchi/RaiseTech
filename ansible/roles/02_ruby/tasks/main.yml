@@ -53,8 +53,8 @@
     mode: '0755'
     state: file
 
-- name: Install Ruby 3.2.3 using rbenv
-  command: /usr/local/rbenv/bin/rbenv install 3.2.3 --skip-existing
+- name: Install Ruby 3.0.0 using rbenv
+  command: /usr/local/rbenv/bin/rbenv install 3.0.0 --skip-existing
   environment:
     RBENV_ROOT: /usr/local/rbenv
 
@@ -65,7 +65,7 @@
 
 - name: Ensure rbenv global Ruby version is set
   become: true
-  shell: /usr/local/rbenv/bin/rbenv global 3.2.3
+  shell: /usr/local/rbenv/bin/rbenv global 3.0.0
   environment:
     RBENV_ROOT: /usr/local/rbenv
 
