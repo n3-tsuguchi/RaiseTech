@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 set :backend, :ssh
-set :host, '54.178.98.55'
+set :host, '54.178.56.216'
 set :ssh_options, user: 'ec2-user', keys: ['kawakami.pem']
 
 listen_port = 80
@@ -9,12 +9,12 @@ rbenv_path = '/home/ec2-user/.rbenv/shims:$PATH'
 
 describe command('ruby -v') do
   let(:path) { rbenv_path }
-  its(:stdout) { should match /ruby 3.2.3/ }
+  its(:stdout) { should match /ruby 3.0.0/ }
 end
 
 describe package('rails') do
   let(:path) { rbenv_path }
-  it { should be_installed.by('gem').with_version('7.1.3.2') }
+  it { should be_installed.by('gem').with_version('6.1.3.1') }
 end
 
 describe command('node -v') do
