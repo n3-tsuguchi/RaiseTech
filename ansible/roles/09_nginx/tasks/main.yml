@@ -22,13 +22,6 @@
     state: started
   register: start_nginx
 
-- name: Install Gems
-  shell: bash -lc "bundle install"
-  args:
-    chdir: "{{ sample_app_dir }}"
-  environment:
-    PATH: "/usr/local/rbenv/shims:/usr/local/rbenv/bin:{{ ansible_env.PATH }}"
-
 - name: Start Unicorn
   shell: bash -lc "bundle exec unicorn_rails -c config/unicorn.rb -D -E development"
   args:
