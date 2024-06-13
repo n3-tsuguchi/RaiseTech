@@ -5,10 +5,11 @@
   ignore_errors: yes
 
 - name: Update bundler
-  shell: /home/ec2-user/.rbenv/shims/gem install bundler -v {{ bundler_version }}
+  shell: bash -lc "source /home/ec2-user/.rbenvrc && gem install bundler -v {{ bundler_version }}"
   args:
     chdir: "{{ sample_app_dir }}"
   when: has_bundler_1.failed
+
 
 
 - name: check bundler installed
