@@ -1,28 +1,28 @@
 - name: check bundler 2.3.14 installed 1
-  shell: bash -lc "bundler -v | grep {{ bundler_version }}"
+  shell: bash -lc "source ~/.bash_profile && rbenv versions && bundler -v | grep {{ bundler_version }}"
   register: has_bundler_1
   changed_when: False
   ignore_errors: yes
 
 - name: update bundler
-  shell: bash -lc "source ~/.bash_profile && gem install bundler -v {{ bundler_version }}"
+  shell: bash -lc "source ~/.bash_profile && rbenv versions && gem install bundler -v {{ bundler_version }}"
   args:
     chdir: "{{ sample_app_dir }}"
   when: has_bundler_1.failed
 
 - name: check bundler installed
-  shell: bash -lc "source ~/.bash_profile && bundle -v | grep {{ bundler_version }}"
+  shell: bash -lc "source ~/.bash_profile && rbenv versions && bundle -v | grep {{ bundler_version }}"
   register: bundler_version_check
   changed_when: False
 
 - name: install gems
-  shell: bash -lc "source ~/.bash_profile && bundle install"
+  shell: bash -lc "source ~/.bash_profile && rbenv versions && bundle install"
   args:
     chdir: "{{ sample_app_dir }}"
   when: not was_cloned_rails.stat.exists or has_directory_gemfile.stat.exists
 
 - name: install webpacker
-  shell: bash -lc "source ~/.bash_profile && bundle exec rails webpacker:install"
+  shell: bash -lc "source ~/.bash_profile && rbenv versions && bundle exec rails webpacker:install"
   args:
     chdir: "{{ sample_app_dir }}"
   when: not was_cloned_rails.stat.exists or has_directory_gemfile.stat.exists
