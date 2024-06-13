@@ -1,3 +1,4 @@
+---
 - name: Ensure sample_app_dir exists
   file:
     path: "{{ sample_app_dir }}"
