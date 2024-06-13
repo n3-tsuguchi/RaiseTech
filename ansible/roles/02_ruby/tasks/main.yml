@@ -1,48 +1,46 @@
-- name: Clone rbenv repository
-  git:
-    repo: 'https://github.com/rbenv/rbenv.git'
-    dest: '/home/ec2-user/.rbenv'
-    version: master
-    update: no
-  become_user: ec2-user
+- name: check rbenv install
+  shell: bash -lc "rbenv --version"
+  register: check_rbenv_installed
+  changed_when: no
+  ignore_errors: yes
 
-- name: Clone ruby-build repository
+- name: install rbenv
   git:
-    repo: 'https://github.com/rbenv/ruby-build.git'
-    dest: '/home/ec2-user/.rbenv/plugins/ruby-build'
-    version: master
-    update: no
-  become_user: ec2-user
+    repo: https://github.com/sstephenson/rbenv.git
+    dest: /home/ec2-user/.rbenv
+  when: check_rbenv_installed.failed
 
-- name: Add rbenv to bash_profile
-  lineinfile:
+- name: Add rbenv to PATH
+  lineinfile: 
     path: /home/ec2-user/.bash_profile
     line: 'export PATH="$HOME/.rbenv/bin:$PATH"'
-    create: yes
-  become_user: ec2-user
+  when: check_rbenv_installed.failed
 
-- name: Add rbenv init to bash_profile
-  lineinfile:
+- name: eval rbenv init
+  lineinfile: 
     path: /home/ec2-user/.bash_profile
     line: 'eval "$(rbenv init -)"'
-    create: yes
-  become_user: ec2-user
+  when: check_rbenv_installed.failed
+  
+- name: load .bash_profile
+  shell: bash -lc "source ~/.bash_profile"
+  when: check_rbenv_installed.failed
 
-- name: Initialize rbenv
-  shell: |
-    export RBENV_ROOT="${HOME}/.rbenv"
-    export PATH="${RBENV_ROOT}/bin:${PATH}"
-    eval "$(rbenv init -)"
-    rbenv rehash
-  become_user: ec2-user
-  changed_when: false
+# ruby------------------------------------------------------------
+- name: install ruby-build
+  git:
+    repo: https://github.com/sstephenson/ruby-build.git
+    dest: /home/ec2-user/.rbenv/plugins/ruby-build
+  when: check_rbenv_installed.failed
 
-- name: Install Ruby
-  shell: |
-    export RBENV_ROOT="${HOME}/.rbenv"
-    export PATH="${RBENV_ROOT}/bin:${PATH}"
-    eval "$(rbenv init -)"
-    rbenv install {{ ruby_version }}
-    rbenv global {{ ruby_version }}
-  become_user: ec2-user
+- name: install ruby
+  shell: bash -lc "rbenv install {{ ruby_version }}"
+  when: check_rbenv_installed.failed
 
+- name: rehash rbenv
+  shell: bash -lc "rbenv rehash"
+  when: check_rbenv_installed.failed
+
+- name: set default ruby version
+  shell: bash -lc "rbenv global {{ ruby_version }}"
+  when: check_rbenv_installed.failed
