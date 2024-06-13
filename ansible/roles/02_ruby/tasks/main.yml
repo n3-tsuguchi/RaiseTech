@@ -43,3 +43,12 @@
 - name: set default ruby version
   shell: bash -lc "rbenv global {{ ruby_version }}"
   when: check_rbenv_installed.failed
+
+- name: Install Rails gem
+  become_user: ec2-user
+  gem:
+    name: rails
+    state: present
+    version: 7.0.4
+  environment:
+    PATH: "/home/ec2-user/.rbenv/shims:/home/ec2-user/.rbenv/bin:{{ ansible_env.PATH }}"
