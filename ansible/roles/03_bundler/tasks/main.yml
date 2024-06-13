@@ -4,11 +4,12 @@
   changed_when: False
   ignore_errors: yes
 
-- name: update bundler
-  shell: bash -lc "gem install bundler -v {{ bundler_version }}"
+- name: Update bundler
+  shell: /home/ec2-user/.rbenv/shims/gem install bundler -v {{ bundler_version }}
   args:
     chdir: "{{ sample_app_dir }}"
   when: has_bundler_1.failed
+
 
 - name: check bundler installed
   shell: bash -lc "bundle -v | grep {{ bundler_version }}"
