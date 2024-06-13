@@ -1,17 +1,23 @@
+- name: Ensure sample_app_dir exists
+  file:
+    path: "{{ sample_app_dir }}"
+    state: directory
+  become: yes
+
 - name: Check if bundler is installed
-  shell: bash -lc "bundler -v | grep {{ bundler_version }}"
+  shell: bash -lc "bundler -v | grep '{{ bundler_version }}'"
   register: has_bundler_1
   changed_when: False
   ignore_errors: yes
 
 - name: Update bundler
-  shell: bash -lc "source ~/.bash_profile && gem install bundler -v {{ bundler_version }}"
+  shell: bash -lc "source ~/.bash_profile && gem install bundler -v '{{ bundler_version }}'"
   args:
     chdir: "{{ sample_app_dir }}"
   when: has_bundler_1.failed
 
 - name: Check bundler installed
-  shell: bash -lc "source ~/.bash_profile && bundle -v | grep {{ bundler_version }}"
+  shell: bash -lc "source ~/.bash_profile && bundle -v | grep '{{ bundler_version }}'"
   register: bundler_version_check
   changed_when: False
 
