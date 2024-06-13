@@ -1,15 +1,16 @@
 - name: update bundler
-  shell:  bash -lc "gem install bundler -v {{ bundler_version }}"
+  shell: bash -lc "gem install bundler -v {{ bundler_version }}"
   args:
     chdir: "{{ sample_app_dir }}"
-  when: has_bundler_1 is failed
+  when: has_bundler_1.failed
 
-- name: check bundler 2.3.11 installed 2
-  shell:  bash -lc "bundler -v | grep {{bundler_version}}"
+- name: check bundler installed
+  shell: bash -lc "bundle -v | grep {{ bundler_version }}"
+  register: bundler_version_check
   changed_when: False
 
 - name: install gems
-  shell:  bash -lc "bundle install"
+  shell: bash -lc "bundle install"
   args:
     chdir: "{{ sample_app_dir }}"
   when: not was_cloned_rails.stat.exists or has_directory_gemfile.stat.exists
