@@ -10,7 +10,16 @@
   changed_when: no
   ignore_errors: yes
 
+- name: Ensure Gemfile exists
+  stat:
+    path: "{{ sample_app_dir }}/Gemfile"
+  register: gemfile_check
+
 - name: Install gems
   shell: bash -lc "bundle install"
   args:
     chdir: "{{ sample_app_dir }}"
+  become: yes
+  become_user: ec2-user
+  when: gemfile_check.stat.exists
+  
