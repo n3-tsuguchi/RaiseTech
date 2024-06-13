@@ -1,7 +1,7 @@
 - name: update bundler
   shell:  bash -lc "gem install bundler -v {{ bundler_version }}"
   args:
-    chdir:  "{{ app_root_dir }}"
+    chdir:  "{{ sample_app_dir }}"
   when: has_bundler_1 is failed
 
 - name: check bundler 2.3.11 installed 2
