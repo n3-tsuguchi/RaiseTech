@@ -1,3 +1,4 @@
+---
 - name: update bundler
   shell: bash -lc "gem install bundler -v {{ bundler_version }}"
   args:
