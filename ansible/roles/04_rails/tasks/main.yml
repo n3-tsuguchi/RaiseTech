@@ -1,13 +1,43 @@
-- name: check rails install
+- name: Ensure sample_app_dir exists
+  file:
+    path: "{{ sample_app_dir }}"
+    state: directory
+  become: yes
+
+- name: Check if bundler is installed
+  shell: /home/ec2-user/.rbenv/shims/bundler --version
+  register: check_bundler_installed
+  changed_when: no
+  ignore_errors: yes
+
+- name: Ensure Gemfile exists
+  stat:
+    path: "{{ sample_app_dir }}/Gemfile"
+  register: gemfile_check
+
+- name: Install gems
+  shell: bash -lc "bundle install"
+  args:
+    chdir: "{{ sample_app_dir }}"
+  become: yes
+  become_user: ec2-user
+  when: gemfile_check.stat.exists
+
+- name: Check if rbenv is initialized
+  shell: bash -lc "rbenv init -"
+  register: rbenv_init
+  changed_when: no
+
+- name: Check if rails is installed
   shell: bash -lc "gem list -e rails | grep {{ rails_version }}"
   register: check_rails_installed
   changed_when: no
   ignore_errors: yes
 
-- name: install rails
-  gem:
-    name: rails
-    version: "{{ rails_version }}"
+- name: Install rails
+  shell: bash -lc "gem install rails -v {{ rails_version }}"
+  args:
     executable: /home/ec2-user/.rbenv/shims/gem
-    user_install: no
   when: check_rails_installed.failed
+  become: yes
+  become_user: ec2-user
