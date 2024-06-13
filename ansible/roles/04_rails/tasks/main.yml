@@ -1,26 +1,13 @@
-- name: Install specific version of Rails
+- name: check rails install
+  shell: bash -lc "gem list -e rails | grep {{ rails_version }}"
+  register: check_rails_installed
+  changed_when: no
+  ignore_errors: yes
+
+- name: install rails
   gem:
     name: rails
     version: "{{ rails_version }}"
-    state: present
-  environment:
-    PATH: "/usr/local/rbenv/shims:/usr/local/rbenv/bin:{{ ansible_env.PATH }}"
-
-- name: Install Unicorn
-  gem:
-    name: unicorn
-    state: present
-  environment:
-    PATH: "/usr/local/rbenv/shims:/usr/local/rbenv/bin:{{ ansible_env.PATH }}"
-
-- name: Check Ruby version
-  command: bash -lc 'ruby -v'
-  register: ruby_version
-  environment:
-    PATH: "/usr/local/rbenv/shims:/usr/local/rbenv/bin:{{ ansible_env.PATH }}"
-  changed_when: false
-
-- name: Ensure correct Ruby version is installed
-  assert:
-    that:
-      - "'ruby 3.1.2' in ruby_version.stdout"
+    executable: /home/ec2-user/.rbenv/shims/gem
+    user_install: no
+  when: check_rails_installed.failed
