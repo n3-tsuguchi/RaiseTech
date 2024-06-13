@@ -1,4 +1,3 @@
----
 - name: Ensure sample_app_dir exists
   file:
     path: "{{ sample_app_dir }}"
@@ -11,8 +10,7 @@
   changed_when: no
   ignore_errors: yes
 
-- name: Install gems with bundler
-  shell: bash -lc "source ~/.bash_profile && /home/ec2-user/.rbenv/shims/bundle install"
+- name: Install gems
+  shell: bash -lc "bundle install"
   args:
     chdir: "{{ sample_app_dir }}"
-  when: check_bundler_installed is failed or not was_cloned_rails.stat.exists or has_directory_gemfile.stat.exists
