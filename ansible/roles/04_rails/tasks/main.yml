@@ -34,8 +34,10 @@
   changed_when: no
   ignore_errors: yes
 
-- name: Install rails
-  shell: bash -lc "gem install rails -v {{ rails_version }}"
-  when: check_rails_installed.failed
-  become: yes
-  become_user: ec2-user
+- name: rails install
+  gem: 
+    name: rails
+    version: "{{ rails_version }}"
+    executable: /home/ec2-user/.rbenv/shims/gem
+    user_install: no
+  when: rails_installed is failed
