@@ -1,13 +1,21 @@
-- name: check bundler install
-  shell: /home/ec2-user/.rbenv/shims/bundler --version
-  register: check_bundler_installed
-  changed_when: no
-  ignore_errors: yes
+- name: update bundler
+  shell:  bash -lc "gem install bundler -v {{ bundler_version }}"
+  args:
+    chdir:  "{{ app_root_dir }}"
+  when: has_bundler_1 is failed
 
-- name: install bundler
-  gem: 
-    name: bundler
-    version: "{{ bundler_version }}"
-    executable: /home/ec2-user/.rbenv/shims/gem
-    user_install: no
-  when: check_bundler_installed is failed
+- name: check bundler 2.3.11 installed 2
+  shell:  bash -lc "bundler -v | grep {{bundler_version}}"
+  changed_when: False
+
+- name: install gems
+  shell:  bash -lc "bundle install"
+  args:
+    chdir: "{{ sample_app_dir }}"
+  when: not was_cloned_rails.stat.exists or has_directory_gemfile.stat.exists
+
+- name: install webpacker
+  shell: bash -lc "bundle exec rails webpacker:install"
+  args:
+    chdir: "{{ sample_app_dir }}"
+  when: not was_cloned_rails.stat.exists or has_directory_gemfile.stat.exists
