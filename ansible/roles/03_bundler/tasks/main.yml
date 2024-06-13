@@ -11,14 +11,6 @@
   changed_when: no
   ignore_errors: yes
 
-- name: Install bundler
-  gem: 
-    name: bundler
-    version: "{{ bundler_version }}"
-    executable: /home/ec2-user/.rbenv/shims/gem
-    user_install: no
-  when: check_bundler_installed is failed
-
 - name: Install gems with bundler
   shell: bash -lc "source ~/.bash_profile && /home/ec2-user/.rbenv/shims/bundle install"
   args:
