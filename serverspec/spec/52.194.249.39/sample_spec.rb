@@ -9,12 +9,12 @@ rbenv_path = '/home/ec2-user/.rbenv/shims:$PATH'
 
 describe command('ruby -v') do
   let(:path) { rbenv_path }
-  its(:stdout) { should match /ruby 3.0.0/ }
+  its(:stdout) { should match /ruby 3.1.2/ }
 end
 
 describe package('rails') do
   let(:path) { rbenv_path }
-  it { should be_installed.by('gem').with_version('6.1.3.1') }
+  it { should be_installed.by('gem').with_version('7.0.4') }
 end
 
 describe command('node -v') do
