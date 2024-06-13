@@ -7,7 +7,6 @@
   shell: bash -lc "bundle install"
   args:
     chdir: "{{ sample_app_dir }}"
-  become: yes
   become_user: ec2-user
   when: gemfile_check.stat.exists
 
@@ -23,7 +22,6 @@
 - name: Install rails
   shell: bash -lc "gem install rails -v {{ rails_version }}"
   when: check_rails_installed.failed
-  become: yes
   become_user: ec2-user
   environment:
     RBENV_ROOT: /home/ec2-user/.rbenv

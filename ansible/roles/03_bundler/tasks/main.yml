@@ -1,25 +1,13 @@
-- name: Ensure sample_app_dir exists
-  file:
-    path: "{{ sample_app_dir }}"
-    state: directory
-  become: yes
-
 - name: Check if bundler is installed
   shell: /home/ec2-user/.rbenv/shims/bundler --version
   register: check_bundler_installed
   changed_when: no
   ignore_errors: yes
 
-- name: Ensure Gemfile exists
-  stat:
-    path: "{{ sample_app_dir }}/Gemfile"
-  register: gemfile_check
-
-- name: Install gems
-  shell: bash -lc "bundle install"
-  args:
-    chdir: "{{ sample_app_dir }}"
-  become: yes
-  become_user: ec2-user
-  when: gemfile_check.stat.exists
-  
+- name: Install bundler
+  gem:
+    name: bundler
+    version: "{{ bundler_version }}"
+    executable: /home/ec2-user/.rbenv/shims/gem
+    user_install: no
+  when: check_bundler_installed is failed
