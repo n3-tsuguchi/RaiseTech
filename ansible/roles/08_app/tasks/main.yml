@@ -3,7 +3,7 @@
   git: 
     repo: https://github.com/yuta-ushijima/raisetech-live8-sample-app.git
     dest: "{{ sample_app_dir }}"
-    version: feature/unicorn
+    version: feature/active_storage_kms
     depth: 1
     force: yes
   register: git_clone

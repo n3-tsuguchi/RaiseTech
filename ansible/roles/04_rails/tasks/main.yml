@@ -23,4 +23,4 @@
 - name: Ensure correct Ruby version is installed
   assert:
     that:
-      - "'ruby 3.2.3' in ruby_version.stdout"
+      - "'ruby 3.1.2' in ruby_version.stdout"
