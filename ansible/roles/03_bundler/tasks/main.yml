@@ -16,6 +16,9 @@
   when: install_bundler == 'yes'
 
 
+- name: Install Bundler
+  shell: bash -lc "gem install bundler"
+
 - name: Install gems
   shell: bash -lc "bundle install"
   args:
