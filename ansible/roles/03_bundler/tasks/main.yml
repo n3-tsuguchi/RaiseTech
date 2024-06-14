@@ -7,10 +7,12 @@
   become_user: ec2-user
 
 - name: Install bundler
-  shell: bash -lc "/home/ec2-user/.rbenv/shims/gem install bundler -v {{ bundler_version }}"
+  shell: |
+    source ~/.bash_profile && /home/ec2-user/.rbenv/shims/gem install bundler -v {{ bundler_version }}
   when: check_bundler_installed.failed
   become: yes
   become_user: ec2-user
+
 
 - name: Ensure sample_app_dir exists
   file:
