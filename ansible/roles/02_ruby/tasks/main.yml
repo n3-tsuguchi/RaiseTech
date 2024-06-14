@@ -38,18 +38,24 @@
   shell: bash -lc "source ~/.bash_profile"
   when: check_rbenv_installed.failed
 
+- name: Recheck rbenv install
+  shell: bash -lc "rbenv --version"
+  register: recheck_rbenv_installed
+  changed_when: no
+  ignore_errors: yes
+
 - name: Install Ruby
   shell: bash -lc "rbenv install {{ ruby_version }}"
   args:
     executable: /bin/bash
   environment:
     PATH: "/home/ec2-user/.rbenv/bin:/home/ec2-user/.rbenv/shims:{{ ansible_env.PATH }}"
-  when: check_rbenv_installed.failed
+  when: recheck_rbenv_installed.rc == 0
 
 - name: Rehash rbenv
   shell: bash -lc "rbenv rehash"
-  when: check_rbenv_installed.failed
+  when: recheck_rbenv_installed.rc == 0
 
 - name: Set default Ruby version
   shell: bash -lc "rbenv global {{ ruby_version }}"
-  when: check_rbenv_installed.failed
+  when: recheck_rbenv_installed.rc == 0
