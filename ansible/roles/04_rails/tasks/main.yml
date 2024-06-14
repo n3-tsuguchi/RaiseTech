@@ -24,6 +24,7 @@
     source /home/ec2-user/.bash_profile
     rbenv rehash
     gem install bundler
+  when: check_bundler_installed.rc != 0
   args:
     executable: /bin/bash
   become_user: ec2-user
