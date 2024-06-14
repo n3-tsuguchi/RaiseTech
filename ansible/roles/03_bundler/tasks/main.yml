@@ -11,6 +11,9 @@
   command: bash -lc 'export PATH="/usr/local/rbenv/shims:/usr/local/rbenv/bin:$PATH"; eval "$(rbenv init -)"; gem install bundler -v 2.3.14'
   environment:
     PATH: "/usr/local/rbenv/shims:/usr/local/rbenv/bin:{{ ansible_env.PATH }}"
+  become: yes
+  become_user: ec2-user
+
 
 - name: Install gems
   shell: bash -lc "bundle install"
