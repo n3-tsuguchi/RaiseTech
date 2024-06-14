@@ -8,6 +8,6 @@
   gem:
     name: rails
     version: "{{ rails_version }}"
-    executable: /home/ec2-user/.rbenv/shims/gem
+    executable: "/usr/local/rbenv/shims:/usr/local/rbenv/bin:{{ ansible_env.PATH }}"
     user_install: no
   when: check_rails_installed.failed
