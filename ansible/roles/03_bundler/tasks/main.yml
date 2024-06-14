@@ -1,24 +1,16 @@
-- name: Check if bundler is installed
-  shell: bash -lc "/home/ec2-user/.rbenv/shims/bundler --version"
-  register: check_bundler_installed
-  changed_when: no
-  ignore_errors: yes
-  become: yes
-  become_user: ec2-user
+- name: Check Bundler version
+  command: bash -lc "export PATH=/usr/local/rbenv/shims:$PATH; eval \"$(rbenv init -)\"; bundler -v"
+  register: bundler_version_check
+  ignore_errors: true
 
-- name: Install bundler
-  shell: |
-    source ~/.bash_profile && /home/ec2-user/.rbenv/shims/gem install bundler -v {{ bundler_version }}
-  when: check_bundler_installed.failed
-  become: yes
-  become_user: ec2-user
+- name: Set Bundler install condition
+  set_fact:
+    install_bundler: "{{ 'yes' if (bundler_version_check.stdout is not defined) or ('Bundler version 2.3.14' not in bundler_version_check.stdout) else 'no' }}"
 
-
-- name: Ensure sample_app_dir exists
-  file:
-    path: "{{ sample_app_dir }}"
-    state: directory
-  become: yes
+- name: Install specific version of Bundler
+  command: bash -lc 'export PATH="/usr/local/rbenv/bin:$PATH"; eval "$(rbenv init -)"; gem install bundler -v 2.3.14'
+  environment:
+    PATH: "/usr/local/rbenv/shims:/usr/local/rbenv/bin:{{ ansible_env.PATH }}"
 
 - name: Install gems
   shell: bash -lc "bundle install"
