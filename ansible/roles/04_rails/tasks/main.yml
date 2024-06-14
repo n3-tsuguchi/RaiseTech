@@ -9,6 +9,7 @@
     name: bundler
     version: "{{ bundler_version }}"
     executable: /home/ec2-user/.bash_profile
+    permission: yes
     user_install: no
   when: check_bundler_installed is failed
 
