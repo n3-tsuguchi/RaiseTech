@@ -1,82 +1,55 @@
-- name: Check if rbenv is installed
+- name: check rbenv install
   shell: bash -lc "rbenv --version"
   register: check_rbenv_installed
   changed_when: no
   ignore_errors: yes
   become_user: ec2-user
 
-- name: Install rbenv
+- name: install rbenv
   git:
-    repo: https://github.com/rbenv/rbenv.git
+    repo: https://github.com/sstephenson/rbenv.git
     dest: /home/ec2-user/.rbenv
   when: check_rbenv_installed.failed
   become_user: ec2-user
 
 - name: Add rbenv to PATH
-  lineinfile:
+  lineinfile: 
     path: /home/ec2-user/.bash_profile
     line: 'export PATH="$HOME/.rbenv/bin:$PATH"'
-    create: yes
   when: check_rbenv_installed.failed
   become_user: ec2-user
 
-- name: Eval rbenv init
-  lineinfile:
+- name: eval rbenv init
+  lineinfile: 
     path: /home/ec2-user/.bash_profile
     line: 'eval "$(rbenv init -)"'
-    create: yes
   when: check_rbenv_installed.failed
   become_user: ec2-user
-
-- name: Load .bash_profile
+  
+- name: load .bash_profile
   shell: bash -lc "source ~/.bash_profile"
   when: check_rbenv_installed.failed
   become_user: ec2-user
 
-- name: Install ruby-build plugin for rbenv
+# ruby------------------------------------------------------------
+- name: install ruby-build
   git:
-    repo: https://github.com/rbenv/ruby-build.git
+    repo: https://github.com/sstephenson/ruby-build.git
     dest: /home/ec2-user/.rbenv/plugins/ruby-build
   when: check_rbenv_installed.failed
   become_user: ec2-user
 
-- name: Ensure .rbenv directory has correct ownership
-  file:
-    path: /home/ec2-user/.rbenv
-    state: directory
-    owner: ec2-user
-    group: ec2-user
-    recurse: yes
-  when: check_rbenv_installed.failed
-
-- name: Load .bash_profile after installing ruby-build
-  shell: bash -lc "source ~/.bash_profile"
-  when: check_rbenv_installed.failed
-  become_user: ec2-user
-
-- name: Recheck if rbenv is installed correctly
-  shell: bash -lc "rbenv --version"
-  register: recheck_rbenv_installed
-  changed_when: no
-  ignore_errors: yes
-  become_user: ec2-user
-
-- name: Install Ruby
+- name: install ruby
   shell: bash -lc "rbenv install {{ ruby_version }}"
-  args:
-    executable: /bin/bash
-  environment:
-    PATH: "/home/ec2-user/.rbenv/bin:/home/ec2-user/.rbenv/shims:{{ ansible_env.PATH }}"
-  when: recheck_rbenv_installed.rc == 0
+  when: check_rbenv_installed.failed
   become_user: ec2-user
 
-- name: Rehash rbenv after Ruby installation
+- name: rehash rbenv
   shell: bash -lc "rbenv rehash"
-  when: recheck_rbenv_installed.rc == 0
+  when: check_rbenv_installed.failed
   become_user: ec2-user
 
-- name: Set the default Ruby version
+- name: set default ruby version
   shell: bash -lc "rbenv global {{ ruby_version }}"
-  when: recheck_rbenv_installed.rc == 0
+  when: check_rbenv_installed.failed
   become_user: ec2-user
-  
