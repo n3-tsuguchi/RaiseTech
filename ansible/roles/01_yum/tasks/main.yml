@@ -1,6 +1,6 @@
 - name: install tools
   become: yes
-  dnf:
+  yum:
     name:
       - git
       - gcc-c++
