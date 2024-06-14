@@ -38,7 +38,7 @@
   git:
     repo: https://github.com/rbenv/ruby-build.git
     dest: /home/ec2-user/.rbenv/plugins/ruby-build
-    version: "v20240401"  # 最新バージョン
+    version: "master"
   when: check_rbenv_installed.failed
   become_user: ec2-user
 
