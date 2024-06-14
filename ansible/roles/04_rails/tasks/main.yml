@@ -1,37 +1,45 @@
 - name: Check if Bundler is installed
-  shell: /home/ec2-user/.rbenv/.bash_profile --version
+  shell: |
+    source /home/ec2-user/.bash_profile
+    /home/ec2-user/.rbenv/shims/bundler --version
   register: check_bundler_installed
   changed_when: no
   ignore_errors: yes
+  args:
+    executable: /bin/bash
+  become: yes
+  become_user: ec2-user
 
-- name: Install Bundler
-  gem:
-    name: bundler
-    version: "{{ bundler_version }}"
-    executable: /home/ec2-user/.bash_profile
-    user_install: no
+- name: Install Bundler if not present
+  shell: |
+    source /home/ec2-user/.bash_profile
+    /home/ec2-user/.rbenv/shims/gem install bundler -v "{{ bundler_version }}"
   when: check_bundler_installed is failed
+  args:
+    executable: /bin/bash
   become: yes
   become_user: ec2-user
 
 - name: Install gems
-  shell: /home/ec2-user/.bash_profile bundle install --path vendor/bundle
+  shell: |
+    source /home/ec2-user/.bash_profile
+    /home/ec2-user/.rbenv/shims/bundle install --path vendor/bundle
   args:
     chdir: "{{ sample_app_dir }}"
+    executable: /bin/bash
   become: yes
   become_user: ec2-user
-  become_method: su
-  become_flags: -s /bin/bash
   register: bundle_install
   changed_when: bundle_install.stdout.find('Installing') != -1
   ignore_errors: yes
 
 - name: Install Rails
-  shell: /home/ec2-user/.bash_profile bundle exec gem install rails -v {{ rails_version }}
+  shell: |
+    source /home/ec2-user/.bash_profile
+    /home/ec2-user/.rbenv/shims/bundle exec gem install rails -v {{ rails_version }}
   args:
     chdir: "{{ sample_app_dir }}"
+    executable: /bin/bash
   become: yes
   become_user: ec2-user
-  become_method: su
-  become_flags: -s /bin/bash
   when: bundle_install is succeeded
