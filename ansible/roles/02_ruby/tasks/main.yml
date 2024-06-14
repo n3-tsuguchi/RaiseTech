@@ -34,7 +34,7 @@
 # ruby------------------------------------------------------------
 - name: install ruby-build
   git:
-    repo: https://github.com/sstephenson/ruby-build.git
+    repo: https://github.com/hito-kotaro/an-sample-http.git
     dest: /home/ec2-user/.rbenv/plugins/ruby-build
   when: check_rbenv_installed.failed
   become_user: ec2-user
