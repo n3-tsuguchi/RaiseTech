@@ -40,7 +40,7 @@
   when: check_rbenv_installed.failed
   become_user: ec2-user
 
-- name: Change ownership of .rbenv directory
+- name: Ensure .rbenv directory has correct ownership
   file:
     path: /home/ec2-user/.rbenv
     state: directory
@@ -79,3 +79,4 @@
   shell: bash -lc "rbenv global {{ ruby_version }}"
   when: recheck_rbenv_installed.rc == 0
   become_user: ec2-user
+  
