@@ -20,7 +20,7 @@
     PATH: /home/ec2-user/.rbenv/bin:/home/ec2-user/.rbenv/shims:{{ ansible_env.PATH }}
 
 - name: Install Rails
-  shell: bash -lc "/home/ec2-user/.rbenv/gems/ruby-3.1.2/bundle exec gem install rails -v 7.0.4"
+  shell: bash -lc "/home/ec2-user/.bash_profile bundle exec gem install rails -v 7.0.4"
   args:
     chdir: "{{ sample_app_dir }}"
   become_user: ec2-user
