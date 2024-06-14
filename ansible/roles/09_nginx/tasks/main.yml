@@ -24,14 +24,6 @@
     state: started
   when: check_nginx_installed.rc == 0 and (start_nginx is undefined or start_nginx.changed)
 
-- name: Start Unicorn
-  shell: bash -lc "bundle exec unicorn_rails -c config/unicorn.rb -D -E development"
-  args:
-    chdir: "{{ sample_app_dir }}"
-  environment:
-    PATH: "/usr/local/rbenv/shims:/usr/local/rbenv/bin:{{ ansible_env.PATH }}"
-  when: start_nginx.changed | default(false)
-
 - name: Reload Nginx configuration
   systemd:
     name: nginx
@@ -53,3 +45,11 @@
   when: nginx_check.stdout is search('configuration file /etc/nginx/nginx.conf test is successful')
   notify:
     - Restart Nginx
+
+- name: Start Unicorn
+  shell: bash -lc "bundle exec unicorn_rails -c config/unicorn.rb -D -E development"
+  args:
+    chdir: "{{ sample_app_dir }}"
+  environment:
+    PATH: "/usr/local/rbenv/shims:/usr/local/rbenv/bin:{{ ansible_env.PATH }}"
+  when: start_nginx.changed | default(false)
