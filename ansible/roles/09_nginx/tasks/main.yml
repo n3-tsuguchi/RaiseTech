@@ -1,26 +1,28 @@
 - name: Check if Nginx is installed
-  shell: bash -lc "nginx -v"
+  command: nginx -v
   register: check_nginx_installed
   changed_when: false
-  ignore_errors: yes
+  ignore_errors: true
 
 - name: Install Nginx
   become: true
-  shell: bash -lc "amazon-linux-extras install -y nginx1"
-  when: check_nginx_installed is failed
+  shell: amazon-linux-extras install -y nginx1
+  when: check_nginx_installed.rc != 0
 
 - name: Create rails.conf
   become: true
   template:
     src: rails.conf.j2
     dest: "/etc/nginx/conf.d/rails.conf"
+  notify:
+    - Restart Nginx
 
 - name: Start Nginx
   become: true
   systemd:
     name: nginx
     state: started
-  register: start_nginx
+  when: check_nginx_installed.rc == 0 and (start_nginx is undefined or start_nginx.changed)
 
 - name: Start Unicorn
   shell: bash -lc "bundle exec unicorn_rails -c config/unicorn.rb -D -E development"
@@ -28,11 +30,14 @@
     chdir: "{{ sample_app_dir }}"
   environment:
     PATH: "/usr/local/rbenv/shims:/usr/local/rbenv/bin:{{ ansible_env.PATH }}"
-  when: start_nginx.changed
+  when: start_nginx.changed | default(false)
 
 - name: Reload Nginx configuration
-  command: systemctl reload nginx
+  systemd:
+    name: nginx
+    state: reloaded
   become: true
+  when: rails_conf_changed is defined
 
 - name: Check Nginx configuration
   command: nginx -t
@@ -41,6 +46,10 @@
   ignore_errors: true
 
 - name: Restart Nginx if configuration is OK
-  command: systemctl restart nginx
+  systemd:
+    name: nginx
+    state: restarted
   become: true
-  when: "'configuration file /etc/nginx/nginx.conf test is successful' in nginx_check.stdout"
+  when: nginx_check.stdout is search('configuration file /etc/nginx/nginx.conf test is successful')
+  notify:
+    - Restart Nginx
