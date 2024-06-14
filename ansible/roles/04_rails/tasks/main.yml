@@ -19,10 +19,10 @@
     RBENV_ROOT: /home/ec2-user/.rbenv
     PATH: /home/ec2-user/.rbenv/bin:/home/ec2-user/.rbenv/shims:{{ ansible_env.PATH }}
 
-- name: Install rails
+- name: Install Rails
   shell: bash -lc "gem install rails -v {{ rails_version }}"
-  when: check_rails_installed.failed
+  args:
+    creates: /home/ec2-user/.rbenv/versions/{{ rails_version }}/bin/rails
   become_user: ec2-user
-  environment:
-    RBENV_ROOT: /home/ec2-user/.rbenv
-    PATH: /home/ec2-user/.rbenv/bin:/home/ec2-user/.rbenv/shims:{{ ansible_env.PATH }}
+  when: check_rails_installed.rc != 0
+  
