@@ -20,8 +20,9 @@
   shell: bash -lc "gem install bundler"
 
 - name: Install gems
-  shell: bash -lc "bundle install"
+  shell: bash -lc "PATH=/usr/local/lib/ruby/gems/bin:$PATH bundle install"
   args:
     chdir: "{{ sample_app_dir }}"
   become: yes
   become_user: ec2-user
+
