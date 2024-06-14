@@ -1,14 +1,9 @@
 - name: check rails install
-  shell: bash -lc "gem list -e rails | grep {{ rails_version }}"
+  shell: source /home/ec2-user/.bash_profile && gem list -e rails | grep {{ rails_version }}
   register: check_rails_installed
   changed_when: no
   ignore_errors: yes
-  environment:
-    BASH_ENV: /home/ec2-user/.bash_profile
 
 - name: install rails
-  gem:
-    name: rails
-    version: "{{ rails_version }}"
-    user_install: false
+  shell: source /home/ec2-user/.bash_profile && gem install rails -v {{ rails_version }}
   when: check_rails_installed.failed
