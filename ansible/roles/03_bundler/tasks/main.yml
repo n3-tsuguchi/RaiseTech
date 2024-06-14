@@ -23,9 +23,10 @@
   when: install_bundler == 'yes'
 
 - name: Install gems
-  shell: bash -lc "PATH=/usr/local/lib/ruby/gems/bin:$PATH bundle install"
-  args:
-    chdir: "{{ sample_app_dir }}"
+  shell: bash -lc "bundle install"
   become: yes
   become_user: ec2-user
+  args:
+    chdir: "{{ project_path }}"
+  when: install_bundler == 'no'
 
