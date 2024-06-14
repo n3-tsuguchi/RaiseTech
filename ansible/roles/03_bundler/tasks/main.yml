@@ -15,7 +15,6 @@
   become_user: ec2-user
   when: install_bundler == 'yes'
 
-
 - name: Install Bundler
   shell: bash -lc "gem install bundler"
   become: yes
@@ -29,4 +28,3 @@
   args:
     chdir: "{{ sample_app_dir }}"
   when: install_bundler == 'yes'
-
