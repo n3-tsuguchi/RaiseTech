@@ -27,6 +27,6 @@
   become: yes
   become_user: ec2-user
   args:
-    chdir: "{{ project_path }}"
-  when: install_bundler == 'no'
+    chdir: "{{ app_dir }}"
+  when: install_bundler == 'yes'
 
