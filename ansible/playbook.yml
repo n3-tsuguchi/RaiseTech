@@ -2,6 +2,14 @@
 - hosts: web_server
   remote_user: ec2-user
   become: yes
+  tasks:
+    - name: Install Ruby Gems system
+      yum:
+        name: rubygems
+        state: present
+
+    - name: Install Rails gem
+      command: gem install rails -v 7.0.4
 
   roles:
     - { role: 01_yum, tags: yum }
