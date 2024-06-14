@@ -1,4 +1,4 @@
-- name: Check rbenv install
+- name: Check if rbenv is installed
   shell: bash -lc "rbenv --version"
   register: check_rbenv_installed
   changed_when: no
@@ -17,7 +17,7 @@
     create: yes
   when: check_rbenv_installed.failed
 
-- name: eval rbenv init
+- name: Eval rbenv init
   lineinfile:
     path: /home/ec2-user/.bash_profile
     line: 'eval "$(rbenv init -)"'
@@ -28,7 +28,7 @@
   shell: bash -lc "source ~/.bash_profile"
   when: check_rbenv_installed.failed
 
-- name: Install ruby-build
+- name: Install ruby-build plugin for rbenv
   git:
     repo: https://github.com/rbenv/ruby-build.git
     dest: /home/ec2-user/.rbenv/plugins/ruby-build
@@ -38,7 +38,7 @@
   shell: bash -lc "source ~/.bash_profile"
   when: check_rbenv_installed.failed
 
-- name: Recheck rbenv install
+- name: Recheck if rbenv is installed correctly
   shell: bash -lc "rbenv --version"
   register: recheck_rbenv_installed
   changed_when: no
@@ -52,10 +52,10 @@
     PATH: "/home/ec2-user/.rbenv/bin:/home/ec2-user/.rbenv/shims:{{ ansible_env.PATH }}"
   when: recheck_rbenv_installed.rc == 0
 
-- name: Rehash rbenv
+- name: Rehash rbenv after Ruby installation
   shell: bash -lc "rbenv rehash"
   when: recheck_rbenv_installed.rc == 0
 
-- name: Set default Ruby version
+- name: Set the default Ruby version
   shell: bash -lc "rbenv global {{ ruby_version }}"
   when: recheck_rbenv_installed.rc == 0
