@@ -9,7 +9,7 @@
 
 - name: install rbenv
   git: 
-    repo: https://github.com/rbenv/rbenv.git
+    repo: https://github.com/sstephenson/rbenv.git
     dest: /home/ec2-user/.rbenv
   when: rbenv_installed is failed
 
