@@ -49,12 +49,11 @@
 - name: Initialize rbenv and install Rails
   shell: |
     source /home/ec2-user/.bash_profile
-    bundle exec gem install rails -v {{ rails_version }}
+    gem install rails -v {{ rails_version }}
   args:
-    chdir: "{{ sample_app_dir }}"
     executable: /bin/bash
   become_user: ec2-user
-  when: check_rails_installed.rc != 0
+  
 
 
 
