@@ -1,12 +1,6 @@
-- name: yum update
-  become: yes
-  yum: 
-    name: "*"
-    state: latest
-
 - name: install tools
   become: yes
-  yum:
+  dnf:
     name:
       - git
       - gcc-c++
@@ -27,4 +21,3 @@
       - libxml2-devel
       - libxslt-devel
     state: present
-    
