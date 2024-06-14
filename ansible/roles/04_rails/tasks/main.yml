@@ -5,7 +5,10 @@
   ignore_errors: yes
 
 - name: install rails
-  shell: source /home/ec2-user/.bash_profile && /usr/local/bin/gem install rails -v 7.0.4
-  when: check_rails_installed.failed
+  shell: source /home/ec2-user/.bash_profile && gem install rails -v 7.0.4
+  become: yes
+  become_user: ec2-user
+  when: install_bundler == 'yes'
+
 
 
