@@ -1,68 +1,25 @@
-- name: Ensure Gemfile exists
-  stat:
-    path: "{{ sample_app_dir }}/Gemfile"
-  register: gemfile_check
-
-- name: Install gems
-  shell: bash -lc "bundle install"
-  args:
-    chdir: "{{ sample_app_dir }}"
-  become_user: ec2-user
-  when: gemfile_check.stat.exists
-
-- name: Check if rails is installed
-  shell: bash -lc "gem list -e rails | grep {{ rails_version }}"
-  register: check_rails_installed
+- name: check bundler install
+  shell: /home/ec2-user/.rbenv/shims/bundler --version
+  register: check_bundler_installed
   changed_when: no
   ignore_errors: yes
-  environment:
-    RBENV_ROOT: /home/ec2-user/.rbenv
-    PATH: /home/ec2-user/.rbenv/bin:/home/ec2-user/.rbenv/shims:{{ ansible_env.PATH }}
 
-- name: Initialize rbenv and install Bundler
-  shell: |
-    source /home/ec2-user/.bash_profile
-    rbenv rehash
-    gem install bundler
-  when: check_bundler_installed.rc != 0
-  args:
-    executable: /bin/bash
-  become_user: ec2-user
+- name: install bundler
+  gem: 
+    name: bundler
+    version: "{{ bundler_version }}"
+    executable: /home/ec2-user/.rbenv/shims/gem
+    user_install: no
+  when: check_bundler_installed is failed
 
-- name: Check if Bundler is installed
-  shell: |
-    source /home/ec2-user/.bash_profile
-    rbenv rehash
-    bundle -v
-  register: check_bundler_installed
-  ignore_errors: true
-  args:
-    executable: /bin/bash
-  become_user: ec2-user
-
-- name: Install Bundler if not present
-  shell: |
-    source /home/ec2-user/.bash_profile
-    rbenv rehash
-    gem install bundler
-  when: check_bundler_installed.rc != 0
-  args:
-    executable: /bin/bash
-  become_user: ec2-user
-
-- name: Initialize rbenv and install Rails
-  shell: |
-    source /home/ec2-user/.bash_profile
-    rbenv rehash
-    bundle exec gem install rails -v {{ rails_version }}
+- name: install gems
+  shell: /home/ec2-user/.rbenv/shims/bundle install --path vendor/bundle
   args:
     chdir: "{{ sample_app_dir }}"
-    executable: /bin/bash
+  become: yes
   become_user: ec2-user
-  when: check_rails_installed.rc != 0
-
-
-
-
-
-  
+  become_method: su
+  become_flags: -s /bin/bash
+  register: bundle_install
+  changed_when: bundle_install.stdout.find('Installing') != -1
+  ignore_errors: yes
