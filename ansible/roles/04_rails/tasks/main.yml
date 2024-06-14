@@ -5,8 +5,7 @@
   ignore_errors: yes
 
 - name: install rails
-  shell: source /home/ec2-user/.bash_profile && gem install rails -v {{ rails_version }}
-  environment:
-    PATH: "{{ ansible_env.PATH }}:/usr/local/bin"
+  shell: source /home/ec2-user/.bash_profile && /usr/local/bin/gem install rails -v 7.0.4
   when: check_rails_installed.failed
+
 
