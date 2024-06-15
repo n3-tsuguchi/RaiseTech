@@ -9,7 +9,7 @@
   git:
     repo: https://github.com/sstephenson/rbenv.git
     dest: /home/ec2-user/.rbenv
-    version: "v1.2.0"  # 最新バージョン
+#    version: "v1.2.0"  # 最新バージョン
   when: check_rbenv_installed.failed
   become_user: ec2-user
 
