@@ -46,10 +46,42 @@
   notify:
     - Restart Nginx
 
-- name: Start Unicorn
-  shell: bash -lc "bundle exec unicorn_rails -c config/unicorn.rb -D -E development"
+- name: Check if puma.service.sample exists
+  stat:
+    path: /home/ec2-user/raisetech-live8-sample-app/samples/puma.service.sample
+  register: puma_service_check
+
+- name: Move puma.service
+  become_user: root
+  command: mv /home/ec2-user/raisetech-live8-sample-app/samples/puma.service.sample /etc/systemd/system/puma.service
+  when: puma_service_check.stat.exists
+
+- name: Check if puma.rb exists
+  stat:
+    path: /home/ec2-user/raisetech-live8-sample-app/config/puma.rb
+  register: puma_check
+
+- name: Generate puma.rb from template
+  template:
+    src: roles/setup_server/template/puma.rb.j2  
+    dest: /home/ec2-user/raisetech-live8-sample-app/config/puma.rb
+
+- name: Change directory to your Rails app directory
+  command: cd /home/ec2-user/raisetech-live8-sample-app/
+
+- name: Install Bundler
+  shell: bash -lc "bundle install"
   args:
-    chdir: "{{ sample_app_dir }}"
-  environment:
-    PATH: "/usr/local/rbenv/shims:/usr/local/rbenv/bin:{{ ansible_env.PATH }}"
-  when: start_nginx.changed | default(false)
+    chdir: /home/ec2-user/raisetech-live8-sample-app/
+
+- name: Run bin/setup
+  command: /home/ec2-user/.rbenv/shims/ruby bin/setup
+  args:
+    chdir: /home/ec2-user/raisetech-live8-sample-app/
+
+- name: Start Puma service
+  become_user: root
+  systemd:
+    name: puma
+    state: started
+
