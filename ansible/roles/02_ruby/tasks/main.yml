@@ -42,15 +42,15 @@
 
 - name: Check if Ruby is installed
   stat:
-    path: /home/ec2-user/.rbenv/versions/3.1.2
+    path: /home/ec2-user/.rbenv/versions/3.2.3
   register: ruby_check
 
-- name: Install Ruby 3.1.2
-  shell: bash -lc "rbenv install 3.1.2"
+- name: Install Ruby 3.2.3
+  shell: bash -lc "rbenv install 3.2.3"
   when: not ruby_check.stat.exists
 
 - name: Rehash rbenv
   shell: bash -lc "rbenv rehash"
 
-- name: Set global Ruby version to 3.1.2
-  shell: bash -lc "rbenv global 3.1.2"
+- name: Set global Ruby version to 3.2.3
+  shell: bash -lc "rbenv global 3.2.3"
