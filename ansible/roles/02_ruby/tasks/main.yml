@@ -7,7 +7,7 @@
 
 - name: Install rbenv
   git:
-    repo: https://github.com/sstephenson/rbenv.git
+    repo: https://github.com/rbenv/rbenv.git
     dest: /home/ec2-user/.rbenv
   when: check_rbenv_installed.failed
   become_user: ec2-user
@@ -35,7 +35,7 @@
 
 - name: Install ruby-build plugin for rbenv
   git:
-    repo: https://github.com/sstephenson/rbenv.git
+    repo: https://github.com/rbenv/ruby-build.git
     dest: /home/ec2-user/.rbenv/plugins/ruby-build
   when: check_rbenv_installed.failed
   become_user: ec2-user
