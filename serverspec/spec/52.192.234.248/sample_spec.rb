@@ -25,9 +25,8 @@ describe service('nginx') do
   it { should be_running }
 end
 
-describe package('unicorn') do
-  let(:path) { rbenv_path }
-  it { should be_installed.by('gem') }
+describe command('ps aux | grep puma') do
+  its(:exit_status) { should eq 0 }
 end
 
 describe file('/etc/nginx/conf.d/rails.conf') do
