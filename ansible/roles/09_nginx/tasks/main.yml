@@ -63,7 +63,7 @@
 
 - name: Generate puma.rb from template
   template:
-    src: roles/setup_server/template/puma.rb.j2  
+    src: roles/09_nginx/templates/puma.rb.j2
     dest: /home/ec2-user/raisetech-live8-sample-app/config/puma.rb
 
 - name: Change directory to your Rails app directory
