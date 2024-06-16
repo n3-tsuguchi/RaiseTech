@@ -7,7 +7,7 @@
 
 - name: Install rbenv
   git:
-    repo: https://github.com/rbenv/rbenv.git
+    repo: https://github.com/sstephenson/rbenv.git
     dest: /home/ec2-user/.rbenv
   when: check_rbenv_installed.failed
   become_user: ec2-user
@@ -30,14 +30,13 @@
 
 - name: Load .bash_profile
   shell: bash -lc "source ~/.bash_profile"
-  when: check_rbenv_installed.failed
+  when: check_rbenv_installed.failed or check_rbenv_installed.changed
   become_user: ec2-user
 
 - name: Install ruby-build plugin for rbenv
   git:
-    repo: https://github.com/rbenv/ruby-build.git
+    repo: https://github.com/sstephenson/rbenv.git
     dest: /home/ec2-user/.rbenv/plugins/ruby-build
-    version: "master"
   when: check_rbenv_installed.failed
   become_user: ec2-user
 
@@ -62,21 +61,28 @@
   ignore_errors: yes
   become_user: ec2-user
 
+- name: Check if ruby-build is installed correctly
+  shell: bash -lc "rbenv install -l"
+  register: check_ruby_build_installed
+  changed_when: no
+  ignore_errors: yes
+  become_user: ec2-user
+
 - name: Install Ruby
   shell: bash -lc "rbenv install {{ ruby_version }}"
   args:
     executable: /bin/bash
   environment:
     PATH: "/home/ec2-user/.rbenv/bin:/home/ec2-user/.rbenv/shims:{{ ansible_env.PATH }}"
-  when: recheck_rbenv_installed.rc == 0
+  when: recheck_rbenv_installed.rc == 0 and check_ruby_build_installed.rc == 0
   become_user: ec2-user
 
 - name: Rehash rbenv after Ruby installation
   shell: bash -lc "rbenv rehash"
-  when: recheck_rbenv_installed.rc == 0
+  when: recheck_rbenv_installed.rc == 0 and check_ruby_build_installed.rc == 0
   become_user: ec2-user
 
 - name: Set the default Ruby version
   shell: bash -lc "rbenv global {{ ruby_version }}"
-  when: recheck_rbenv_installed.rc == 0
+  when: recheck_rbenv_installed.rc == 0 and check_ruby_build_installed.rc == 0
   become_user: ec2-user
