@@ -1,3 +1,4 @@
+---
 - name: Check if Nginx is installed
   ansible.builtin.command: nginx -v
   register: check_nginx_installed
@@ -21,7 +22,6 @@
   ansible.builtin.systemd:
     name: nginx
     state: started
-    daemon_reload: yes
   become: true
   when: check_nginx_installed.rc == 0 and (start_nginx is undefined or start_nginx.changed)
 
@@ -35,7 +35,6 @@
   ansible.builtin.systemd:
     name: nginx
     state: restarted
-    daemon_reload: yes
   become: true
   when: nginx_check.stdout is search('configuration file /etc/nginx/nginx.conf test is successful')
   notify:
@@ -69,25 +68,18 @@
   notify:
     - Reload systemd
 
-- name: Reload systemd
-  ansible.builtin.systemd:
-    daemon_reload: yes
-
 - name: Enable and start Puma service
   ansible.builtin.systemd:
     name: puma.service
     state: started
     enabled: yes
-    daemon_reload: yes
 
 - name: Start Puma service
   ansible.builtin.systemd:
     name: puma.service
     state: started
-    daemon_reload: yes
 
 - name: Restart Puma service if needed
   ansible.builtin.systemd:
     name: puma.service
     state: restarted
-    daemon_reload: yes
