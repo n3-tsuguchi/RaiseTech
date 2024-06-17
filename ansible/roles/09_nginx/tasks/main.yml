@@ -104,7 +104,7 @@
     var: puma_status.stdout
 
 - name: Check Puma service journal logs
-  ansible.builtin.command: journalctl -xe
+  ansible.builtin.command: journalctl -xe -u puma.service
   register: puma_journal
   become: true
   ignore_errors: true
