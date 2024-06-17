@@ -74,8 +74,43 @@
     src: roles/08_app/templates/puma.rb.j2
     dest: /home/ec2-user/raisetech-live8-sample-app/config/puma.rb
 
-- name: Change directory to your Rails app directory
-  command: cd /home/ec2-user/raisetech-live8-sample-app/
+- name: Ensure rbenv is initialized
+  shell: |
+    export PATH="$HOME/.rbenv/bin:$PATH"
+    eval "$(rbenv init -)"
+  args:
+    executable: /bin/bash
+
+- name: Check Bundler version
+  command: bash -lc "export PATH=/usr/local/rbenv/shims:$PATH; eval \"$(rbenv init -)\"; bundler -v"
+  register: bundler_version_check
+  ignore_errors: true
+
+- name: Set Bundler install condition
+  set_fact:
+    install_bundler: "{{ 'yes' if (bundler_version_check.stdout is not defined) or ('Bundler version 2.3.14' not in bundler_version_check.stdout) else 'no' }}"
+
+- name: Install specific version of Bundler
+  command: bash -lc 'export PATH="/usr/local/rbenv/shims:$PATH:/usr/local/rbenv/bin"; /usr/local/rbenv/shims/gem install bundler -v 2.3.14'
+  environment:
+    PATH: "/usr/local/rbenv/shims:/usr/local/rbenv/bin:{{ ansible_env.PATH }}"
+  become: yes
+  become_user: ec2-user
+  when: install_bundler == 'yes'
+
+- name: Install Bundler
+  shell: bash -lc "gem install bundler"
+  become: yes
+  become_user: ec2-user
+  when: install_bundler == 'yes'
+
+- name: Install gems
+  shell: bash -lc "bundle install"
+  become: yes
+  become_user: ec2-user
+  args:
+    chdir: "/home/ec2-user/raisetech-live8-sample-app/"
+  when: install_bundler == 'yes'
 
 - name: Check if bin/setup exists
   stat:
@@ -93,4 +128,3 @@
   systemd:
     name: puma
     state: started
-
