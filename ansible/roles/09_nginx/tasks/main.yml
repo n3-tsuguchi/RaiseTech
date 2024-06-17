@@ -56,11 +56,6 @@
   command: mv /home/ec2-user/raisetech-live8-sample-app/samples/puma.service.sample /etc/systemd/system/puma.service
   when: puma_service_check.stat.exists
 
-- name: Check if puma.rb exists
-  stat:
-    path: /home/ec2-user/raisetech-live8-sample-app/config/puma.rb
-  register: puma_check
-
 - name: Ensure config directory exists
   file:
     path: /home/ec2-user/raisetech-live8-sample-app/config
@@ -123,8 +118,13 @@
     chdir: /home/ec2-user/raisetech-live8-sample-app/
   when: setup_script_check.stat.exists
 
-- name: Start Puma service
-  become_user: root
+- name: Reload systemd to read new unit files
+  become: yes
+  command: systemctl daemon-reload
+
+- name: Enable and start Puma service
+  become: yes
   systemd:
     name: puma
+    enabled: yes
     state: started
