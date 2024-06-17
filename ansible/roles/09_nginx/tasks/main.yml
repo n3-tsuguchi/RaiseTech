@@ -46,16 +46,17 @@
   notify:
     - Restart Nginx
 
-- name: Start puma.service using systemd_service module
-  ansible.builtin.service:
-    name: puma.service
+- name: Start Puma service
+  ansible.builtin.systemd:
+    name: puma
     state: started
-    enabled: yes
     daemon_reload: yes
+    enabled: yes
 
-- name: Restart puma.service
-  ansible.builtin.service:
-    name: puma.service
+- name: Restart Puma service
+  ansible.builtin.systemd:
+    name: puma
     state: restarted
     daemon_reload: yes
     enabled: yes
+
