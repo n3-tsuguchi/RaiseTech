@@ -45,6 +45,7 @@
   ansible.builtin.gem:
     name: puma
     state: present
+    executable: /home/ec2-user/.rbenv/shims/gem
   become: true
 
 - name: Create Puma service file
