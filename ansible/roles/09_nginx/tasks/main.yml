@@ -68,6 +68,15 @@
   notify:
     - Reload systemd
 
+- name: Reload systemd
+  ansible.builtin.systemd:
+    daemon_reload: yes
+
+- name: Reset failed Puma service
+  ansible.builtin.command: systemctl reset-failed puma.service
+  become: true
+  ignore_errors: true
+
 - name: Enable and start Puma service
   ansible.builtin.systemd:
     name: puma.service
@@ -83,3 +92,23 @@
   ansible.builtin.systemd:
     name: puma.service
     state: restarted
+
+- name: Check Puma service status
+  ansible.builtin.command: systemctl status puma.service
+  register: puma_status
+  become: true
+  ignore_errors: true
+
+- name: Display Puma service status
+  ansible.builtin.debug:
+    var: puma_status.stdout
+
+- name: Check Puma service journal logs
+  ansible.builtin.command: journalctl -xe
+  register: puma_journal
+  become: true
+  ignore_errors: true
+
+- name: Display Puma service journal logs
+  ansible.builtin.debug:
+    var: puma_journal.stdout
