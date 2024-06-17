@@ -74,12 +74,17 @@
     enabled: yes
     daemon_reload: yes
 
+- name: Start Puma service
+  ansible.builtin.systemd:
+    name: puma.service
+    state: started
+    daemon_reload: yes
+
 - name: Restart Puma service if needed
   ansible.builtin.systemd:
     name: puma.service
     state: restarted
     daemon_reload: yes
-    enabled: yes
 
   handlers:
   - name: Restart Nginx
