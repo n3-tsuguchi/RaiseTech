@@ -1,17 +1,17 @@
 - name: Check if Nginx is installed
-  command: nginx -v
+  ansible.builtin.command: nginx -v
   register: check_nginx_installed
   changed_when: false
   ignore_errors: true
 
 - name: Install Nginx
   become: true
-  shell: amazon-linux-extras install -y nginx1
+  ansible.builtin.shell: amazon-linux-extras install -y nginx1
   when: check_nginx_installed.rc != 0
 
 - name: Create rails.conf
   become: true
-  template:
+  ansible.builtin.template:
     src: rails.conf.j2
     dest: "/etc/nginx/conf.d/rails.conf"
   notify:
@@ -19,26 +19,26 @@
 
 - name: Start Nginx
   become: true
-  systemd:
+  ansible.builtin.systemd:
     name: nginx
     state: started
   when: check_nginx_installed.rc == 0 and (start_nginx is undefined or start_nginx.changed)
 
 - name: Reload Nginx configuration
-  systemd:
+  ansible.builtin.systemd:
     name: nginx
     state: reloaded
   become: true
   when: rails_conf_changed is defined
 
 - name: Check Nginx configuration
-  command: nginx -t
+  ansible.builtin.command: nginx -t
   become: true
   register: nginx_check
   ignore_errors: true
 
 - name: Restart Nginx if configuration is OK
-  systemd:
+  ansible.builtin.systemd:
     name: nginx
     state: restarted
   become: true
@@ -53,10 +53,9 @@
     enabled: yes
     daemon_reload: yes
 
-- name: restart puma.service
-  become: true
+- name: Restart puma.service
   ansible.builtin.systemd_service:
     name: puma.service
     state: restarted
     daemon_reload: yes
-    enabled: true
+    enabled: yes
