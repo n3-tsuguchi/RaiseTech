@@ -4,54 +4,75 @@
   changed_when: false
   ignore_errors: true
 
-- name: Install Nginx
-  become: true
+- name: Install Nginx if not installed
   ansible.builtin.shell: amazon-linux-extras install -y nginx1
+  become: true
   when: check_nginx_installed.rc != 0
 
-- name: Create rails.conf
-  become: true
+- name: Create rails.conf for Nginx
   ansible.builtin.template:
     src: rails.conf.j2
     dest: "/etc/nginx/conf.d/rails.conf"
+  become: true
   notify:
     - Restart Nginx
 
-- name: Start Nginx
-  become: true
+- name: Start or reload Nginx
   ansible.builtin.systemd:
     name: nginx
     state: started
-  when: check_nginx_installed.rc == 0 and (start_nginx is undefined or start_nginx.changed)
-
-- name: Reload Nginx configuration
-  ansible.builtin.systemd:
-    name: nginx
-    state: reloaded
+    daemon_reload: yes
   become: true
-  when: rails_conf_changed is defined
+  when: check_nginx_installed.rc == 0 and (start_nginx is undefined or start_nginx.changed)
 
 - name: Check Nginx configuration
   ansible.builtin.command: nginx -t
-  become: true
   register: nginx_check
+  become: true
   ignore_errors: true
 
 - name: Restart Nginx if configuration is OK
   ansible.builtin.systemd:
     name: nginx
     state: restarted
-  become: true
+    become: true
   when: nginx_check.stdout is search('configuration file /etc/nginx/nginx.conf test is successful')
   notify:
-    - Restart Nginx
+    - Restart Puma
 
-- name: Start Puma service
+- name: Install Puma gem
+  ansible.builtin.gem:
+    name: puma
+    state: present
+  become: yes
+
+- name: Create Puma service file
+  ansible.builtin.copy:
+    content: |
+      [Unit]
+      Description=Puma HTTP Server
+      After=network.target
+
+      [Service]
+      Type=simple
+      User=ec2-user
+      WorkingDirectory=/home/ec2-user/raisetech-live8-sample-app
+      ExecStart=/home/ec2-user/.rbenv/shims/puma -C /home/ec2-user/raisetech-live8-sample-app/config/puma.rb
+      Restart=always
+
+      [Install]
+      WantedBy=multi-user.target
+    dest: /etc/systemd/system/puma.service
+  become_user: root
+  notify:
+    - Reload systemd
+
+- name: Enable and start Puma service
   ansible.builtin.systemd:
     name: puma.service
     state: started
-    daemon_reload: yes
     enabled: yes
+    daemon_reload: yes
 
 - name: Restart Puma service if needed
   ansible.builtin.systemd:
@@ -60,4 +81,13 @@
     daemon_reload: yes
     enabled: yes
 
+handlers:
+- name: Restart Nginx
+  ansible.builtin.systemd:
+    name: nginx
+    state: restarted
+    daemon_reload: yes
 
+- name: Reload systemd
+  ansible.builtin.systemd:
+    daemon_reload: yes
