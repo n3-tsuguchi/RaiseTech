@@ -81,13 +81,13 @@
     daemon_reload: yes
     enabled: yes
 
-handlers:
-- name: Restart Nginx
-  ansible.builtin.systemd:
-    name: nginx
-    state: restarted
-    daemon_reload: yes
+  handlers:
+  - name: Restart Nginx
+    ansible.builtin.systemd:
+      name: nginx
+      state: restarted
+      daemon_reload: yes
 
-- name: Reload systemd
-  ansible.builtin.systemd:
-    daemon_reload: yes
+  - name: Reload systemd
+    ansible.builtin.systemd:
+      daemon_reload: yes
