@@ -73,8 +73,6 @@
   template:
     src: roles/08_app/templates/puma.rb.j2
     dest: /home/ec2-user/raisetech-live8-sample-app/config/puma.rb
-  notify:
-    - Restart Puma
 
 - name: Change directory to your Rails app directory
   command: cd /home/ec2-user/raisetech-live8-sample-app/
