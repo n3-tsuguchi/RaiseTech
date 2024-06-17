@@ -35,7 +35,8 @@
   ansible.builtin.systemd:
     name: nginx
     state: restarted
-    become: true
+    daemon_reload: yes
+  become: true
   when: nginx_check.stdout is search('configuration file /etc/nginx/nginx.conf test is successful')
   notify:
     - Restart Puma
@@ -44,7 +45,7 @@
   ansible.builtin.gem:
     name: puma
     state: present
-  become: yes
+  become: true
 
 - name: Create Puma service file
   ansible.builtin.copy:
@@ -66,6 +67,10 @@
   become_user: root
   notify:
     - Reload systemd
+
+- name: Reload systemd
+  ansible.builtin.systemd:
+    daemon_reload: yes
 
 - name: Enable and start Puma service
   ansible.builtin.systemd:
