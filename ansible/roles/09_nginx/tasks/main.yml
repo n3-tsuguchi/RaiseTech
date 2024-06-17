@@ -77,10 +77,16 @@
 - name: Change directory to your Rails app directory
   command: cd /home/ec2-user/raisetech-live8-sample-app/
 
+- name: Check if bin/setup exists
+  stat:
+    path: /home/ec2-user/raisetech-live8-sample-app/bin/setup
+  register: setup_script_check
+
 - name: Run bin/setup
   command: /home/ec2-user/.rbenv/shims/ruby bin/setup
   args:
     chdir: /home/ec2-user/raisetech-live8-sample-app/
+  when: setup_script_check.stat.exists
 
 - name: Start Puma service
   become_user: root
