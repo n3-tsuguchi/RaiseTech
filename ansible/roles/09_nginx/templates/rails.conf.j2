@@ -1,7 +1,7 @@
 client_max_body_size 2G;
 
 
-upstream unicorn {
+upstream puma {
   server unix://var/www/raisetech-live8-sample-app/puma.sock;
 }
 
