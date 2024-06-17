@@ -3,7 +3,6 @@
   git: 
     repo: https://github.com/yuta-ushijima/raisetech-live8-sample-app.git
     dest: "{{ sample_app_dir }}"
-    version: main
     force: yes
   register: git_clone
 
