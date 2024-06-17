@@ -23,3 +23,8 @@
     aws_db_pw : "{{ (lookup('env','AWS_DB_PW')) }}"
     aws_db_host : "{{ (lookup('env','AWS_DB_HOST')) }}"
     aws_s3_bucket: "{{ (lookup('env','AWS_S3_BUCKET')) }}"
+
+  handlers:
+  - name: Reload systemd
+    ansible.builtin.systemd:
+      daemon_reload: yes
