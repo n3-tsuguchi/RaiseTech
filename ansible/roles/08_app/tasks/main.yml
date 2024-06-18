@@ -10,6 +10,7 @@
     version: main
   become: true
   when: not git_directory.stat.exists
+  register: git_clone
 
 - name: Update the repository if it already exists
   ansible.builtin.git:
@@ -19,6 +20,7 @@
     update: yes
   become: true
   when: git_directory.stat.exists
+  register: git_clone.changed
 
 
 
