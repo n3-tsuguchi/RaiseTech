@@ -1,7 +1,7 @@
 client_max_body_size 2G;
 
 upstream puma {
-  server unix:///home/ec2-user/raisetech-live8-sample-app/tmp/sockets/puma.sock;
+  server unix://home/ec2-user/raisetech-live8-sample-app/puma.sock;
 }
 
 server {
