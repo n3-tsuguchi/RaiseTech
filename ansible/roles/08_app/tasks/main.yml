@@ -12,18 +12,6 @@
   when: not git_directory.stat.exists
   register: Clone_result
 
-- name: Update the repository if it already exists
-  ansible.builtin.git:
-    repo: https://github.com/yuta-ushijima/raisetech-live8-sample-app.git
-    dest: /home/ec2-user/raisetech-live8-sample-app
-    version: main
-    update: yes
-  become: true
-  when: git_directory.stat.exists
-  register: Clone_result.changed
-
-
-
 - name: change owner /var/www/raisetech-live8-sample-app
   become: yes
   file:
