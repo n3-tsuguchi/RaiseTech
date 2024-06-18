@@ -46,6 +46,38 @@
     executable: /home/ec2-user/.rbenv/shims/gem
   become: true
 
+- name: Ensure the application directory exists
+  ansible.builtin.file:
+    path: /home/ec2-user/raisetech-live8-sample-app
+    state: directory
+    owner: ec2-user
+    group: ec2-user
+    mode: '0755'
+  become: true
+
+- name: Ensure the Puma configuration directory exists
+  ansible.builtin.file:
+    path: /home/ec2-user/raisetech-live8-sample-app/config
+    state: directory
+    owner: ec2-user
+    group: ec2-user
+    mode: '0755'
+  become: true
+
+- name: Ensure the Puma configuration file exists
+  ansible.builtin.copy:
+    content: |
+      # Puma configuration file
+      # Example content:
+      # bind "unix:///tmp/puma.sock"
+      # port 3000
+      # environment "production"
+    dest: /home/ec2-user/raisetech-live8-sample-app/config/puma.rb
+    owner: ec2-user
+    group: ec2-user
+    mode: '0644'
+  become: true
+
 - name: Create Puma service file
   ansible.builtin.copy:
     content: |
@@ -63,7 +95,7 @@
       [Install]
       WantedBy=multi-user.target
     dest: /etc/systemd/system/puma.service
-  become_user: root
+  become: true
   notify:
     - Reload systemd
 
@@ -80,35 +112,3 @@
     name: puma.service
     state: started
     enabled: yes
-
-- name: Check Puma service status
-  ansible.builtin.command: systemctl status puma.service
-  register: puma_status
-  become: true
-  ignore_errors: true
-
-- name: Display Puma service status
-  ansible.builtin.debug:
-    var: puma_status.stdout
-
-- name: Check Puma service journal logs
-  ansible.builtin.command: journalctl -xe -u puma.service
-  register: puma_journal
-  become: true
-  ignore_errors: true
-
-- name: Display Puma service journal logs
-  ansible.builtin.debug:
-    var: puma_journal.stdout
-
-- name: Start Puma service
-  ansible.builtin.systemd:
-    name: puma.service
-    state: started
-  become: true
-
-- name: Restart Puma service if needed
-  ansible.builtin.systemd:
-    name: puma.service
-    state: restarted
-  become: true
