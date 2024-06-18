@@ -113,3 +113,32 @@
     name: puma.service
     state: started
     enabled: yes
+
+- name: Create rails.conf for Nginx
+  template:
+    src: templates/rails.conf.j2
+    dest: "/etc/nginx/conf.d/rails.conf"
+  become: true
+  notify:
+    - Restart Nginx
+
+- name: Start or reload Nginx
+  systemd:
+    name: nginx
+    state: started
+  become: true
+
+- name: Check Nginx configuration
+  command: nginx -t
+  register: nginx_check
+  become: true
+  ignore_errors: true
+
+- name: Restart Nginx if configuration is OK
+  systemd:
+    name: nginx
+    state: restarted
+  become: true
+  when: nginx_check.stdout is search('configuration file /etc/nginx/nginx.conf test is successful')
+  notify:
+    - Restart Puma
