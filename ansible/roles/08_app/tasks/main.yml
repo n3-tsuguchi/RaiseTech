@@ -12,15 +12,6 @@
   when: not git_directory.stat.exists
   register: Clone_result
 
-- name: change owner /var/www/raisetech-live8-sample-app
-  become: yes
-  file:
-    path: "{{ sample_app_dir }}"
-    state: directory
-    owner: ec2-user
-    recurse: yes
-  when: git_clone.changed
-
 - name: create database.yml
   become_user: root
   template:
