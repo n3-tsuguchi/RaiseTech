@@ -1,4 +1,3 @@
----
 - name: Check if Nginx is installed
   ansible.builtin.command: nginx -v
   register: check_nginx_installed
@@ -75,23 +74,12 @@
 - name: Reset failed Puma service
   ansible.builtin.command: systemctl reset-failed puma.service
   become: true
-  ignore_errors: true
 
 - name: Enable and start Puma service
   ansible.builtin.systemd:
     name: puma.service
     state: started
     enabled: yes
-
-- name: Start Puma service
-  ansible.builtin.systemd:
-    name: puma.service
-    state: started
-
-- name: Restart Puma service if needed
-  ansible.builtin.systemd:
-    name: puma.service
-    state: restarted
 
 - name: Check Puma service status
   ansible.builtin.command: systemctl status puma.service
@@ -112,3 +100,15 @@
 - name: Display Puma service journal logs
   ansible.builtin.debug:
     var: puma_journal.stdout
+
+- name: Start Puma service
+  ansible.builtin.systemd:
+    name: puma.service
+    state: started
+  become: true
+
+- name: Restart Puma service if needed
+  ansible.builtin.systemd:
+    name: puma.service
+    state: restarted
+  become: true
