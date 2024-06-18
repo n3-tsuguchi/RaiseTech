@@ -1,16 +1,25 @@
-- name: Remove existing directory if it exists
-  ansible.builtin.file:
-    path: /home/ec2-user/raisetech-live8-sample-app
-    state: absent
-  become: true
-  ignore_errors: true
+- name: Check if the directory exists
+  ansible.builtin.stat:
+    path: /home/ec2-user/raisetech-live8-sample-app/.git
+  register: git_directory
 
 - name: Clone the specific branch
   ansible.builtin.git:
     repo: https://github.com/yuta-ushijima/raisetech-live8-sample-app.git
     dest: /home/ec2-user/raisetech-live8-sample-app
-    version: your-branch-name  # replace with your branch name
+    version: main
   become: true
+  when: not git_directory.stat.exists
+
+- name: Update the repository if it already exists
+  ansible.builtin.git:
+    repo: https://github.com/yuta-ushijima/raisetech-live8-sample-app.git
+    dest: /home/ec2-user/raisetech-live8-sample-app
+    version: main
+    update: yes
+  become: true
+  when: git_directory.stat.exists
+
 
 
 - name: change owner /var/www/raisetech-live8-sample-app
