@@ -1,10 +1,17 @@
+- name: Remove existing directory if it exists
+  ansible.builtin.file:
+    path: /home/ec2-user/raisetech-live8-sample-app
+    state: absent
+  become: true
+  ignore_errors: true
+
 - name: Clone the specific branch
-  become_user: root
-  git: 
+  ansible.builtin.git:
     repo: https://github.com/yuta-ushijima/raisetech-live8-sample-app.git
-    dest: "{{ sample_app_dir }}"
-    force: yes
-  register: git_clone
+    dest: /home/ec2-user/raisetech-live8-sample-app
+    version: your-branch-name  # replace with your branch name
+  become: true
+
 
 - name: change owner /var/www/raisetech-live8-sample-app
   become: yes
