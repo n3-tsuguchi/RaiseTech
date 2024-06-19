@@ -124,11 +124,11 @@
     mode: '0664'
   become_user: ec2-user
 
-- name: Run bin/setup
-  command: /home/ec2-user/.rbenv/shims/ruby bin/setup
-  args:
-    chdir: /home/ec2-user/raisetech-live8-sample-app/
-  become_user: ec2-user
+#- name: Run bin/setup
+#  command: /home/ec2-user/.rbenv/shims/ruby bin/setup
+#  args:
+#    chdir: /home/ec2-user/raisetech-live8-sample-app/
+#  become_user: ec2-user
 
 - name: Start Puma service
   become_user: root
