@@ -52,6 +52,96 @@
   register: puma_service_check
 
 
+- name: Ensure the application directory exists
+  ansible.builtin.file:
+    path: /home/ec2-user/raisetech-live8-sample-app
+    state: directory
+    owner: ec2-user
+    group: ec2-user
+    mode: '0755'
+
+- name: Ensure the Puma configuration directory exists
+  ansible.builtin.file:
+    path: /home/ec2-user/raisetech-live8-sample-app/config
+    state: directory
+    owner: ec2-user
+    group: ec2-user
+    mode: '0755'
+
+- name: Create Puma configuration file
+  ansible.builtin.copy:
+    content: |
+      directory '/home/ec2-user/raisetech-live8-sample-app'
+      rackup "/home/ec2-user/raisetech-live8-sample-app/config.ru"
+      environment 'production'
+
+      pidfile "/home/ec2-user/raisetech-live8-sample-app/tmp/pids/puma.pid"
+      state_path "/home/ec2-user/raisetech-live8-sample-app/tmp/pids/puma.state"
+      stdout_redirect '/home/ec2-user/raisetech-live8-sample-app/log/puma.stdout.log', '/home/ec2-user/raisetech-live8-sample-app/log/puma.stderr.log', true
+
+      threads 0, 5
+      bind "unix:///home/ec2-user/raisetech-live8-sample-app/tmp/sockets/puma.sock"
+
+      workers 2
+      preload_app!
+
+      on_worker_boot do
+        ActiveRecord::Base.establish_connection if defined?(ActiveRecord)
+      end
+    dest: /home/ec2-user/raisetech-live8-sample-app/config/puma.rb
+    owner: ec2-user
+    group: ec2-user
+    mode: '0644'
+
+- name: Create Puma service file
+  ansible.builtin.copy:
+    content: |
+      [Unit]
+      Description=Puma HTTP Server
+      After=network.target
+
+      [Service]
+      Type=simple
+      User=ec2-user
+      WorkingDirectory=/home/ec2-user/raisetech-live8-sample-app
+      ExecStart=/home/ec2-user/.rbenv/shims/puma -C /home/ec2-user/raisetech-live8-sample-app/config/puma.rb
+      Restart=always
+
+      [Install]
+      WantedBy=multi-user.target
+    dest: /etc/systemd/system/puma.service
+  notify:
+    - Reload systemd
+
+- name: Create tmp/sockets directory
+  ansible.builtin.file:
+    path: /home/ec2-user/raisetech-live8-sample-app/tmp/sockets
+    state: directory
+    owner: ec2-user
+    group: ec2-user
+    mode: '0755'
+
+- name: Create tmp/pids directory
+  ansible.builtin.file:
+    path: /home/ec2-user/raisetech-live8-sample-app/tmp/pids
+    state: directory
+    owner: ec2-user
+    group: ec2-user
+    mode: '0755'
+
+- name: Reload systemd
+  ansible.builtin.systemd:
+    daemon_reload: yes
+
+- name: Enable and start Puma service
+  ansible.builtin.systemd:
+    name: puma.service
+    state: started
+    enabled: yes
+
+
+
+
 - name: Add rbenv to bash_profile for ec2-user
   ansible.builtin.lineinfile:
     path: /home/ec2-user/.bash_profile
