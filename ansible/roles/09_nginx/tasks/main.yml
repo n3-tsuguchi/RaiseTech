@@ -102,14 +102,13 @@
 
 - name: Render database.yml from template
   template:
-    src: roles/setup_server/template/database.yml.j2
+    src: database.yml.j2
     dest: /home/ec2-user/raisetech-live8-sample-app/config/database.yml
 
 - name: Generate database.yml
   template:
     src: database.yml.j2
     dest: "{{ sample_app_dir }}/config/database.yml"
-  become_user: ec2-user
 
 - name: Run bin/setup
   command: /home/ec2-user/.rbenv/shims/ruby bin/setup
