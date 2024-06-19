@@ -14,7 +14,7 @@
 
 - name: Ensure config directory exists
   file:
-    path: "/var/www/raisetech-live8-sample-app/config"
+    path: "{{ sample_app_dir }}/config"
     state: directory
 
 - name: create storage.yml
