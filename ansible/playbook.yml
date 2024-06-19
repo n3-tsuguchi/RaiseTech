@@ -27,17 +27,13 @@
     aws_s3_bucket: "{{ (lookup('env','AWS_S3_BUCKET')) }}"
 
   handlers:
-    - name: Reload systemd
-      systemd:
-        daemon_reload: yes
-    - name: Restart Puma
-      systemd:
-        name: puma
-        state: restarted
     - name: Restart Nginx
-      systemd:
+      ansible.builtin.systemd:
         name: nginx
         state: restarted
+
+    - name: Reload systemd
+      ansible.builtin.systemd:
         daemon_reload: yes
 
 
