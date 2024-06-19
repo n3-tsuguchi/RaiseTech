@@ -104,6 +104,7 @@
       Type=simple
       User=ec2-user
       WorkingDirectory=/home/ec2-user/raisetech-live8-sample-app
+      Environment="PATH=/home/ec2-user/.rbenv/shims:/home/ec2-user/.rbenv/bin:/usr/local/bin:/usr/bin:/bin"
       ExecStart=/home/ec2-user/.rbenv/shims/puma -C /home/ec2-user/raisetech-live8-sample-app/config/puma.rb
       Restart=always
 
