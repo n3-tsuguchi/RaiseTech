@@ -1,160 +1,189 @@
-- name: Check if Nginx is installed
-  ansible.builtin.command: nginx -v
-  register: check_nginx_installed
-  changed_when: false
-  ignore_errors: true
-
-- name: Install Nginx if not installed
-  ansible.builtin.shell: amazon-linux-extras install -y nginx1
+- name: Ensure Nginx is installed and configured
+  hosts: all
   become: true
-  when: check_nginx_installed.rc != 0
+  tasks:
+    - name: Check if Nginx is installed
+      ansible.builtin.command: nginx -v
+      register: check_nginx_installed
+      changed_when: false
+      ignore_errors: true
 
-- name: Create rails.conf for Nginx
-  ansible.builtin.template:
-    src: rails.conf.j2
-    dest: "/etc/nginx/conf.d/rails.conf"
+    - name: Install Nginx if not installed
+      ansible.builtin.shell: amazon-linux-extras install -y nginx1
+      when: check_nginx_installed.rc != 0
+
+    - name: Create rails.conf for Nginx
+      ansible.builtin.template:
+        src: rails.conf.j2
+        dest: "/etc/nginx/conf.d/rails.conf"
+      notify:
+        - Restart Nginx
+
+    - name: Start or reload Nginx
+      ansible.builtin.systemd:
+        name: nginx
+        state: started
+      when: check_nginx_installed.rc == 0 and (start_nginx is undefined or start_nginx.changed)
+
+    - name: Check Nginx configuration
+      ansible.builtin.command: nginx -t
+      register: nginx_check
+      ignore_errors: true
+
+    - name: Restart Nginx if configuration is OK
+      ansible.builtin.systemd:
+        name: nginx
+        state: restarted
+      when: nginx_check.stdout is search('configuration file /etc/nginx/nginx.conf test is successful')
+      notify:
+        - Restart Puma
+
+- name: Ensure Ruby, Bundler, and Puma are installed and configured
+  hosts: all
   become: true
-  notify:
-    - Restart Nginx
+  tasks:
+    - name: Add rbenv path to .bash_profile
+      lineinfile:
+        path: /home/ec2-user/.bash_profile
+        line: 'export PATH="$HOME/.rbenv/bin:$PATH"'
+        create: yes
+      become_user: ec2-user
 
-- name: Start or reload Nginx
-  ansible.builtin.systemd:
-    name: nginx
-    state: started
+    - name: Add rbenv init to .bash_profile
+      lineinfile:
+        path: /home/ec2-user/.bash_profile
+        line: 'eval "$(rbenv init -)"'
+        create: yes
+      become_user: ec2-user
+
+    - name: Install required dependencies
+      package:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - git
+        - gcc
+        - make
+        - openssl-devel
+        - readline-devel
+        - zlib-devel
+        - bzip2
+        - autoconf
+        - bison
+        - libffi-devel
+        - sqlite-devel
+
+    - name: Install rbenv and ruby-build
+      git:
+        repo: 'https://github.com/rbenv/rbenv.git'
+        dest: '/home/ec2-user/.rbenv'
+        version: 'master'
+      become_user: ec2-user
+
+    - name: Install ruby-build as an rbenv plugin
+      git:
+        repo: 'https://github.com/rbenv/ruby-build.git'
+        dest: '/home/ec2-user/.rbenv/plugins/ruby-build'
+        version: 'master'
+      become_user: ec2-user
+
+    - name: Install Ruby
+      command: "/home/ec2-user/.rbenv/bin/rbenv install 3.1.2"
+      become_user: ec2-user
+      environment:
+        PATH: "/home/ec2-user/.rbenv/bin:/home/ec2-user/.rbenv/shims:{{ ansible_env.PATH }}"
+
+    - name: Set global Ruby version
+      command: "/home/ec2-user/.rbenv/bin/rbenv global 3.1.2"
+      become_user: ec2-user
+      environment:
+        PATH: "/home/ec2-user/.rbenv/bin:/home/ec2-user/.rbenv/shims:{{ ansible_env.PATH }}"
+
+    - name: Install Bundler
+      gem:
+        name: bundler
+        state: present
+        executable: /home/ec2-user/.rbenv/shims/gem
+      become_user: ec2-user
+
+    - name: Ensure Puma gem is installed
+      ansible.builtin.shell: /home/ec2-user/.rbenv/shims/gem install puma
+      become_user: ec2-user
+      environment:
+        PATH: "/home/ec2-user/.rbenv/bin:/home/ec2-user/.rbenv/shims:{{ ansible_env.PATH }}"
+
+    - name: Run bundle install in the application directory
+      ansible.builtin.shell: |
+        source /home/ec2-user/.bash_profile
+        cd /home/ec2-user/raisetech-live8-sample-app
+        ~/.rbenv/shims/bundle install
+      become_user: ec2-user
+
+- name: Ensure Puma is configured and running
+  hosts: all
   become: true
-  when: check_nginx_installed.rc == 0 and (start_nginx is undefined or start_nginx.changed)
+  tasks:
+    - name: Ensure the application directory exists
+      ansible.builtin.file:
+        path: /home/ec2-user/raisetech-live8-sample-app
+        state: directory
+        owner: ec2-user
+        group: ec2-user
+        mode: '0755'
 
-- name: Check Nginx configuration
-  ansible.builtin.command: nginx -t
-  register: nginx_check
-  become: true
-  ignore_errors: true
+    - name: Ensure the Puma configuration directory exists
+      ansible.builtin.file:
+        path: /home/ec2-user/raisetech-live8-sample-app/config
+        state: directory
+        owner: ec2-user
+        group: ec2-user
+        mode: '0755'
 
-- name: Restart Nginx if configuration is OK
-  ansible.builtin.systemd:
-    name: nginx
-    state: restarted
-  become: true
-  when: nginx_check.stdout is search('configuration file /etc/nginx/nginx.conf test is successful')
-  notify:
-    - Restart Puma
+    - name: Ensure the Puma configuration file exists
+      ansible.builtin.copy:
+        content: |
+          # Puma configuration file
+          # Example content:
+          # bind "unix:///tmp/puma.sock"
+          # port 3000
+          # environment "production"
+        dest: /home/ec2-user/raisetech-live8-sample-app/config/puma.rb
+        owner: ec2-user
+        group: ec2-user
+        mode: '0644'
 
-- name: Install Bundler
-  gem:
-    name: bundler
-    state: present
-    executable: /home/ec2-user/.rbenv/shims/gem
-  become: true
-  become_user: ec2-user
+    - name: Create Puma service file
+      ansible.builtin.copy:
+        content: |
+          [Unit]
+          Description=Puma HTTP Server
+          After=network.target
 
-- name: Ensure Puma gem is installed
-  ansible.builtin.shell: /home/ec2-user/.rbenv/shims/gem install puma
-  become_user: ec2-user
-  environment:
-    PATH: "/home/ec2-user/.rbenv/bin:/home/ec2-user/.rbenv/shims:{{ ansible_env.PATH }}"
+          [Service]
+          Type=simple
+          User=ec2-user
+          WorkingDirectory=/home/ec2-user/raisetech-live8-sample-app
+          Environment="PATH=/home/ec2-user/.rbenv/bin:/home/ec2-user/.rbenv/shims:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+          ExecStart=/home/ec2-user/.rbenv/shims/puma -C /home/ec2-user/raisetech-live8-sample-app/config/puma.rb
+          Restart=always
 
-- name: Run bundle install in the application directory
-  ansible.builtin.shell: |
-    source /home/ec2-user/.bash_profile
-    cd /home/ec2-user/raisetech-live8-sample-app
-    ~/.rbenv/shims/bundle install
-  become_user: ec2-user
+          [Install]
+          WantedBy=multi-user.target
+        dest: /etc/systemd/system/puma.service
+      notify:
+        - Reload systemd
 
-- name: Ensure the application directory exists
-  ansible.builtin.file:
-    path: /home/ec2-user/raisetech-live8-sample-app
-    state: directory
-    owner: ec2-user
-    group: ec2-user
-    mode: '0755'
-  become: true
+    - name: Reload systemd
+      ansible.builtin.systemd:
+        daemon_reload: yes
 
-- name: Ensure the Puma configuration directory exists
-  ansible.builtin.file:
-    path: /home/ec2-user/raisetech-live8-sample-app/config
-    state: directory
-    owner: ec2-user
-    group: ec2-user
-    mode: '0755'
-  become: true
+    - name: Reset failed Puma service
+      ansible.builtin.command: systemctl reset-failed puma.service
+      ignore_errors: true
 
-- name: Ensure the Puma configuration file exists
-  ansible.builtin.copy:
-    content: |
-      # Puma configuration file
-      # Example content:
-      # bind "unix:///tmp/puma.sock"
-      # port 3000
-      # environment "production"
-    dest: /home/ec2-user/raisetech-live8-sample-app/config/puma.rb
-    owner: ec2-user
-    group: ec2-user
-    mode: '0644'
-  become: true
+    - name: Enable and start Puma service
+      ansible.builtin.systemd:
+        name: puma.service
+        state: started
+        enabled: yes
 
-- name: Create Puma service file
-  ansible.builtin.copy:
-    content: |
-      [Unit]
-      Description=Puma HTTP Server
-      After=network.target
-
-      [Service]
-      Type=simple
-      User=ec2-user
-      WorkingDirectory=/home/ec2-user/raisetech-live8-sample-app
-      Environment="PATH=/home/ec2-user/.rbenv/bin:/home/ec2-user/.rbenv/shims:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-      ExecStart=/home/ec2-user/.rbenv/shims/puma -C /home/ec2-user/raisetech-live8-sample-app/config/puma.rb
-      Restart=always
-
-      [Install]
-      WantedBy=multi-user.target
-    dest: /etc/systemd/system/puma.service
-  become: true
-  notify:
-    - Reload systemd
-
-- name: Reload systemd
-  ansible.builtin.systemd:
-    daemon_reload: yes
-
-
-- name: Reset failed Puma service
-  ansible.builtin.command: systemctl reset-failed puma.service
-  become: true
-  ignore_errors: true
-
-- name: Enable and start Puma service
-  ansible.builtin.systemd:
-    name: puma.service
-    state: started
-    enabled: yes
-
-- name: Create rails.conf for Nginx
-  template:
-    src: templates/rails.conf.j2
-    dest: "/etc/nginx/conf.d/rails.conf"
-  become: true
-  notify:
-    - Restart Nginx
-
-- name: Start or reload Nginx
-  systemd:
-    name: nginx
-    state: started
-  become: true
-
-- name: Check Nginx configuration
-  command: nginx -t
-  register: nginx_check
-  become: true
-  ignore_errors: true
-
-- name: Restart Nginx if configuration is OK
-  systemd:
-    name: nginx
-    state: restarted
-  become: true
-  when: nginx_check.stdout is search('configuration file /etc/nginx/nginx.conf test is successful')
-  notify:
-    - Restart Puma
