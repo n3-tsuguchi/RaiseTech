@@ -102,13 +102,6 @@
     src: database.yml.j2
     dest: /home/ec2-user/raisetech-live8-sample-app/config/database.yml
 
-- name: Ensure schema.rb file exists and is writable
-  ansible.builtin.file:
-    path: /home/ec2-user/raisetech-live8-sample-app/db/schema.rb
-    state: touch
-    mode: '0664'
-  become_user: ec2-user
-
 - name: Start Puma service
   ansible.builtin.systemd:
     name: puma
