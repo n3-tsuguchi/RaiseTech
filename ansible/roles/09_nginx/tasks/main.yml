@@ -48,11 +48,11 @@
 
 - name: Check if puma.service.sample exists
   ansible.builtin.stat:
-    path: /home/ec2-user/raisetech-live8-sample-app/puma.service
+    path: /home/ec2-user/raisetech-live8-sample-app/puma.service.sample
   register: puma_service_check
 
 - name: Move puma.service
-  ansible.builtin.command: mv /home/ec2-user/raisetech-live8-sample-app/puma.service /etc/systemd/system/puma.service
+  ansible.builtin.command: mv /home/ec2-user/raisetech-live8-sample-app/puma.service.sample /etc/systemd/system/puma.service.sample
   when: puma_service_check.stat.exists
 
 - name: Check if puma.rb exists
