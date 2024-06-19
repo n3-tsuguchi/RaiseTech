@@ -45,6 +45,13 @@
     ~/.rbenv/shims/gem install puma
   become_user: ec2-user
 
+- name: Run bundle install in the application directory
+  ansible.builtin.shell: |
+    source /home/ec2-user/.bash_profile
+    cd /home/ec2-user/raisetech-live8-sample-app
+    ~/.rbenv/shims/bundle install
+  become_user: ec2-user
+
 - name: Ensure the application directory exists
   ansible.builtin.file:
     path: /home/ec2-user/raisetech-live8-sample-app
