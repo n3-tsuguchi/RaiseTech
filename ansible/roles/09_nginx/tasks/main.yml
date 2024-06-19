@@ -51,6 +51,15 @@
     path: /home/ec2-user/raisetech-live8-sample-app/puma.service.sample
   register: puma_service_check
 
+
+- name: Install Puma
+  ansible.builtin.gem:
+    name: puma
+    user_install: no
+
+
+
+
 - name: Move puma.service
   ansible.builtin.command: mv /home/ec2-user/raisetech-live8-sample-app/puma.service.sample /etc/systemd/system/puma.service.sample
   when: puma_service_check.stat.exists
