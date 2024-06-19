@@ -72,6 +72,7 @@
   shell: bash -lc "gem install bundler"
   args:
     chdir: /home/ec2-user/raisetech-live8-sample-app/
+  become_user: ec2-user
 
 - name: Create tmp/sokets directory
   file:
