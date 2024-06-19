@@ -12,12 +12,6 @@
   when: not git_directory.stat.exists
   register: Clone_result
 
-- name: create database.yml
-  become_user: root
-  template:
-    src: database.yml.j2
-    dest: "{{ sample_app_dir }}/config/database.yml"
-
 - name: create storage.yml
   become_user: root
   template:
