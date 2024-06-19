@@ -110,6 +110,13 @@
     src: database.yml.j2
     dest: "{{ sample_app_dir }}/config/database.yml"
 
+- name: Ensure schema.rb file exists and is writable
+  file:
+    path: "{{ sample_app_dir }}/db/schema.rb"
+    state: touch
+    mode: '0664'
+  become_user: ec2-user
+
 - name: Run bin/setup
   command: /home/ec2-user/.rbenv/shims/ruby bin/setup
   args:
