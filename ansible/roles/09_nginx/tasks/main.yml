@@ -79,18 +79,6 @@
     version: 'master'
   become_user: ec2-user
 
-- name: Install Ruby
-  command: "/home/ec2-user/.rbenv/bin/rbenv install 3.2.3"
-  become_user: ec2-user
-  environment:
-    PATH: "/home/ec2-user/.rbenv/bin:/home/ec2-user/.rbenv/shims:{{ ansible_env.PATH }}"
-
-- name: Set global Ruby version
-  command: "/home/ec2-user/.rbenv/bin/rbenv global 3.2.3"
-  become_user: ec2-user
-  environment:
-    PATH: "/home/ec2-user/.rbenv/bin:/home/ec2-user/.rbenv/shims:{{ ansible_env.PATH }}"
-
 - name: Install Bundler
   gem:
     name: bundler
