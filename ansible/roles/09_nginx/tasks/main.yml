@@ -50,12 +50,12 @@
 
 - name: Check if puma.service.sample exists
   stat:
-    path: /home/ec2-user/raisetech-live8-sample-app/puma.service.sample
+    path: /home/ec2-user/raisetech-live8-sample-app/puma.service
   register: puma_service_check
 
 - name: Move puma.service
   become_user: root
-  command: mv /home/ec2-user/raisetech-live8-sample-app/puma.service.sample /etc/systemd/system/puma.service
+  command: mv /home/ec2-user/raisetech-live8-sample-app/puma.service /etc/systemd/system/puma.service
   when: puma_service_check.stat.exists
 
 - name: Check if puma.rb exists
@@ -65,16 +65,23 @@
 
 - name: Generate puma.rb from template
   template:
-    src: roles/setup_server/template/puma.rb.j2  
+    src: roles/08_app/templates/puma.rb.j2
     dest: /home/ec2-user/raisetech-live8-sample-app/config/puma.rb
-
-- name: Change directory to your Rails app directory
-  command: cd /home/ec2-user/raisetech-live8-sample-app/
 
 - name: Install Bundler
   shell: bash -lc "bundle install"
   args:
     chdir: /home/ec2-user/raisetech-live8-sample-app/
+
+- name: Create tmp/sokets directory
+  file:
+    path: /home/ec2-user/raisetech-live8-sample-app/tmp/sokets
+    state: directory
+
+- name: Create tmp/pids directory
+  file:
+    path: /home/ec2-user/raisetech-live8-sample-app/tmp/pids
+    state: directory
 
 - name: Run bin/setup
   command: /home/ec2-user/.rbenv/shims/ruby bin/setup
