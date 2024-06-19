@@ -81,13 +81,6 @@
     path: /home/ec2-user/raisetech-live8-sample-app/tmp/pids
     state: directory
 
-- name: Ensure log file exists and is writable
-  ansible.builtin.file:
-    path: /home/ec2-user/raisetech-live8-sample-app/log/development.log
-    state: touch
-    mode: '0664'
-  become_user: ec2-user
-
 - name: Check if database.yml.sample exists
   ansible.builtin.stat:
     path: /home/ec2-user/raisetech-live8-sample-app/config/database.yml.sample
