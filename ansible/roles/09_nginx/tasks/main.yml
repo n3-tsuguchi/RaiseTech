@@ -107,7 +107,6 @@
     src: puma.rb.j2
     dest: /home/ec2-user/raisetech-live8-sample-app/config/puma.rb
 
-
 - name: Reload systemd
   ansible.builtin.systemd:
     daemon_reload: yes
