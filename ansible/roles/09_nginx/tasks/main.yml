@@ -91,6 +91,20 @@
     mode: '0664'
   become_user: ec2-user
 
+- name: Check if database.yml.sample exists
+  stat:
+    path: /home/ec2-user/raisetech-live8-sample-app/config/database.yml.sample
+  register: file_check
+
+- name: Rename database.yml.sample
+  command: mv /home/ec2-user/raisetech-live8-sample-app/config/database.yml.sample /home/ec2-user/raisetech-live8-sample-app/config/database.yml
+  when: file_check.stat.exists
+
+- name: Render database.yml from template
+  template:
+    src: roles/setup_server/template/database.yml.j2
+    dest: /home/ec2-user/raisetech-live8-sample-app/config/database.yml
+
 - name: Generate database.yml
   template:
     src: database.yml.j2
