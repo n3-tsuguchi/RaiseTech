@@ -84,6 +84,19 @@
     path: /home/ec2-user/raisetech-live8-sample-app/tmp/pids
     state: directory
 
+- name: Ensure log directory exists
+  file:
+    path: "{{ sample_app_dir }}/log"
+    state: directory
+    mode: '0775'
+  become_user: ec2-user
+
+- name: Generate database.yml
+  template:
+    src: database.yml.j2
+    dest: "{{ sample_app_dir }}/config/database.yml"
+  become_user: ec2-user
+
 - name: Run bin/setup
   command: /home/ec2-user/.rbenv/shims/ruby bin/setup
   args:
