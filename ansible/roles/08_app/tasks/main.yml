@@ -12,6 +12,11 @@
   when: not git_directory.stat.exists
   register: Clone_result
 
+- name: Ensure config directory exists
+  file:
+    path: "/var/www/raisetech-live8-sample-app/config"
+    state: directory
+
 - name: create storage.yml
   become_user: root
   template:
