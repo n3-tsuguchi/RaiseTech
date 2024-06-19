@@ -39,12 +39,11 @@
   notify:
     - Restart Puma
 
-- name: Install Puma gem
-  ansible.builtin.gem:
-    name: puma
-    state: present
-    executable: /home/ec2-user/.rbenv/shims/gem
-  become: true
+- name: Ensure Puma gem is installed
+  ansible.builtin.shell: |
+    source /home/ec2-user/.bash_profile
+    ~/.rbenv/shims/gem install puma
+  become_user: ec2-user
 
 - name: Ensure the application directory exists
   ansible.builtin.file:
