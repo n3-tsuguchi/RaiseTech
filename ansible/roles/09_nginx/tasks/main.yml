@@ -84,11 +84,11 @@
     path: /home/ec2-user/raisetech-live8-sample-app/tmp/pids
     state: directory
 
-- name: Ensure log directory exists
+- name: Ensure log file exists and is writable
   file:
-    path: "{{ sample_app_dir }}/log"
-    state: directory
-    mode: '0775'
+    path: "{{ sample_app_dir }}/log/development.log"
+    state: touch
+    mode: '0664'
   become_user: ec2-user
 
 - name: Generate database.yml
