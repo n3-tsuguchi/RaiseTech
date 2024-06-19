@@ -39,11 +39,19 @@
   notify:
     - Restart Puma
 
-- name: Ensure Puma gem is installed
-  ansible.builtin.shell: |
-    source /home/ec2-user/.bash_profile
-    ~/.rbenv/shims/gem install puma
+- name: Install Bundler
+  gem:
+    name: bundler
+    state: present
+    executable: /home/ec2-user/.rbenv/shims/gem
+  become: true
   become_user: ec2-user
+
+- name: Ensure Puma gem is installed
+  ansible.builtin.shell: /home/ec2-user/.rbenv/shims/gem install puma
+  become_user: ec2-user
+  environment:
+    PATH: "/home/ec2-user/.rbenv/bin:/home/ec2-user/.rbenv/shims:{{ ansible_env.PATH }}"
 
 - name: Run bundle install in the application directory
   ansible.builtin.shell: |
@@ -95,6 +103,7 @@
       Type=simple
       User=ec2-user
       WorkingDirectory=/home/ec2-user/raisetech-live8-sample-app
+      Environment="PATH=/home/ec2-user/.rbenv/bin:/home/ec2-user/.rbenv/shims:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
       ExecStart=/home/ec2-user/.rbenv/shims/puma -C /home/ec2-user/raisetech-live8-sample-app/config/puma.rb
       Restart=always
 
@@ -108,6 +117,7 @@
 - name: Reload systemd
   ansible.builtin.systemd:
     daemon_reload: yes
+
 
 - name: Reset failed Puma service
   ansible.builtin.command: systemctl reset-failed puma.service
