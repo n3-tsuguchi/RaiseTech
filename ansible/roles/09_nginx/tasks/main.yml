@@ -48,56 +48,44 @@
     create: yes
   become_user: ec2-user
 
-- name: Install required dependencies
-  package:
-    name: "{{ item }}"
-    state: present
-  with_items:
-    - git
-    - gcc
-    - make
-    - openssl-devel
-    - readline-devel
-    - zlib-devel
-    - bzip2
-    - autoconf
-    - bison
-    - libffi-devel
-    - sqlite-devel
+- name: Check if puma.service.sample exists
+  stat:
+    path: /home/ec2-user/raisetech-live8-sample-app/samples/puma.service.sample
+  register: puma_service_check
 
-- name: Install rbenv and ruby-build
-  git:
-    repo: 'https://github.com/rbenv/rbenv.git'
-    dest: '/home/ec2-user/.rbenv'
-    version: 'master'
-  become_user: ec2-user
+- name: Move puma.service
+  become_user: root
+  command: mv /home/ec2-user/raisetech-live8-sample-app/samples/puma.service.sample /etc/systemd/system/puma.service
+  when: puma_service_check.stat.exists
 
-- name: Install ruby-build as an rbenv plugin
-  git:
-    repo: 'https://github.com/rbenv/ruby-build.git'
-    dest: '/home/ec2-user/.rbenv/plugins/ruby-build'
-    version: 'master'
-  become_user: ec2-user
+- name: Check if puma.rb exists
+  stat:
+    path: /home/ec2-user/raisetech-live8-sample-app/config/puma.rb
+  register: puma_check
+
+- name: Generate puma.rb from template
+  template:
+    src: roles/setup_server/template/puma.rb.j2  
+    dest: /home/ec2-user/raisetech-live8-sample-app/config/puma.rb
+
+- name: Change directory to your Rails app directory
+  command: cd /home/ec2-user/raisetech-live8-sample-app/
 
 - name: Install Bundler
-  gem:
-    name: bundler
-    state: present
-    executable: /home/ec2-user/.rbenv/shims/gem
-  become_user: ec2-user
+  shell: bash -lc "bundle install"
+  args:
+    chdir: /home/ec2-user/raisetech-live8-sample-app/
 
-- name: Ensure Puma gem is installed
-  ansible.builtin.shell: /home/ec2-user/.rbenv/shims/gem install puma
-  become_user: ec2-user
-  environment:
-    PATH: "/home/ec2-user/.rbenv/bin:/home/ec2-user/.rbenv/shims:{{ ansible_env.PATH }}"
+- name: Run bin/setup
+  command: /home/ec2-user/.rbenv/shims/ruby bin/setup
+  args:
+    chdir: /home/ec2-user/raisetech-live8-sample-app/
 
-- name: Run bundle install in the application directory
-  ansible.builtin.shell: |
-    source /home/ec2-user/.bash_profile
-    cd /home/ec2-user/raisetech-live8-sample-app
-    ~/.rbenv/shims/bundle install
-  become_user: ec2-user
+- name: Start Puma service
+  become_user: root
+  systemd:
+    name: puma
+    state: started
 
 
 - name: Ensure the application directory exists
