@@ -24,6 +24,7 @@
     repo: 'https://github.com/rbenv/ruby-build.git'
     dest: '~/.rbenv/plugins/ruby-build'
     version: master
+    force: yes
   become_user: ec2-user
 
 - name: Install Ruby
