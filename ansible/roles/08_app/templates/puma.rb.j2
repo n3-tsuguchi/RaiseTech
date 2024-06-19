@@ -1,12 +1,17 @@
-environment: production
-daemonize: true
-pidfile: tmp/pids/puma.pid
-state_path: tmp/pids/puma.state
-stdout_redirect: log/puma.stdout.log, log/puma.stderr.log, true
-bind:
-  - "unix:///home/ec2-user/raisetech-live8-sample-app/tmp/sockets/puma.sock"
-workers: 2
-threads:
-  min: 1
-  max: 6
-preload_app: true
+directory '/home/ec2-user/raisetech-live8-sample-app'
+rackup "/home/ec2-user/raisetech-live8-sample-app/config.ru"
+environment 'production'
+
+pidfile "/home/ec2-user/raisetech-live8-sample-app/tmp/pids/puma.pid"
+state_path "/home/ec2-user/raisetech-live8-sample-app/tmp/pids/puma.state"
+stdout_redirect '/home/ec2-user/raisetech-live8-sample-app/log/puma.stdout.log', '/home/ec2-user/raisetech-live8-sample-app/log/puma.stderr.log', true
+
+threads 0, 5
+bind "unix:///home/ec2-user/raisetech-live8-sample-app/tmp/sockets/puma.sock"
+
+workers 2
+preload_app!
+
+on_worker_boot do
+  ActiveRecord::Base.establish_connection if defined?(ActiveRecord)
+end

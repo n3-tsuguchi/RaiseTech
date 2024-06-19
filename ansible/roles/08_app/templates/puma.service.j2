@@ -6,7 +6,7 @@ After=network.target
 Type=simple
 User=ec2-user
 WorkingDirectory=/home/ec2-user/raisetech-live8-sample-app
-ExecStart=/home/ec2-user/.rbenv/shims/bundle exec puma -C /home/ec2-user/raisetech-live8-sample-app/config/puma.rb
+ExecStart=/home/ec2-user/.rbenv/shims/puma -C /home/ec2-user/raisetech-live8-sample-app/config/puma.rb
 Restart=always
 
 [Install]
