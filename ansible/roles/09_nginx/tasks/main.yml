@@ -117,6 +117,13 @@
     mode: '0664'
   become_user: ec2-user
 
+- name: Ensure development.log file exists and is writable
+  file:
+    path: "{{ sample_app_dir }}/log/development.log"
+    state: touch
+    mode: '0664'
+  become_user: ec2-user
+
 - name: Run bin/setup
   command: /home/ec2-user/.rbenv/shims/ruby bin/setup
   args:
