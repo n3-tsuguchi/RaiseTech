@@ -52,17 +52,41 @@
   register: puma_service_check
 
 
-- name: Setup rbenv
+- name: Add rbenv to bash_profile for ec2-user
+  ansible.builtin.lineinfile:
+    path: /home/ec2-user/.bash_profile
+    line: 'export PATH="$HOME/.rbenv/bin:$PATH"'
+    create: yes
+  become_user: ec2-user
+
+- name: Initialize rbenv in bash_profile for ec2-user
+  ansible.builtin.lineinfile:
+    path: /home/ec2-user/.bash_profile
+    line: 'eval "$(rbenv init -)"'
+    create: yes
+  become_user: ec2-user
+
+- name: Load rbenv environment
   shell: |
-    source ~/.bashrc
+    export PATH="$HOME/.rbenv/bin:$PATH"
+    eval "$(rbenv init -)"
     rbenv global
+  become_user: ec2-user
+  environment:
+    HOME: /home/ec2-user
   changed_when: false
 
-- name: Install Puma
+- name: Install Puma using rbenv
   shell: |
-    source ~/.bashrc
+    export PATH="$HOME/.rbenv/bin:$PATH"
+    eval "$(rbenv init -)"
     gem install puma
+    rbenv rehash
+  become_user: ec2-user
+  environment:
+    HOME: /home/ec2-user
   changed_when: false
+
 
 
 
