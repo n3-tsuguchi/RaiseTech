@@ -52,10 +52,17 @@
   register: puma_service_check
 
 
+- name: Setup rbenv
+  shell: |
+    source ~/.bashrc
+    rbenv global
+  changed_when: false
+
 - name: Install Puma
-  ansible.builtin.gem:
-    name: puma
-    user_install: no
+  shell: |
+    source ~/.bashrc
+    gem install puma
+  changed_when: false
 
 
 
