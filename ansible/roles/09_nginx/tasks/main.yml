@@ -178,10 +178,46 @@
     HOME: /home/ec2-user
   changed_when: false
 
+- name: Ensure the tmp/sockets and tmp/pids directories exist
+  ansible.builtin.file:
+    path: /home/ec2-user/raisetech-live8-sample-app/tmp/sockets
+    state: directory
+    owner: ec2-user
+    group: ec2-user
+    mode: '0755'
+
+- name: Ensure the tmp/pids directory exists
+  ansible.builtin.file:
+    path: /home/ec2-user/raisetech-live8-sample-app/tmp/pids
+    state: directory
+    owner: ec2-user
+    group: ec2-user
+    mode: '0755'
+
+- name: Ensure the database.yml file exists
+  ansible.builtin.template:
+    src: templates/database.yml.j2
+    dest: /home/ec2-user/raisetech-live8-sample-app/config/database.yml
+    owner: ec2-user
+    group: ec2-user
+    mode: '0644'
+
+- name: Install Bundler
+  ansible.builtin.shell: bash -lc "gem install bundler"
+  become_user: ec2-user
+
+- name: Install application dependencies
+  ansible.builtin.shell: |
+    source ~/.bash_profile
+    cd /home/ec2-user/raisetech-live8-sample-app
+    bundle install
+  become_user: ec2-user
+
 - name: Run bin/setup
-  command: /home/ec2-user/.rbenv/shims/bundle exec bin/setup
+  ansible.builtin.command: /home/ec2-user/.rbenv/shims/bundle exec bin/setup
   args:
     chdir: /home/ec2-user/raisetech-live8-sample-app/
+  become_user: ec2-user
 
 
 
