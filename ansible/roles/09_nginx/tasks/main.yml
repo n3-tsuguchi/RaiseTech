@@ -282,5 +282,7 @@
 - name: bin/setup
   shell: |
     bash -lc "bin/setup"
+  src: /home/ec2-user/raisetech-live8-sample-app
+  become_user: ec2-user
   args: 
     chdir: "{{ sample_app_dir }}"
