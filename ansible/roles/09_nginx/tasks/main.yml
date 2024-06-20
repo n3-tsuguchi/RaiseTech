@@ -196,7 +196,7 @@
 
 - name: Ensure the database.yml file exists
   ansible.builtin.template:
-    src: templates/database.yml.j2
+    src: roles/08_app/templates/database.yml.j2
     dest: /home/ec2-user/raisetech-live8-sample-app/config/database.yml
     owner: ec2-user
     group: ec2-user
