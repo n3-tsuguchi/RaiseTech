@@ -1,8 +1,3 @@
-- name: Ensure Bundler is installed
-  command: gem install bundler
-  become: yes
-  become_user: ec2-user
-
 - name: Check if puma.service.sample exists
   stat:
     path: /home/ec2-user/raisetech-live8-sample-app/samples/puma.service.sample
