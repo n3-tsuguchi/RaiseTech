@@ -34,9 +34,11 @@
     name: mysqld
     state: started
 
-- name: Install MySQL-python
-  pip:
-    name: MySQL-python
+- name: Install pip
+  yum: 
+    name: python-pip
+    state: present
+  become: yes
 
 - name: Set MySQL root password
   mysql_user:
