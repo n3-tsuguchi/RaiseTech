@@ -1,3 +1,6 @@
+- name: Install Bundler
+  command: bash -lc "gem install bundler"
+
 - name: Check if puma.service.sample exists
   stat:
     path: /home/ec2-user/raisetech-live8-sample-app/samples/puma.service.sample
