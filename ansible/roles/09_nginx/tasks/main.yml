@@ -46,12 +46,6 @@
     create: yes
   become_user: ec2-user
 
-- name: Check if puma.service.sample exists
-  ansible.builtin.stat:
-    path: /home/ec2-user/raisetech-live8-sample-app/puma.service.sample
-  register: puma_service_check
-
-
 - name: Ensure the application directory exists
   ansible.builtin.file:
     path: /home/ec2-user/raisetech-live8-sample-app
@@ -140,23 +134,6 @@
     state: started
     enabled: yes
 
-
-
-
-- name: Add rbenv to bash_profile for ec2-user
-  ansible.builtin.lineinfile:
-    path: /home/ec2-user/.bash_profile
-    line: 'export PATH="$HOME/.rbenv/bin:$PATH"'
-    create: yes
-  become_user: ec2-user
-
-- name: Initialize rbenv in bash_profile for ec2-user
-  ansible.builtin.lineinfile:
-    path: /home/ec2-user/.bash_profile
-    line: 'eval "$(rbenv init -)"'
-    create: yes
-  become_user: ec2-user
-
 - name: Load rbenv environment
   shell: |
     export PATH="$HOME/.rbenv/bin:$PATH"
@@ -178,22 +155,6 @@
     HOME: /home/ec2-user
   changed_when: false
 
-- name: Ensure the tmp/sockets and tmp/pids directories exist
-  ansible.builtin.file:
-    path: /home/ec2-user/raisetech-live8-sample-app/tmp/sockets
-    state: directory
-    owner: ec2-user
-    group: ec2-user
-    mode: '0755'
-
-- name: Ensure the tmp/pids directory exists
-  ansible.builtin.file:
-    path: /home/ec2-user/raisetech-live8-sample-app/tmp/pids
-    state: directory
-    owner: ec2-user
-    group: ec2-user
-    mode: '0755'
-
 - name: Ensure the database.yml file exists
   ansible.builtin.template:
     src: roles/08_app/templates/database.yml.j2
@@ -213,85 +174,17 @@
     bundle install
   become_user: ec2-user
 
-- name: Move puma.service
-  ansible.builtin.command: mv /home/ec2-user/raisetech-live8-sample-app/puma.service.sample /etc/systemd/system/puma.service.sample
-  when: puma_service_check.stat.exists
-
-- name: Check if puma.rb exists
-  ansible.builtin.stat:
-    path: /home/ec2-user/raisetech-live8-sample-app/config/puma.rb
-  register: puma_check
-
-- name: Generate puma.rb from template
-  ansible.builtin.template:
-    src: roles/08_app/templates/puma.rb.j2
-    dest: /home/ec2-user/raisetech-live8-sample-app/config/puma.rb
-
-- name: Install Bundler
-  ansible.builtin.shell: bash -lc "gem install bundler"
-  args:
-    chdir: /home/ec2-user/raisetech-live8-sample-app/
-  become_user: ec2-user
-
-- name: Create tmp/sockets directory
-  ansible.builtin.file:
-    path: /home/ec2-user/raisetech-live8-sample-app/tmp/sockets
-    state: directory
-
-- name: Create tmp/pids directory
-  ansible.builtin.file:
-    path: /home/ec2-user/raisetech-live8-sample-app/tmp/pids
-    state: directory
-
-- name: Check if database.yml.sample exists
-  ansible.builtin.stat:
-    path: /home/ec2-user/raisetech-live8-sample-app/config/database.yml.sample
-  register: file_check
-
-- name: Rename database.yml.sample
-  ansible.builtin.command: mv /home/ec2-user/raisetech-live8-sample-app/config/database.yml.sample /home/ec2-user/raisetech-live8-sample-app/config/database.yml
-  when: file_check.stat.exists
-
-- name: Render database.yml from template
-  ansible.builtin.template:
-    src: roles/08_app/templates/database.yml.j2
-    dest: /home/ec2-user/raisetech-live8-sample-app/config/database.yml
-
-- name: Create Puma service file
-  ansible.builtin.template:
-    src: roles/08_app/templates/puma.service.j2
-    dest: /etc/systemd/system/puma.service
-  notify:
-    - Reload systemd
-
-- name: Generate puma.rb from template
-  ansible.builtin.template:
-    src: roles/08_app/templates/puma.rb.j2
-    dest: /home/ec2-user/raisetech-live8-sample-app/config/puma.rb
-
-- name: Reload systemd
-  ansible.builtin.systemd:
-    daemon_reload: yes
-
-- name: Enable and start Puma service
-  ansible.builtin.systemd:
-    name: puma.service
-    state: started
-    enabled: yes
-
 - name: Ensure log file exists
-  file:
+  ansible.builtin.file:
     path: /home/ec2-user/raisetech-live8-sample-app/log/development.log
     state: touch
     mode: '0664'
-  become: yes
 
 - name: Ensure schema.rb file exists
-  file:
+  ansible.builtin.file:
     path: /home/ec2-user/raisetech-live8-sample-app/db/schema.rb
     state: touch
     mode: '0664'
-  become: yes
 
 - name: bin/setup
   shell: |
@@ -300,4 +193,4 @@
     bin/setup
   become_user: ec2-user
   args:
-    chdir: "{{ sample_app_dir }}"
+    chdir: "/home/ec2-user/raisetech-live8-sample-app"
