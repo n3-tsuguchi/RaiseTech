@@ -1,5 +1,7 @@
-- name: Install Bundler
-  command: bash -lc "gem install bundler"
+- name: Ensure Bundler is installed
+  command: gem install bundler
+  become: yes
+  become_user: ec2-user
 
 - name: Check if puma.service.sample exists
   stat:
