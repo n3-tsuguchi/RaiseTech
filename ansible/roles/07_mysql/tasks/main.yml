@@ -34,6 +34,26 @@
     name: mysqld
     state: started
 
+- name: Set MySQL root password
+  mysql_user:
+    login_user: {{ aws_db_user }}
+    name: {{ aws_db_user}}
+    password: {{ aws_db_pw }}
+    host_all: true
+    state: present
+
+- name: Create database for Rails app
+  mysql_db:
+    name: raisetech_live8_sample_app
+    state: present
+
+- name: Create MySQL user for Rails app
+  mysql_user:
+    name: {{ aws_db_user }}
+    password: {{ aws_db_pw }}
+    priv: 'raisetech_live8_sample_app.*:ALL'
+    state: present
+
 - name: Configure database
   template:
     src: roles/08_app/templates/database.yml.j2
