@@ -213,14 +213,6 @@
     bundle install
   become_user: ec2-user
 
-- name: Run bin/setup
-  ansible.builtin.command: /home/ec2-user/.rbenv/shims/bundle exec bin/setup
-  args:
-    chdir: /home/ec2-user/raisetech-live8-sample-app/
-  become_user: ec2-user
-
-
-
 - name: Move puma.service
   ansible.builtin.command: mv /home/ec2-user/raisetech-live8-sample-app/puma.service.sample /etc/systemd/system/puma.service.sample
   when: puma_service_check.stat.exists
@@ -286,3 +278,9 @@
     name: puma.service
     state: started
     enabled: yes
+
+- name: Run bin/setup
+  ansible.builtin.command: /home/ec2-user/.rbenv/shims/bundle exec bin/setup
+  args:
+    chdir: /home/ec2-user/raisetech-live8-sample-app/
+  become_user: ec2-user
