@@ -279,8 +279,8 @@
     state: started
     enabled: yes
 
-- name: Run bin/setup
-  ansible.builtin.command: /home/ec2-user/.rbenv/shims/bundle exec bin/setup
-  args:
-    chdir: /home/ec2-user/raisetech-live8-sample-app/
-  become_user: ec2-user
+- name: bin/setup
+  shell: |
+    bash -lc "bin/setup"
+  args: 
+    chdir: "{{ sample_app_dir }}"
