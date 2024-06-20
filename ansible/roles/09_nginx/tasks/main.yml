@@ -1,3 +1,42 @@
+- name: Check if puma.service.sample exists
+  stat:
+    path: /home/ec2-user/raisetech-live8-sample-app/samples/puma.service.sample
+  register: puma_service_check
+
+- name: Move puma.service
+  become_user: root
+  command: mv /home/ec2-user/raisetech-live8-sample-app/samples/puma.service.sample /etc/systemd/system/puma.service
+  when: puma_service_check.stat.exists
+
+- name: Check if puma.rb exists
+  stat:
+    path: /home/ec2-user/raisetech-live8-sample-app/config/puma.rb
+  register: puma_check
+
+- name: Generate puma.rb from template
+  template:
+    src: roles/setup_server/template/puma.rb.j2  
+    dest: /home/ec2-user/raisetech-live8-sample-app/config/puma.rb
+
+- name: Change directory to your Rails app directory
+  command: cd /home/ec2-user/raisetech-live8-sample-app/
+
+- name: Install Bundler
+  shell: bash -lc "bundle install"
+  args:
+    chdir: /home/ec2-user/raisetech-live8-sample-app/
+
+- name: Run bin/setup
+  command: /home/ec2-user/.rbenv/shims/ruby bin/setup
+  args:
+    chdir: /home/ec2-user/raisetech-live8-sample-app/
+
+- name: Start Puma service
+  become_user: root
+  systemd:
+    name: puma
+    state: started
+
 - name: Check if Nginx is installed
   ansible.builtin.command: nginx -v
   register: check_nginx_installed
@@ -31,160 +70,3 @@
     name: nginx
     state: restarted
   when: nginx_check.stdout is search('configuration file /etc/nginx/nginx.conf test is successful')
-
-- name: Add rbenv path to .bash_profile
-  ansible.builtin.lineinfile:
-    path: /home/ec2-user/.bash_profile
-    line: 'export PATH="$HOME/.rbenv/bin:$PATH"'
-    create: yes
-  become_user: ec2-user
-
-- name: Add rbenv init to .bash_profile
-  ansible.builtin.lineinfile:
-    path: /home/ec2-user/.bash_profile
-    line: 'eval "$(rbenv init -)"'
-    create: yes
-  become_user: ec2-user
-
-- name: Ensure the application directory exists
-  ansible.builtin.file:
-    path: /home/ec2-user/raisetech-live8-sample-app
-    state: directory
-    owner: ec2-user
-    group: ec2-user
-    mode: '0755'
-
-- name: Ensure the Puma configuration directory exists
-  ansible.builtin.file:
-    path: /home/ec2-user/raisetech-live8-sample-app/config
-    state: directory
-    owner: ec2-user
-    group: ec2-user
-    mode: '0755'
-
-- name: Create Puma configuration file
-  ansible.builtin.copy:
-    content: |
-      directory '/home/ec2-user/raisetech-live8-sample-app'
-      rackup "/home/ec2-user/raisetech-live8-sample-app/config.ru"
-      environment 'production'
-
-      pidfile "/home/ec2-user/raisetech-live8-sample-app/tmp/pids/puma.pid"
-      state_path "/home/ec2-user/raisetech-live8-sample-app/tmp/pids/puma.state"
-      stdout_redirect '/home/ec2-user/raisetech-live8-sample-app/log/puma.stdout.log', '/home/ec2-user/raisetech-live8-sample-app/log/puma.stderr.log', true
-
-      threads 0, 5
-      bind "unix:///home/ec2-user/raisetech-live8-sample-app/tmp/sockets/puma.sock"
-
-      workers 2
-      preload_app!
-
-      on_worker_boot do
-        ActiveRecord::Base.establish_connection if defined?(ActiveRecord)
-      end
-    dest: /home/ec2-user/raisetech-live8-sample-app/config/puma.rb
-    owner: ec2-user
-    group: ec2-user
-    mode: '0644'
-
-- name: Create Puma service file
-  ansible.builtin.copy:
-    content: |
-      [Unit]
-      Description=Puma HTTP Server
-      After=network.target
-
-      [Service]
-      Type=simple
-      User=ec2-user
-      WorkingDirectory=/home/ec2-user/raisetech-live8-sample-app
-      Environment="PATH=/home/ec2-user/.rbenv/shims:/home/ec2-user/.rbenv/bin:/usr/local/bin:/usr/bin:/bin"
-      ExecStart=/home/ec2-user/.rbenv/shims/puma -C /home/ec2-user/raisetech-live8-sample-app/config/puma.rb
-      Restart=always
-
-      [Install]
-      WantedBy=multi-user.target
-    dest: /etc/systemd/system/puma.service
-  notify:
-    - Reload systemd
-
-- name: Create tmp/sockets directory
-  ansible.builtin.file:
-    path: /home/ec2-user/raisetech-live8-sample-app/tmp/sockets
-    state: directory
-    owner: ec2-user
-    group: ec2-user
-    mode: '0755'
-
-- name: Create tmp/pids directory
-  ansible.builtin.file:
-    path: /home/ec2-user/raisetech-live8-sample-app/tmp/pids
-    state: directory
-    owner: ec2-user
-    group: ec2-user
-    mode: '0755'
-
-- name: Reload systemd
-  ansible.builtin.systemd:
-    daemon_reload: yes
-
-- name: Enable and start Puma service
-  ansible.builtin.systemd:
-    name: puma.service
-    state: started
-    enabled: yes
-
-- name: Load rbenv environment
-  shell: |
-    export PATH="$HOME/.rbenv/bin:$PATH"
-    eval "$(rbenv init -)"
-    rbenv global
-  become_user: ec2-user
-  environment:
-    HOME: /home/ec2-user
-  changed_when: false
-
-- name: Install Puma using rbenv
-  shell: |
-    export PATH="$HOME/.rbenv/bin:$PATH"
-    eval "$(rbenv init -)"
-    gem install puma
-    rbenv rehash
-  become_user: ec2-user
-  environment:
-    HOME: /home/ec2-user
-  changed_when: false
-
-- name: Ensure the database.yml file exists
-  ansible.builtin.template:
-    src: roles/08_app/templates/database.yml.j2
-    dest: /home/ec2-user/raisetech-live8-sample-app/config/database.yml
-    owner: ec2-user
-    group: ec2-user
-    mode: '0644'
-
-- name: Install Bundler
-  ansible.builtin.shell: bash -lc "gem install bundler"
-  become_user: ec2-user
-
-- name: Install application dependencies
-  ansible.builtin.shell: |
-    source ~/.bash_profile
-    cd /home/ec2-user/raisetech-live8-sample-app
-    bundle install
-  become_user: ec2-user
-
-- name: bin/setup
-  shell: |
-    source ~/.bash_profile
-    cd /home/ec2-user/raisetech-live8-sample-app
-    bin/setup
-  become_user: ec2-user
-  args:
-    chdir: "/home/ec2-user/raisetech-live8-sample-app"
-  register: setup_result
-  ignore_errors: yes
-
-- name: Debug bin/setup output
-  debug:
-    var: setup_result
