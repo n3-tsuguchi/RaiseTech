@@ -36,5 +36,5 @@
 
 - name: Configure database
   template:
-    src: /role/08_app/templates/database.yml.j2
+    src: /roles/08_app/templates/database.yml.j2
     dest: "{{ sample_app_dir }}/config/database.yml"
