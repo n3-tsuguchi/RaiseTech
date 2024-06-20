@@ -179,7 +179,7 @@
   changed_when: false
 
 - name: Run bin/setup
-  command: /home/ec2-user/.rbenv/shims/ruby bin/setup
+  command: /home/ec2-user/.rbenv/shims/bundle exec bin/setup
   args:
     chdir: /home/ec2-user/raisetech-live8-sample-app/
 
