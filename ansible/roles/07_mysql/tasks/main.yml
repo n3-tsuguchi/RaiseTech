@@ -34,6 +34,10 @@
     name: mysqld
     state: started
 
+- name: Install MySQL-python
+  pip:
+    name: MySQL-python
+
 - name: Set MySQL root password
   mysql_user:
     login_user: "{{ aws_db_user }}"
