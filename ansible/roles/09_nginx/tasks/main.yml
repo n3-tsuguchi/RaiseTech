@@ -174,17 +174,13 @@
     bundle install
   become_user: ec2-user
 
-- name: Ensure log file exists
-  ansible.builtin.file:
-    path: /home/ec2-user/raisetech-live8-sample-app/log/development.log
-    state: touch
-    mode: '0664'
+- name: Clone the sample app repository
+  ansible.builtin.git:
+    repo: 'https://github.com/yuta-ushijima/raisetech-live8-sample-app.git'
+    dest: /home/ec2-user/raisetech-live8-sample-app
+    version: master
+  become_user: ec2-user
 
-- name: Ensure schema.rb file exists
-  ansible.builtin.file:
-    path: /home/ec2-user/raisetech-live8-sample-app/db/schema.rb
-    state: touch
-    mode: '0664'
 
 - name: bin/setup
   shell: |
@@ -194,3 +190,9 @@
   become_user: ec2-user
   args:
     chdir: "/home/ec2-user/raisetech-live8-sample-app"
+  register: setup_result
+  ignore_errors: yes
+
+- name: Debug bin/setup output
+  debug:
+    var: setup_result
