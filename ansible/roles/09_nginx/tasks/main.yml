@@ -279,6 +279,20 @@
     state: started
     enabled: yes
 
+- name: Ensure log file exists
+  file:
+    path: /home/ec2-user/raisetech-live8-sample-app/log/development.log
+    state: touch
+    mode: '0664'
+  become: yes
+
+- name: Ensure schema.rb file exists
+  file:
+    path: /home/ec2-user/raisetech-live8-sample-app/db/schema.rb
+    state: touch
+    mode: '0664'
+  become: yes
+
 - name: bin/setup
   shell: |
     source ~/.bash_profile
