@@ -19,13 +19,21 @@
     insertafter: EOF
   become_user: ec2-user
 
-- name: Install ruby-build as an rbenv plugin
-  git:
-    repo: 'https://github.com/rbenv/ruby-build.git'
-    dest: '~/.rbenv/plugins/ruby-build'
-    version: master
-    force: no
+- name: Add the application directory to Git safe.directory
+  ansible.builtin.command: git config --global --add safe.directory /home/ec2-user/raisetech-live8-sample-app
+  become: yes
   become_user: ec2-user
+
+- name: Clone the sample app repository
+  ansible.builtin.git:
+    repo: 'https://github.com/yuta-ushijima/raisetech-live8-sample-app.git'
+    dest: /home/ec2-user/raisetech-live8-sample-app
+    version: master
+    force: yes
+  become_user: ec2-user
+
+- name: Change directory
+  shell: cd raisetech-live8-sample-app
 
 - name: Install Ruby
   command: /home/ec2-user/.rbenv/bin/rbenv install 3.2.3
