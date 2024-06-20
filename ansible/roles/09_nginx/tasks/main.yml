@@ -174,12 +174,18 @@
     bundle install
   become_user: ec2-user
 
+- name: Add the application directory to Git safe.directory
+  ansible.builtin.command: git config --global --add safe.directory /home/ec2-user/raisetech-live8-sample-app
+  become: yes
+  become_user: ec2-user
+
 - name: Clone the sample app repository
   ansible.builtin.git:
     repo: 'https://github.com/yuta-ushijima/raisetech-live8-sample-app.git'
     dest: /home/ec2-user/raisetech-live8-sample-app
     version: master
   become_user: ec2-user
+
 
 
 - name: bin/setup
