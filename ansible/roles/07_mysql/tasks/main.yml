@@ -36,9 +36,9 @@
 
 - name: Set MySQL root password
   mysql_user:
-    login_user: {{ aws_db_user }}
-    name: {{ aws_db_user}}
-    password: {{ aws_db_pw }}
+    login_user: "{{ aws_db_user }}"
+    name: "{{ aws_db_user}}"
+    password: "{{ aws_db_pw }}"
     host_all: true
     state: present
 
@@ -49,8 +49,8 @@
 
 - name: Create MySQL user for Rails app
   mysql_user:
-    name: {{ aws_db_user }}
-    password: {{ aws_db_pw }}
+    name: "{{ aws_db_user }}"
+    password: "{{ aws_db_pw }}"
     priv: 'raisetech_live8_sample_app.*:ALL'
     state: present
 
