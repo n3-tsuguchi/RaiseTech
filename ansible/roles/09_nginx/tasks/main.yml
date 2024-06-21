@@ -19,14 +19,15 @@
     dest: /home/ec2-user/raisetech-live8-sample-app/config/puma.rb
   when: not puma_check.stat.exists
 
-- name: Install Puma gem
-  become: yes
-  become_user: ec2-user
-  shell: |
-    source /home/ec2-user/.bash_profile
-    cd /home/ec2-user/raisetech-live8-sample-app
-    gem install puma
-    bundle exec puma -C config/puma.rb
+- name: Install Bundler
+  shell: bash -lc "bundle install"
+  args:
+    chdir: /home/ec2-user/raisetech-live8-sample-app/
+
+- name: Run bin/setup
+  command: /home/ec2-user/.rbenv/shims/ruby bin/setup
+  args:
+    chdir: /home/ec2-user/raisetech-live8-sample-app/
 
 - name: Start Puma service
   become: yes
