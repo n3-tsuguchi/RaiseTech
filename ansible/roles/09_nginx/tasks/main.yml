@@ -21,12 +21,6 @@
 - name: Change directory to your Rails app directory
   command: cd /home/ec2-user/raisetech-live8-sample-app/
 
-
-- name: Change owner of the puma socket file
-  ansible.builtin.command:
-    cmd: chown nginx:nginx /home/ec2-user/raisetech-live8-sample-app/tmp/sockets/puma.sock
-  become: yes
-
 - name: Start Puma service
   become_user: root
   systemd:
