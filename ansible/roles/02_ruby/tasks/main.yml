@@ -1,44 +1,56 @@
-- name: Install rbenv
+- name: Clone rbenv repository
+  become_user: root
   git:
-    repo: 'https://github.com/rbenv/rbenv.git'
-    dest: '~/.rbenv'
+    repo: "https://github.com/sstephenson/rbenv.git"
+    dest: "/home/ec2-user/.rbenv"
     version: master
-  become_user: ec2-user
 
-- name: Add rbenv to bashrc
+- name: Change ownership of .rbenv directory to ec2-user
+  become_user: root
+  file:
+    path: "/home/ec2-user/.rbenv"
+    owner: ec2-user
+    group: ec2-user
+    recurse: yes
+    state: directory
+
+- name: Add rbenv path to .bash_profile
   lineinfile:
-    path: /home/ec2-user/.bashrc
+    path: /home/ec2-user/.bash_profile
     line: 'export PATH="$HOME/.rbenv/bin:$PATH"'
-    insertafter: EOF
-  become_user: ec2-user
+    create: yes
 
 - name: Initialize rbenv
   lineinfile:
-    path: /home/ec2-user/.bashrc
+    path: /home/ec2-user/.bash_profile
     line: 'eval "$(rbenv init -)"'
-    insertafter: EOF
-  become_user: ec2-user
+    create: yes
 
-- name: Check if the folder exists
-  stat:
-    path: /home/ec2-user/raisetech-live8-sample-app
-  register: folder_check
+- name: Add rbenv path to .bash_profile
+  lineinfile:
+    path: /home/ec2-user/.bash_profile
+    line: 'export PATH="$HOME/.rbenv/bin:$PATH"'
+    create: yes
 
-- name: Clone repository
+- name: Load .bash_profile
+  shell: bash -lc "source /home/ec2-user/.bash_profile"
+
+- name: Install rbenv plugins
   git:
-    repo: https://github.com/yuta-ushijima/raisetech-live8-sample-app.git
-    dest: /home/ec2-user/raisetech-live8-sample-app
-  when: not folder_check.stat.exists
+    repo: https://github.com/sstephenson/ruby-build.git
+    dest: "/home/ec2-user/.rbenv/plugins/ruby-build"
 
-- name: Change directory
-  shell: cd raisetech-live8-sample-app
+- name: Check if Ruby is installed
+  stat:
+    path: /home/ec2-user/.rbenv/versions/3.2.3
+  register: ruby_check
 
-- name: Install Ruby
-  command: /home/ec2-user/.rbenv/bin/rbenv install 3.2.3
-  args:
-    creates: /home/ec2-user/.rbenv/versions/3.2.3
-  become_user: ec2-user
+- name: Install Ruby 3.2.3
+  shell: bash -lc "rbenv install 3.2.3"
+  when: not ruby_check.stat.exists
 
-- name: Set global Ruby version
-  command: /home/ec2-user/.rbenv/bin/rbenv global 3.2.3
-  become_user: ec2-user
+- name: Rehash rbenv
+  shell: bash -lc "rbenv rehash"
+
+- name: Set global Ruby version to 3.2.3
+  shell: bash -lc "rbenv global 3.2.3"
