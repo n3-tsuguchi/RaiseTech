@@ -33,8 +33,3 @@
   service:
     name: mysqld
     state: started
-
-- name: Configure database
-  template:
-    src: roles/08_app/templates/database.yml.j2
-    dest: "{{ sample_app_dir }}/config/database.yml"
