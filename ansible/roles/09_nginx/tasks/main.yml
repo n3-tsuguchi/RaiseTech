@@ -19,11 +19,6 @@
     dest: /home/ec2-user/raisetech-live8-sample-app/config/puma.rb
   when: not puma_check.stat.exists
 
-- name: Install Bundler
-  shell: bash -lc "bundle install"
-  args:
-    chdir: /home/ec2-user/raisetech-live8-sample-app/
-
 - name: Run bin/setup
   command: /home/ec2-user/.rbenv/shims/ruby bin/setup
   args:
