@@ -4,7 +4,7 @@
   register: puma_service_check
 
 - name: Move puma.service
-  become_user: root
+  become: yes
   command: mv /home/ec2-user/raisetech-live8-sample-app/samples/puma.service.sample /etc/systemd/system/puma.service
   when: puma_service_check.stat.exists
 
@@ -17,24 +17,37 @@
   template:
     src: roles/08_app/templates/puma.rb.j2
     dest: /home/ec2-user/raisetech-live8-sample-app/config/puma.rb
+  when: not puma_check.stat.exists
 
-- name: Change directory to your Rails app directory
-  command: cd /home/ec2-user/raisetech-live8-sample-app/
+- name: Install Puma gem
+  become: yes
+  become_user: ec2-user
+  shell: |
+    source /home/ec2-user/.bash_profile
+    cd /home/ec2-user/raisetech-live8-sample-app
+    gem install puma
+    bundle exec puma -C config/puma.rb
 
 - name: Start Puma service
-  become_user: root
+  become: yes
   systemd:
     name: puma
     state: started
 
+- name: Enable Puma service
+  become: yes
+  systemd:
+    name: puma
+    enabled: yes
+
 - name: Start nginx service
-  become_user: root
+  become: yes
   service:
     name: nginx
     state: started
 
 - name: Enable nginx service
-  become_user: root
+  become: yes
   service:
     name: nginx
     enabled: yes
