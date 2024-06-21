@@ -20,11 +20,9 @@
   when: not puma_check.stat.exists
 
 - name: Run bin/setup
-  command: bin/setup
+  command: bash -lc "source /home/ec2-user/.rbenv/bin/rbenv init - && bin/setup"
   args:
     chdir: /home/ec2-user/raisetech-live8-sample-app/
-  environment:
-    PATH: "/home/ec2-user/.rbenv/versions/3.2.3/bin:{{ ansible_env.PATH }}"
 
 - name: Start Puma service
   become: yes
