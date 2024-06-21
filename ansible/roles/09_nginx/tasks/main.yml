@@ -20,7 +20,7 @@
   when: not puma_check.stat.exists
 
 - name: Run bin/setup
-  command: /home/ec2-user/.rbenv/shims/ruby bin/setup
+  command: /home/ec2-user/.rbenv/versions/3.2.3/bin/bundle exec bin/setup
   args:
     chdir: /home/ec2-user/raisetech-live8-sample-app/
 
