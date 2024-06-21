@@ -45,5 +45,8 @@ bind "unix:///home/ec2-user/raisetech-live8-sample-app/tmp/sockets/puma.sock"
 #
 # preload_app!
 
+# Redirect STDOUT and STDERR to a log file
+stdout_redirect 'log/puma.log', 'log/puma.err.log', true
+
 # Allow puma to be restarted by `rails restart` command.
 plugin :tmp_restart
