@@ -27,35 +27,6 @@
     name: puma
     state: started
 
-
-
-- name: Set ownership for app directory
-  file:
-    path: /home/ec2-user/raisetech-live8-sample-app
-    state: directory
-    owner: ec2-user
-    group: nginx
-    recurse: yes
-    mode: '0755'
-
-- name: Set ownership for Puma socket
-  file:
-    path: /home/ec2-user/raisetech-live8-sample-app/tmp/sockets/puma.sock
-    state: file
-    owner: ec2-user
-    group: nginx
-    mode: '0755'
-
-- name: Set SELinux context for app directory (if SELinux is enabled)
-  command: chcon -t httpd_sys_content_t /home/ec2-user/raisetech-live8-sample-app -R
-  when: ansible_selinux.status == "enabled"
-
-- name: Set SELinux context for Puma socket (if SELinux is enabled)
-  command: chcon -t httpd_sys_rw_content_t /home/ec2-user/raisetech-live8-sample-app/tmp/sockets/puma.sock
-  when: ansible_selinux.status == "enabled"
-
-
-
 - name: Check if Nginx is installed
   ansible.builtin.command: nginx -v
   register: check_nginx_installed
