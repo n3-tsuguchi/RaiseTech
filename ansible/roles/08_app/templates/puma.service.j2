@@ -1,5 +1,3 @@
-# /etc/systemd/system/puma.service
-
 [Unit]
 Description=Puma HTTP Server
 After=network.target
@@ -8,9 +6,10 @@ After=network.target
 Type=simple
 User=ec2-user
 WorkingDirectory=/home/ec2-user/raisetech-live8-sample-app
-Environment="PATH=/home/ec2-user/.rbenv/shims:/home/ec2-user/.rbenv/bin:/usr/local/bin:/usr/bin:/bin"
-ExecStart=/home/ec2-user/.rbenv/shims/puma -C /home/ec2-user/raisetech-live8-sample-app/config/puma.rb
+Environment="HOME=/home/ec2-user"
+ExecStart=/bin/bash -lc 'bundle exec puma -C /home/ec2-user/raisetech-live8-sample-app/config/puma.rb'
 Restart=always
+RestartSec=5
 
 [Install]
 WantedBy=multi-user.target
