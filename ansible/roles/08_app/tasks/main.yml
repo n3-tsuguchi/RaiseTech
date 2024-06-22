@@ -53,7 +53,7 @@
 
 - name: Render database.yml from template
   template:
-    src: roles/setup_server/template/database.yml.j2
+    src: roles/08_app/templates/database.yml.j2
     dest: /home/ec2-user/raisetech-live8-sample-app/config/database.yml
 
 - name: Ensure config directory exists
