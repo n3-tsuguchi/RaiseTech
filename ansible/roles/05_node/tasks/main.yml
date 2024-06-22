@@ -4,7 +4,7 @@
   register: nodejs_bin
 
 - name: add repository for nodejs
-  shell: bash -lc "curl -sL https://rpm.nodesource.com/setup_17.x | bash -"
+  shell: bash -lc "curl -sL https://github.com/nodejs/node.git | bash -"
   when: not nodejs_bin.stat.exists
   become: yes
 
