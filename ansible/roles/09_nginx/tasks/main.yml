@@ -78,6 +78,12 @@
     src: roles/09_nginx/templates/rails.conf.j2
     dest: "/etc/nginx/rails.conf"
 
+- name: create nginx.d.conf
+  become_user: root
+  template:
+    src: roles/09_nginx/templates/rails.d.conf.j2
+    dest: "/etc/nginx/rails.d.conf"
+
 - name: add server_names_hash_bucket_size to http block in nginx.conf
   become_user: root
   ansible.builtin.lineinfile:

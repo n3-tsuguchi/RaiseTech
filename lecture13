@@ -6,6 +6,10 @@
 
 ## CircleCIからServerSpecへのテスト実行
 ![](image/2024-04-03_14h54_09.png)
+![](image/2024-06-22_21h56_24.png)
+![](image/2024-06-22_21h56_37.png)
+![](image/2024-06-22_21h56_48.png)
+![](image/2024-06-22_21h57_00.png)
 
 ### CircleCIからAnsibleの疎通とServerSpecへのテスト実行について
 - AnsibleとServerSpec単体はそんなに難しくなかったです。
