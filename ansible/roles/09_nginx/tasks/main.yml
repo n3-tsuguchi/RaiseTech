@@ -19,13 +19,19 @@
     dest: /home/ec2-user/raisetech-live8-sample-app/config/puma.rb
   when: not puma_check.stat.exists
 
+- name: Install bundler gem
+  shell: . /home/ec2-user/.bash_profile && gem install bundler
+  become: yes
+  become_user: ec2-user
+
 - name: puma permissions
   become: yes
   command: chown -R ec2-user:ec2-user /home/ec2-user/raisetech-live8-sample-app
 
 - name: Install application dependencies
   become: yes
-  shell: /bin/bash -lc 'cd /home/ec2-user/raisetech-live8-sample-app && bundle install'
+  shell: . /home/ec2-user/.bash_profile && cd /home/ec2-user/raisetech-live8-sample-app && bundle install
+  become_user: ec2-user
 
 
 - name: Run bin/setup
