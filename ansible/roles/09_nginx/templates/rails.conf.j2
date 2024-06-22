@@ -1,5 +1,5 @@
 upstream puma {
-  server unix:///home/ec2-user/raisetech-live8-sample-app/tmp/sockets/puma.sock;
+  server unix:///home/ec2-user/raisetech-live8-sample-app/tmp/sockets/puma.sock fail_timeout=0;
 }
 
 server {
@@ -17,8 +17,10 @@ server {
 
   location @puma {
     proxy_set_header X-Real-IP $remote_addr;
-    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    index index.html index.htm;
+    proxy_set_header X-Forwarded-Photo $scheme;
     proxy_set_header Host $http_host;
+    proxy_redirect off;
     proxy_pass http://puma;
   }
 }
