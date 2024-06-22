@@ -50,7 +50,7 @@
   become_user: root
   template:
     src: roles/08_app/templates/rails.conf.j2
-    dest: "/etc/nginx/conf.d/rails.conf"
+    dest: "/etc/nginx/conf.d/app.conf"
 
 - name: add server_names_hash_bucket_size to http block in nginx.conf
   become_user: root
