@@ -23,6 +23,11 @@
   become: yes
   command: chown -R ec2-user:ec2-user /home/ec2-user/raisetech-live8-sample-app
 
+- name: Install application dependencies
+  become: yes
+  shell: /bin/bash -lc 'cd /home/ec2-user/raisetech-live8-sample-app && bundle install'
+
+
 - name: Run bin/setup
   command: bash -lc "source /home/ec2-user/.rbenv/bin/rbenv init - && bin/setup"
   args:

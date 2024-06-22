@@ -7,7 +7,7 @@ Type=simple
 User=ec2-user
 WorkingDirectory=/home/ec2-user/raisetech-live8-sample-app
 Environment="HOME=/home/ec2-user"
-ExecStart=/bin/bash -lc 'bundle exec puma -C /home/ec2-user/raisetech-live8-sample-app/config/puma.rb'
+ExecStart=/bin/bash -lc 'cd /home/ec2-user/raisetech-live8-sample-app && bundle exec puma -C /home/ec2-user/raisetech-live8-sample-app/config/puma.rb >> /home/ec2-user/raisetech-live8-sample-app/log/puma.log 2>&1'
 Restart=always
 RestartSec=5
 
