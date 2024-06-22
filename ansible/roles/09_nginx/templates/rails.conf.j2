@@ -4,7 +4,7 @@ upstream app {
 
 server {
   listen 80;
-  server_name 13.231.232.45;
+  server_name {{ aws_ec2_host }};
 
   keepalive_timeout 5;
   access_log /var/log/nginx/access.log;
