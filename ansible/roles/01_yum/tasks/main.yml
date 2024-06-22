@@ -3,21 +3,20 @@
   yum:
     name:
       - git
+      - make
       - gcc-c++
       - patch
-      - bzip2
-      - openssl-devel
       - libyaml-devel
       - libffi-devel
-      - readline-devel
-      - zlib-devel
-      - gdbm-devel
-      - ncurses-devel
-      - make
-      - curl
-      - ImageMagick-devel
-      - libcurl-devel
       - libicu-devel
+      - zlib-devel
+      - readline-devel
       - libxml2-devel
       - libxslt-devel
+      - ImageMagick
+      - ImageMagick-devel
+      - openssl-devel
+      - libcurl
+      - libcurl-devel
+      - curl
     state: present
