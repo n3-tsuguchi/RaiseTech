@@ -19,6 +19,10 @@
     dest: /home/ec2-user/raisetech-live8-sample-app/config/puma.rb
   when: not puma_check.stat.exists
 
+- name: puma permissions
+  become: yes
+  command: chown -R ec2-user:ec2-user /home/ec2-user/raisetech-live8-sample-app
+
 - name: Run bin/setup
   command: bash -lc "source /home/ec2-user/.rbenv/bin/rbenv init - && bin/setup"
   args:
