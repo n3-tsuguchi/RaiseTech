@@ -28,6 +28,30 @@
   args:
     chdir: /home/ec2-user/raisetech-live8-sample-app/
 
+
+- name: Ensure puma.service is configured correctly
+  become: yes
+  copy:
+    dest: /etc/systemd/system/puma.service
+    content: |
+      [Unit]
+      Description=Puma HTTP Server
+      After=network.target
+
+      [Service]
+      Type=simple
+      User=ec2-user
+      WorkingDirectory=/home/ec2-user/raisetech-live8-sample-app
+      ExecStart=/home/ec2-user/.rbenv/shims/bundle exec puma -C /home/ec2-user/raisetech-live8-sample-app/config/puma.rb
+      Restart=always
+
+      [Install]
+      WantedBy=multi-user.target
+
+- name: Reload systemd daemon
+  become: yes
+  command: systemctl daemon-reload
+
 - name: Start Puma service
   become: yes
   systemd:
