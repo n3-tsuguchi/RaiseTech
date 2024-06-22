@@ -78,7 +78,7 @@
     src: roles/09_nginx/templates/rails.conf.j2
     dest: "/etc/nginx/rails.conf"
 
-- name: create nginx.d.conf
+- name: create rails.d.conf
   become_user: root
   template:
     src: roles/09_nginx/templates/rails.conf.j2
