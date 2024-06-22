@@ -55,7 +55,7 @@
 - name: add server_names_hash_bucket_size to http block in nginx.conf
   become_user: root
   ansible.builtin.lineinfile:
-    path: /roles/09_nginx/templates/rails.conf.j2
+    path: /etc/nginx/nginx.conf
     insertbefore: types_hash_max_size 4096;
     firstmatch: yes
     line: server_names_hash_bucket_size 128;
