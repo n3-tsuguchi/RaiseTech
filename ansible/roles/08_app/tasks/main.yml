@@ -12,6 +12,50 @@
   when: not git_directory.stat.exists
   register: Clone_result
 
+- name: Change directory
+  shell: cd raisetech-live8-sample-app
+
+
+
+
+
+
+
+
+
+
+- name: add mini_magick to config/application.rb
+  become_user: root
+  ansible.builtin.lineinfile:
+    path: /home/ec2-user/raisetech-live8-sample-app/config/application.rb
+    insertbefore: config.generators.system_tests = nil
+    firstmatch: yes
+    line: config.active_storage.variant_processor = :mini_magick
+
+- name: Create tmp/sokets directory
+  file:
+    path: /home/ec2-user/raisetech-live8-sample-app/tmp/sokets
+    state: directory
+
+- name: Create tmp/pids directory
+  file:
+    path: /home/ec2-user/raisetech-live8-sample-app/tmp/pids
+    state: directory
+
+- name: Check if database.yml.sample exists
+  stat:
+    path: /home/ec2-user/raisetech-live8-sample-app/config/database.yml.sample
+  register: file_check
+
+- name: Rename database.yml.sample
+  command: mv /home/ec2-user/raisetech-live8-sample-app/config/database.yml.sample /home/ec2-user/raisetech-live8-sample-app/config/database.yml
+  when: file_check.stat.exists
+
+- name: Render database.yml from template
+  template:
+    src: roles/setup_server/template/database.yml.j2
+    dest: /home/ec2-user/raisetech-live8-sample-app/config/database.yml
+
 - name: Ensure config directory exists
   file:
     path: "{{ sample_app_dir }}/config"
