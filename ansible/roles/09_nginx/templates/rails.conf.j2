@@ -4,16 +4,17 @@ upstream puma {
 
 server {
   listen 80;
-  server_name {{ aws_ec2_host }};
+  server_name ec2-13-231-232-45.ap-northeast-1.compute.amazonaws.com;
 
   keepalive_timeout 5;
   access_log /var/log/nginx/access.log;
   error_log /var/log/nginx/error.log;
   root /home/ec2-user/raisetech-live8-sample-app/public;
+  index index.html index.htm;
 
   error_page 404 /404.html;
   error_page 500 502 503 504 /500.html;
-  try_files $uri/index.html $uri @app;
+  try_files $uri @app;
 
   location @app {
     proxy_set_header X-Real-IP $remote_addr;
@@ -21,7 +22,6 @@ server {
     proxy_set_header X-Forwarded-Proto $scheme;
     proxy_set_header Host $http_host;
     proxy_redirect off;
-    index index.html index.htm;
     proxy_pass http://puma;
   }
 }
