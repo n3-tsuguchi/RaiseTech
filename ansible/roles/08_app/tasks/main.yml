@@ -12,16 +12,24 @@
   when: not git_directory.stat.exists
   register: Clone_result
 
+- name: add config/environments/development.rb
+  become_user: root
+  ansible.builtin.lineinfile:
+    path: /home/ec2-user/raisetech-live8-sample-app/config/environments/development.rb
+    insertbefore: config.action_controller.raise_on_missing_callback_actions = true
+    firstmatch: yes
+    line: config.hosts << "{{ aws_ec2_host }}"
+
+- name: add mini_magick to config/application.rb
+  become_user: root
+  ansible.builtin.lineinfile:
+    path: /home/ec2-user/raisetech-live8-sample-app/config/application.rb
+    insertbefore: config.generators.system_tests = nil
+    firstmatch: yes
+    line: config.active_storage.variant_processor = :mini_magick
+
 - name: Change directory
   shell: cd raisetech-live8-sample-app
-
-
-
-
-
-
-
-
 
 
 - name: add mini_magick to config/application.rb
