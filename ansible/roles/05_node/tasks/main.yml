@@ -15,10 +15,8 @@
     name: nodejs
     state: latest
 
-- name: install nodejs
+- name: Install npm
+  become_user: root
   yum:
-    name: nodejs
-    state:  installed
-  become: yes
-  when: not nodejs_bin.stat.exists
-  
+    name: npm
+    state: latest
