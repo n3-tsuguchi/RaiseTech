@@ -20,6 +20,14 @@
     firstmatch: yes
     line: config.hosts << "{{ aws_ec2_host }}"
 
+- name: add config/environments/production.rb
+  become_user: root
+  ansible.builtin.lineinfile:
+    path: /home/ec2-user/raisetech-live8-sample-app/config/environments/production.rb
+    insertbefore: config.action_controller.raise_on_missing_callback_actions = true
+    firstmatch: yes
+    line: config.hosts << "{{ aws_ec2_host }}"
+
 - name: add mini_magick to config/application.rb
   become_user: root
   ansible.builtin.lineinfile:
