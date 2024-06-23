@@ -51,3 +51,5 @@ end
 
 # Allow puma to be restarted by `rails restart` command.
 plugin :tmp_restart
+
+stdout_redirect 'log/puma.access.log', 'log/puma.error.log', true
