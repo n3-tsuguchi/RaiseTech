@@ -91,7 +91,7 @@
 - name: Start Puma
   ansible.builtin.command:
     cmd: bundle exec puma -C config/puma.rb
-    chdir: "{{ sample_app_dir }}"
+    chdir: /home/ec2-user/raisetech-live8-sample-app/config/puma.rb
 
 - name: Install nginx
   become_user: root
