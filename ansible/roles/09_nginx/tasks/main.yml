@@ -1,3 +1,9 @@
+- name: Run bin/setup
+  command: bash -lc "source /home/ec2-user/.rbenv/bin/rbenv init - && bin/setup"
+  args:
+    chdir: /home/ec2-user/raisetech-live8-sample-app/
+
+
 - name: Check if puma.service.sample exists
   stat:
     path: /home/ec2-user/raisetech-live8-sample-app/samples/puma.service.sample
@@ -61,12 +67,6 @@
   file:
     path: /home/ec2-user
     mode: 0701
-
-- name: Run bin/setup
-  command: bash -lc "source /home/ec2-user/.rbenv/bin/rbenv init - && bin/setup"
-  args:
-    chdir: /home/ec2-user/raisetech-live8-sample-app/
-
 
 - name: Install nginx
   become_user: root
