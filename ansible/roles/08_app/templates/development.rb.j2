@@ -75,5 +75,6 @@ Rails.application.configure do
   # config.action_cable.disable_request_forgery_protection = true
 
   config.hosts << "ec2-18-181-171-64.ap-northeast-1.compute.amazonaws.com"
+  config.web_console.permissions = '0.0.0.0/0'
 
 end
