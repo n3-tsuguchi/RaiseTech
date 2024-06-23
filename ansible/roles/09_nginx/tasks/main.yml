@@ -88,12 +88,6 @@
     mode: "0755"
     owner: ec2-user
 
-- name: puma start
-  become: true
-  become_method: sudo
-  become_user: root
-  command: systemctl start puma
-
 - name: Install nginx
   become_user: root
   command: amazon-linux-extras install nginx1 -y
