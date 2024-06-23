@@ -68,6 +68,26 @@
     path: /home/ec2-user
     mode: 0701
 
+- name: create tmp/sockets
+  become: true
+  become_method: sudo
+  become_user: root
+  ansible.builtin.file:
+    path: "{{ sample_app_dir }}/tmp/sockets"
+    state: directory
+    mode: "0755"
+    owner: ec2-user
+
+- name: create tmp/pids
+  become: true
+  become_method: sudo
+  become_user: root
+  ansible.builtin.file:
+    path: "{{ sample_app_dir }}/tmp/pids"
+    state: directory
+    mode: "0755"
+    owner: ec2-user
+
 - name: Install nginx
   become_user: root
   command: amazon-linux-extras install nginx1 -y
