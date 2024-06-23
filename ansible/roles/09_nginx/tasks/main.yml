@@ -88,6 +88,11 @@
     mode: "0755"
     owner: ec2-user
 
+- name: Start Puma
+  ansible.builtin.command:
+    cmd: bundle exec puma -C config/puma.rb
+    chdir: /home/ec2-user/raisetech-live8-sample-app/
+
 - name: Install nginx
   become_user: root
   command: amazon-linux-extras install nginx1 -y
