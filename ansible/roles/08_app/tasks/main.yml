@@ -47,10 +47,6 @@
     path: /home/ec2-user/raisetech-live8-sample-app/config/database.yml.sample
   register: file_check
 
-- name: Rename database.yml.sample
-  command: mv /home/ec2-user/raisetech-live8-sample-app/config/database.yml.sample /home/ec2-user/raisetech-live8-sample-app/config/database.yml
-  when: file_check.stat.exists
-
 - name: Render database.yml from template
   template:
     src: roles/08_app/templates/database.yml.j2
