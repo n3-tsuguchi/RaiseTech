@@ -47,15 +47,6 @@
     firstmatch: yes
     line: config.active_storage.variant_processor = :mini_magick
 
-- name: Create tmp/sokets directory
-  file:
-    path: /home/ec2-user/raisetech-live8-sample-app/tmp/sokets
-    state: directory
-
-- name: Create tmp/pids directory
-  file:
-    path: /home/ec2-user/raisetech-live8-sample-app/tmp/pids
-    state: directory
 
 - name: Check if database.yml.sample exists
   stat:
