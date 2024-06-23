@@ -21,7 +21,7 @@
     path: /home/ec2-user/raisetech-live8-sample-app/config/environments/development.rb
     insertbefore: config.action_controller.raise_on_missing_callback_actions = true
     firstmatch: yes
-    line: config.hosts << "{{ aws_ec2_host }}"
+    line: config.hosts << "{{ aws_alb_host }}"
 
 - name: add config/environments/production.rb
   become_user: root
@@ -29,7 +29,7 @@
     path: /home/ec2-user/raisetech-live8-sample-app/config/environments/production.rb
     insertbefore: config.action_controller.raise_on_missing_callback_actions = true
     firstmatch: yes
-    line: config.hosts << "{{ aws_ec2_host }}"
+    line: config.hosts << "{{ aws_alb_host }}"
 
 - name: add mini_magick to config/application.rb
   become_user: root
@@ -61,6 +61,10 @@
   stat:
     path: /home/ec2-user/raisetech-live8-sample-app/config/database.yml.sample
   register: file_check
+
+- name: Rename database.yml.sample
+  command: mv /home/ec2-user/raisetech-live8-sample-app/config/database.yml.sample /home/ec2-user/raisetech-live8-sample-app/config/database.yml
+  when: file_check.stat.exists
 
 - name: Render database.yml from template
   template:
