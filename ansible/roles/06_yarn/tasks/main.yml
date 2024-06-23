@@ -4,5 +4,5 @@
     state: present
     global: yes
   become: yes
-  when: not nodejs_bin.stat.exists
+  when: not nodejs.stat.exists
   
