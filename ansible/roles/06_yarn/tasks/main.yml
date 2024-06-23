@@ -4,5 +4,4 @@
     state: present
     global: yes
   become: yes
-  when: not yarn_check.stat.exists
   
