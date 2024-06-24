@@ -13,9 +13,9 @@ default: &default
   adapter: mysql2
   encoding: utf8mb4
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  username: <%= ENV['aws_db_user'] %>
-  password: <%= ENV['aws_db_pw'] %>
-  host: <%= ENV['aws_db_host'] %>
+  username: <%= ENV['AWS_DB_USER'] %>
+  password: <%= ENV['AWS_DB_PW'] %>
+  host: <%= ENV['AWS_DB_HOST'] %>
   socket: /var/lib/mysql/mysql.sock
 
 development:
