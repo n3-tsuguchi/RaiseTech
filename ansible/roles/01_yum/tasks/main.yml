@@ -1,23 +1,28 @@
-- name: install tools
-  become: yes
+- name: yum update
+  become_user: root
   yum:
-    name:
+    name: '*'
+    state: latest
+
+- name: install general packages
+  become_user: root
+  yum:
+    name: 
       - git
-      - gcc-c++
-      - patch
-      - bzip2
-      - openssl-devel
-      - libyaml-devel
-      - libffi-devel
-      - readline-devel
-      - zlib-devel
-      - gdbm-devel
-      - ncurses-devel
-      - make
-      - curl
-      - ImageMagick-devel
+      - make 
+      - gcc-c++ 
+      - patch 
+      - libyaml-devel 
+      - libffi-devel 
+      - libicu-devel 
+      - zlib-devel 
+      - readline-devel 
+      - libxml2-devel 
+      - libxslt-devel 
+      - ImageMagick 
+      - ImageMagick-devel 
+      - openssl-devel 
+      - libcurl
       - libcurl-devel
-      - libicu-devel
-      - libxml2-devel
-      - libxslt-devel
-    state: present
+      - curl
+    state: installed
