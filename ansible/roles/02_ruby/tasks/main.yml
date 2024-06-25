@@ -4,7 +4,6 @@
     repo: "https://github.com/sstephenson/rbenv.git"
     dest: "/home/ec2-user/.rbenv"
     version: master
-  become: yes
   become_user: ec2-user
 
 - name: Change ownership of .rbenv directory to ec2-user
