@@ -1,7 +1,13 @@
-- name: install tools
-  become: yes
+- name: yum update
+  become_user: root
   yum:
-    name:
+    name: '*'
+    state: latest
+
+- name: install general packages
+  become_user: root
+  yum:
+    name: 
       - git
       - make 
       - gcc-c++ 
@@ -19,4 +25,4 @@
       - libcurl
       - libcurl-devel
       - curl
-    state: present
+    state: installed
