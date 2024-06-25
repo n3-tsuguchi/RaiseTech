@@ -1,10 +1,10 @@
 - name: Clone rbenv repository
-  become: yes
   git:
     repo: "https://github.com/sstephenson/rbenv.git"
     dest: "/home/ec2-user/.rbenv"
     version: master
   become_user: ec2-user
+  become: yes
 
 - name: Change ownership of .rbenv directory to ec2-user
   become: yes
