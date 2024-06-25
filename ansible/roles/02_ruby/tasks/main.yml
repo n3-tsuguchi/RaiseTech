@@ -1,7 +1,7 @@
 - name: Clone rbenv repository
   become: yes
   git:
-    repo: "git@github.com:sstephenson/rbenv.git"
+    repo: "https://github.com/sstephenson/rbenv.git"
     dest: "/home/ec2-user/.rbenv"
     version: master
   become_user: ec2-user
