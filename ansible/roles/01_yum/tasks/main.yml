@@ -5,7 +5,7 @@
     state: latest
 
 - name: install general packages
-  become: yes
+  become_user: root
   yum:
     name: 
       - git
