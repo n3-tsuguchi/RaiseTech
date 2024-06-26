@@ -1,3 +1,8 @@
+- name: Install EPEL release
+  yum:
+    name: epel-release
+    state: present
+
 - name: yum update
   become_user: root
   yum:
