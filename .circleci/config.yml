@@ -22,7 +22,6 @@ jobs:
 
   execute-ansible:
     executor: ansible-playbook/default
-    circleci_ip_ranges: true
     steps:
       - checkout
       - add_ssh_keys:
