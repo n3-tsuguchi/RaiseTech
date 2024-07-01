@@ -1,12 +1,13 @@
 - name: Clone rbenv repository
-  become_user: root
+  become: yes
+  become_user: ec2-user
   git:
     repo: "https://github.com/sstephenson/rbenv.git"
     dest: "/home/ec2-user/.rbenv"
     version: master
 
 - name: Change ownership of .rbenv directory to ec2-user
-  become_user: root
+  become: yes
   file:
     path: "/home/ec2-user/.rbenv"
     owner: ec2-user
@@ -14,28 +15,24 @@
     recurse: yes
     state: directory
 
-- name: Add rbenv path to .bash_profile
+- name: Add rbenv path and initialize rbenv in .bash_profile
+  become: yes
+  become_user: ec2-user
   lineinfile:
     path: /home/ec2-user/.bash_profile
-    line: 'export PATH="$HOME/.rbenv/bin:$PATH"'
-    create: yes
-
-- name: Initialize rbenv
-  lineinfile:
-    path: /home/ec2-user/.bash_profile
-    line: 'eval "$(rbenv init -)"'
-    create: yes
-
-- name: Add rbenv path to .bash_profile
-  lineinfile:
-    path: /home/ec2-user/.bash_profile
-    line: 'export PATH="$HOME/.rbenv/bin:$PATH"'
+    line: |
+      export PATH="$HOME/.rbenv/bin:$PATH"
+      eval "$(rbenv init -)"
     create: yes
 
 - name: Load .bash_profile
-  shell: bash -lc "source /home/ec2-user/.bash_profile"
+  become: yes
+  become_user: ec2-user
+  shell: source /home/ec2-user/.bash_profile
 
 - name: Install rbenv plugins
+  become: yes
+  become_user: ec2-user
   git:
     repo: https://github.com/sstephenson/ruby-build.git
     dest: "/home/ec2-user/.rbenv/plugins/ruby-build"
@@ -46,11 +43,17 @@
   register: ruby_check
 
 - name: Install Ruby 3.2.3
+  become: yes
+  become_user: ec2-user
   shell: bash -lc "rbenv install 3.2.3"
   when: not ruby_check.stat.exists
 
 - name: Rehash rbenv
+  become: yes
+  become_user: ec2-user
   shell: bash -lc "rbenv rehash"
 
 - name: Set global Ruby version to 3.2.3
+  become: yes
+  become_user: ec2-user
   shell: bash -lc "rbenv global 3.2.3"
