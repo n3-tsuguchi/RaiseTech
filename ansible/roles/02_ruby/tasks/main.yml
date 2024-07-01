@@ -1,12 +1,12 @@
 - name: Clone rbenv repository
+  become_user: root
   git:
-    repo: https://github.com/sstephenson/rbenv.git
+    repo: "https://github.com/sstephenson/rbenv.git"
     dest: "/home/ec2-user/.rbenv"
     version: master
-  become_user: ec2-user
 
 - name: Change ownership of .rbenv directory to ec2-user
-  become: yes
+  become_user: root
   file:
     path: "/home/ec2-user/.rbenv"
     owner: ec2-user
@@ -14,45 +14,48 @@
     recurse: yes
     state: directory
 
-- name: Add rbenv paths and initialize rbenv in .bash_profile
-  become: yes
+- name: Add rbenv path to .bash_profile
   lineinfile:
     path: /home/ec2-user/.bash_profile
-    line: |
-      export PATH="$HOME/.rbenv/bin:$PATH"
-      eval "$(rbenv init -)"
+    line: 'export PATH="$HOME/.rbenv/bin:$PATH"'
+    create: yes
+
+- name: Initialize rbenv
+  lineinfile:
+    path: /home/ec2-user/.bash_profile
+    line: 'eval "$(rbenv init -)"'
+    create: yes
+
+- name: Add rbenv path to .bash_profile
+  lineinfile:
+    path: /home/ec2-user/.bash_profile
+    line: 'export PATH="$HOME/.rbenv/bin:$PATH"'
     create: yes
 
 - name: Load .bash_profile
-  shell: . /home/ec2-user/.bash_profile
-  become: yes
-  args:
-    executable: /bin/bash
+  shell: bash -lc "source /home/ec2-user/.bash_profile"
 
 - name: Install rbenv plugins
-  become: yes
   git:
     repo: https://github.com/sstephenson/ruby-build.git
     dest: "/home/ec2-user/.rbenv/plugins/ruby-build"
-  become_user: ec2-user
 
 - name: Check if Ruby 3.2.3 is installed
   stat:
     path: /home/ec2-user/.rbenv/versions/3.2.3
   register: ruby_check
 
+- name: Check if Ruby is installed
+  stat:
+    path: /home/ec2-user/.rbenv/versions/3.2.3
+  register: ruby_check
+
 - name: Install Ruby 3.2.3
-  shell: . /home/ec2-user/.bash_profile && rbenv install 3.2.3
-  become: yes
-  become_user: ec2-user
+  shell: bash -lc "rbenv install 3.2.3"
   when: not ruby_check.stat.exists
 
 - name: Rehash rbenv
-  shell: . /home/ec2-user/.bash_profile && rbenv rehash
-  become: yes
-  become_user: ec2-user
+  shell: bash -lc "rbenv rehash"
 
 - name: Set global Ruby version to 3.2.3
-  shell: . /home/ec2-user/.bash_profile && rbenv global 3.2.3
-  become: yes
-  become_user: ec2-user
+  shell: bash -lc "rbenv global 3.2.3"
