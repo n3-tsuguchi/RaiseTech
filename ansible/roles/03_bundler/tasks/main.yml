@@ -1,10 +1,13 @@
-- name: Check if Bundler is installed
-  stat:
-    path: /home/ec2-user/.rbenv/versions/3.2.3/bin/bundle
-  register: bundler_check
+- name: check bundler exists
+  shell: bash -lc "bundler version | grep {{ bundler_version }}"
+  register: bundler_exists
+  changed_when: no
+  ignore_errors: yes
 
-- name: Install Bundler
-  become: yes
-  become_user: ec2-user
-  command: bash -lc "gem install bundler"
-  when: not bundler_check.stat.exists
+- name: bundler install
+  gem: 
+    name: bundler
+    version: "{{ bundler_version }}"
+    executable: "/home/ec2-user/.rbenv/shims/gem"
+    user_install: no
+  when: bundler_exists is failed
