@@ -79,7 +79,7 @@
   command: cd /home/ec2-user/raisetech-live8-sample-app/
 
 - name: Install Bundler
-  shell: bash -lc "bundle install"
+  shell: bash -lc "gem install bundler"
   args:
     chdir: /home/ec2-user/raisetech-live8-sample-app/
 
