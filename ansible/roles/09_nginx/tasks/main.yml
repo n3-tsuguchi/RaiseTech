@@ -17,6 +17,7 @@
   template:
     src: roles/08_app/templates/puma.rb.j2  
     dest: /home/ec2-user/raisetech-live8-sample-app/config/puma.rb
+  when: not puma_check.stat.exists
 
 - name: Install Puma dependencies
   become: yes
@@ -47,13 +48,6 @@
     owner: ec2-user
     group: ec2-user
     mode: '0664'
-
-- name: Install Bundler
-  become: yes
-  become_user: ec2-user
-  shell: bash -lc "bundle install"
-  args:
-    chdir: /home/ec2-user/raisetech-live8-sample-app/
 
 - name: Run bin/setup
   become: yes
