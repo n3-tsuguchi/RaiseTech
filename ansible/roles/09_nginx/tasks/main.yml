@@ -56,11 +56,16 @@
   args:
     chdir: /home/ec2-user/raisetech-live8-sample-app/
 
-- name: Install PolicyKit
+- name: Reload systemd to apply new puma service
   become: yes
-  yum:
-    name: policykit-1
-    state: present
+  shell: sudo systemctl daemon-reload
+
+- name: Start and enable puma service
+  become: yes
+  service:
+    name: puma
+    state: started
+    enabled: yes
 
 - name: Start Puma service
   become_user: root
