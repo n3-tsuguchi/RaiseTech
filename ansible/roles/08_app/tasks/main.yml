@@ -69,7 +69,8 @@
     state: directory
 
 - name: edit development.rb
-  become_user: root
+  become: yes
+  become_user: ec2-user
   template:
     src: development.rb.j2
     dest: "{{ sample_app_dir }}/config/environments/development.rb"
