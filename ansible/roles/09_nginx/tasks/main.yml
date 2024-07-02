@@ -79,10 +79,14 @@
   command: cd /home/ec2-user/raisetech-live8-sample-app/
 
 - name: Install Bundler
-  shell: bash -lc "gem install bundler"
+  shell: |
+    export PATH="$HOME/.rbenv/bin:$PATH"
+    eval "$(rbenv init -)"
+    gem install bundler
   args:
     chdir: /home/ec2-user/raisetech-live8-sample-app/
-  when: puma_check.stat.exists
+  become: yes
+  become_user: ec2-user
 
 - name: Run bin/setup
   command: /home/ec2-user/.rbenv/shims/ruby bin/setup
