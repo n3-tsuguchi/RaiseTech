@@ -4,7 +4,7 @@
   register: puma_service_check
 
 - name: Move puma.service
-  become_user: root
+  become: yes
   command: mv /home/ec2-user/raisetech-live8-sample-app/samples/puma.service.sample /etc/systemd/system/puma.service
   when: puma_service_check.stat.exists
 
@@ -17,9 +17,6 @@
   template:
     src: roles/08_app/templates/puma.rb.j2  
     dest: /home/ec2-user/raisetech-live8-sample-app/config/puma.rb
-
-- name: Change directory to your Rails app directory
-  command: cd /home/ec2-user/raisetech-live8-sample-app/
 
 - name: Ensure db/schema.rb is writable
   file:
@@ -45,12 +42,14 @@
     mode: '0664'
 
 - name: Install Bundler
+  become: yes
   become_user: ec2-user
   shell: bash -lc "bundle install"
   args:
     chdir: /home/ec2-user/raisetech-live8-sample-app/
 
 - name: Run bin/setup
+  become: yes
   become_user: ec2-user
   command: /home/ec2-user/.rbenv/shims/ruby bin/setup
   args:
@@ -61,34 +60,33 @@
   shell: sudo systemctl daemon-reload
 
 - name: Start Puma service
-  become_user: root
+  become: yes
   systemd:
     name: puma
     state: started
 
 - name: Install nginx
-  become_user: root
+  become: yes
   command: amazon-linux-extras install nginx1 -y
 
-- name: create rails.conf
-  become_user: root
+- name: Create rails.conf
+  become: yes
   template:
     src: roles/09_nginx/templates/rails.conf.j2
     dest: "/etc/nginx/rails.conf"
 
-- name: create rails.d.conf
-  become_user: root
+- name: Create rails.d.conf
+  become: yes
   template:
     src: roles/09_nginx/templates/rails.conf.j2
     dest: "/etc/nginx/conf.d/rails.conf"
 
-- name: add server_names_hash_bucket_size to http block in nginx.conf
-  become_user: root
-  ansible.builtin.lineinfile:
-    path: /etc/nginx/rails.conf
-    insertbefore: types_hash_max_size 4096;
-    firstmatch: yes
-    line: server_names_hash_bucket_size 128;
+- name: Add server_names_hash_bucket_size to http block in nginx.conf
+  become: yes
+  lineinfile:
+    path: /etc/nginx/nginx.conf
+    insertbefore: 'types_hash_max_size 4096;'
+    line: 'server_names_hash_bucket_size 128;'
 
 - name: Start nginx service
   become: yes
