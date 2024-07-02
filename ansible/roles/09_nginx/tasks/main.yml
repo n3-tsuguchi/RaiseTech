@@ -18,6 +18,13 @@
     src: roles/08_app/templates/puma.rb.j2  
     dest: /home/ec2-user/raisetech-live8-sample-app/config/puma.rb
 
+- name: Install Puma dependencies
+  become: yes
+  become_user: ec2-user
+  shell: bash -lc "bundle install"
+  args:
+    chdir: /home/ec2-user/raisetech-live8-sample-app/
+
 - name: Ensure db/schema.rb is writable
   file:
     path: /home/ec2-user/raisetech-live8-sample-app/db/schema.rb
@@ -52,13 +59,6 @@
   become: yes
   become_user: ec2-user
   command: /home/ec2-user/.rbenv/shims/ruby bin/setup
-  args:
-    chdir: /home/ec2-user/raisetech-live8-sample-app/
-
-- name: Install Puma dependencies
-  become: yes
-  become_user: ec2-user
-  shell: bash -lc "bundle install"
   args:
     chdir: /home/ec2-user/raisetech-live8-sample-app/
 
