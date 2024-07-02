@@ -14,9 +14,3 @@
   yum:
     name: nodejs
     state: latest
-
-- name: Install npm
-  become_user: root
-  yum:
-    name: npm
-    state: latest
