@@ -60,13 +60,6 @@
   become: yes
   shell: sudo systemctl daemon-reload
 
-- name: Start and enable puma service
-  become: yes
-  service:
-    name: puma
-    state: started
-    enabled: yes
-
 - name: Start Puma service
   become_user: root
   systemd:
