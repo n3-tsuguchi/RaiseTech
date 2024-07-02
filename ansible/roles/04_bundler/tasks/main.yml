@@ -4,4 +4,7 @@
   register: bundler_check
 
 - name: Install Bundler
-  command: bash -lc "gem install bundler"
+  become: yes
+  become_user: ec2-user
+  command: bash -lc "rbenv exec gem install bundler"
+  when: not bundler_check.stat.exists
