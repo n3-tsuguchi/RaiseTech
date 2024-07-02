@@ -55,6 +55,13 @@
   args:
     chdir: /home/ec2-user/raisetech-live8-sample-app/
 
+- name: Install Puma dependencies
+  become: yes
+  become_user: ec2-user
+  shell: bash -lc "bundle install"
+  args:
+    chdir: /home/ec2-user/raisetech-live8-sample-app/
+
 - name: Reload systemd to apply new puma service
   become: yes
   shell: sudo systemctl daemon-reload
