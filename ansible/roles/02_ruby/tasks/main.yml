@@ -28,8 +28,8 @@
     line: 'eval "$(rbenv init -)"'
   when: rbenv_exists is failed
 
-- name: execute $SHELL -l
-  shell: "exec $SHELL -l"
+- name: source bash_profile
+  shell: source /home/ec2-user/.bash_profile
   when: rbenv_exists is failed
 
 
