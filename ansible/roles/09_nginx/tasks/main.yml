@@ -1,10 +1,67 @@
+- name: Check if the folder exists
+  stat:
+    path: /home/ec2-user/raisetech-live8-sample-app
+  register: folder_check
+
+- name: Clone repository
+  git:
+    repo: https://github.com/yuta-ushijima/raisetech-live8-sample-app.git
+    dest: /home/ec2-user/raisetech-live8-sample-app
+  when: not folder_check.stat.exists
+
+- name: Change directory
+  shell: cd raisetech-live8-sample-app
+
+- name: add alb-dns to config/environments/development.rb
+  become_user: root
+  ansible.builtin.lineinfile:
+    path: /home/ec2-user/raisetech-live8-sample-app/config/environments/development.rb
+    insertbefore: config.action_controller.raise_on_missing_callback_actions = true
+    firstmatch: yes
+    line: config.hosts << "{{ aws_ec2_host }}"
+
+- name: add mini_magick to config/application.rb
+  become_user: root
+  ansible.builtin.lineinfile:
+    path: /home/ec2-user/raisetech-live8-sample-app/config/application.rb
+    insertbefore: config.generators.system_tests = nil
+    firstmatch: yes
+    line: config.active_storage.variant_processor = :mini_magick
+
+- name: Create tmp/sokets directory
+  file:
+    path: /home/ec2-user/raisetech-live8-sample-app/tmp/sokets
+    state: directory
+
+- name: Create tmp/pids directory
+  file:
+    path: /home/ec2-user/raisetech-live8-sample-app/tmp/pids
+    state: directory
+
+
+# RDS
+- name: Check if database.yml.sample exists
+  stat:
+    path: /home/ec2-user/raisetech-live8-sample-app/config/database.yml.sample
+  register: file_check
+
+- name: Rename database.yml.sample
+  command: mv /home/ec2-user/raisetech-live8-sample-app/config/database.yml.sample /home/ec2-user/raisetech-live8-sample-app/config/database.yml
+  when: file_check.stat.exists
+
+- name: Render database.yml from template
+  template:
+    src: roles/08_app/templates/database.yml.j2
+    dest: /home/ec2-user/raisetech-live8-sample-app/config/database.yml
+
+# puma
 - name: Check if puma.service.sample exists
   stat:
     path: /home/ec2-user/raisetech-live8-sample-app/samples/puma.service.sample
   register: puma_service_check
 
 - name: Move puma.service
-  become: yes
+  become_user: root
   command: mv /home/ec2-user/raisetech-live8-sample-app/samples/puma.service.sample /etc/systemd/system/puma.service
   when: puma_service_check.stat.exists
 
@@ -17,86 +74,35 @@
   template:
     src: roles/08_app/templates/puma.rb.j2  
     dest: /home/ec2-user/raisetech-live8-sample-app/config/puma.rb
-  when: not puma_check.stat.exists
 
-- name: Install Puma dependencies
-  become: yes
-  become_user: ec2-user
+- name: Change directory to your Rails app directory
+  command: cd /home/ec2-user/raisetech-live8-sample-app/
+
+- name: Install Bundler
   shell: bash -lc "bundle install"
   args:
     chdir: /home/ec2-user/raisetech-live8-sample-app/
 
-- name: Ensure db/schema.rb is writable
-  file:
-    path: /home/ec2-user/raisetech-live8-sample-app/db/schema.rb
-    owner: ec2-user
-    group: ec2-user
-    mode: '0664'
-
-- name: Ensure tmp directory exists
-  file:
-    path: /home/ec2-user/raisetech-live8-sample-app/tmp
-    state: directory
-    owner: ec2-user
-    group: ec2-user
-    mode: '0755'
-
-- name: Ensure restart.txt is writable
-  file:
-    path: /home/ec2-user/raisetech-live8-sample-app/tmp/restart.txt
-    state: touch
-    owner: ec2-user
-    group: ec2-user
-    mode: '0664'
-
 - name: Run bin/setup
-  become: yes
-  become_user: ec2-user
   command: /home/ec2-user/.rbenv/shims/ruby bin/setup
   args:
     chdir: /home/ec2-user/raisetech-live8-sample-app/
 
-- name: Reload systemd to apply new puma service
-  become: yes
-  shell: sudo systemctl daemon-reload
-
 - name: Start Puma service
-  become: yes
+  become_user: root
   systemd:
     name: puma
     state: started
 
-- name: Install nginx
-  become: yes
-  command: amazon-linux-extras install nginx1 -y
-
-- name: Create rails.conf
-  become: yes
-  template:
-    src: roles/09_nginx/templates/rails.conf.j2
-    dest: "/etc/nginx/rails.conf"
-
-- name: Create rails.d.conf
-  become: yes
-  template:
-    src: roles/09_nginx/templates/rails.conf.j2
-    dest: "/etc/nginx/conf.d/rails.conf"
-
-- name: Add server_names_hash_bucket_size to http block in nginx.conf
-  become: yes
-  lineinfile:
-    path: /etc/nginx/nginx.conf
-    insertbefore: 'types_hash_max_size 4096;'
-    line: 'server_names_hash_bucket_size 128;'
-
+# nginx start
 - name: Start nginx service
-  become: yes
+  become_user: root
   service:
     name: nginx
     state: started
 
 - name: Enable nginx service
-  become: yes
+  become_user: root
   service:
     name: nginx
     enabled: yes
