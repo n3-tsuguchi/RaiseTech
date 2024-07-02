@@ -95,6 +95,30 @@
     state: started
 
 # nginx start
+- name: Change permissions of /home/ec2-user
+  become_user: root
+  file:
+    path: /home/ec2-user
+    mode: 0701
+
+- name: Install nginx
+  become_user: root
+  command: amazon-linux-extras install nginx1 -y
+
+- name: create app.conf
+  become_user: root
+  template:
+    src: roles/09_nginx/templates/rails.conf.j2
+    dest: "/etc/nginx/conf.d/app.conf"
+
+- name: add server_names_hash_bucket_size to http block in nginx.conf
+  become_user: root
+  ansible.builtin.lineinfile:
+    path: /etc/nginx/nginx.conf
+    insertbefore: types_hash_max_size 4096;
+    firstmatch: yes
+    line: server_names_hash_bucket_size 128;
+
 - name: Start nginx service
   become_user: root
   service:
