@@ -1,16 +1,13 @@
-- name: Check if the directory exists
-  ansible.builtin.stat:
-    path: /home/ec2-user/raisetech-live8-sample-app/.git
-  register: git_directory
+- name: Check if the folder exists
+  stat:
+    path: /home/ec2-user/raisetech-live8-sample-app
+  register: folder_check
 
-- name: Clone the specific branch
-  ansible.builtin.git:
+- name: Clone repository
+  git:
     repo: https://github.com/yuta-ushijima/raisetech-live8-sample-app.git
     dest: /home/ec2-user/raisetech-live8-sample-app
-    version: main
-  become: true
-  when: not git_directory.stat.exists
-  register: Clone_result
+  when: not folder_check.stat.exists
 
 - name: Change directory
   shell: cd raisetech-live8-sample-app
@@ -23,14 +20,6 @@
     firstmatch: yes
     line: config.hosts << "{{ aws_alb_host }}"
 
-- name: add config/environments/production.rb
-  become_user: root
-  ansible.builtin.lineinfile:
-    path: /home/ec2-user/raisetech-live8-sample-app/config/environments/production.rb
-    insertbefore: config.action_controller.raise_on_missing_callback_actions = true
-    firstmatch: yes
-    line: config.hosts << "{{ aws_alb_host }}"
-
 - name: add mini_magick to config/application.rb
   become_user: root
   ansible.builtin.lineinfile:
@@ -39,14 +28,15 @@
     firstmatch: yes
     line: config.active_storage.variant_processor = :mini_magick
 
-- name: add mini_magick to config/application.rb
-  become_user: root
-  ansible.builtin.lineinfile:
-    path: /home/ec2-user/raisetech-live8-sample-app/config/application.rb
-    insertbefore: config.generators.system_tests = nil
-    firstmatch: yes
-    line: config.active_storage.variant_processor = :mini_magick
+- name: Create tmp/sokets directory
+  file:
+    path: /home/ec2-user/raisetech-live8-sample-app/tmp/sokets
+    state: directory
 
+- name: Create tmp/pids directory
+  file:
+    path: /home/ec2-user/raisetech-live8-sample-app/tmp/pids
+    state: directory
 
 - name: Check if database.yml.sample exists
   stat:
@@ -56,7 +46,6 @@
 - name: Rename database.yml.sample
   command: mv /home/ec2-user/raisetech-live8-sample-app/config/database.yml.sample /home/ec2-user/raisetech-live8-sample-app/config/database.yml
   when: file_check.stat.exists
-  ignore_errors: yes
 
 - name: Render database.yml from template
   template:

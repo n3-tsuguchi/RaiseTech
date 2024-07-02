@@ -1,16 +1,10 @@
-- name: Run bin/setup
-  command: bash -lc "source /home/ec2-user/.rbenv/bin/rbenv init - && bin/setup"
-  args:
-    chdir: /home/ec2-user/raisetech-live8-sample-app/
-
-
 - name: Check if puma.service.sample exists
   stat:
     path: /home/ec2-user/raisetech-live8-sample-app/samples/puma.service.sample
   register: puma_service_check
 
 - name: Move puma.service
-  become: yes
+  become_user: root
   command: mv /home/ec2-user/raisetech-live8-sample-app/samples/puma.service.sample /etc/systemd/system/puma.service
   when: puma_service_check.stat.exists
 
@@ -21,72 +15,27 @@
 
 - name: Generate puma.rb from template
   template:
-    src: roles/08_app/templates/puma.rb.j2
+    src: roles/setup_server/template/puma.rb.j2  
     dest: /home/ec2-user/raisetech-live8-sample-app/config/puma.rb
-  when: not puma_check.stat.exists
 
-- name: Install bundler gem
-  shell: . /home/ec2-user/.bash_profile && gem install bundler
-  become: yes
-  become_user: ec2-user
+- name: Change directory to your Rails app directory
+  command: cd /home/ec2-user/raisetech-live8-sample-app/
 
-- name: puma permissions
-  become: yes
-  command: chown -R ec2-user:ec2-user /home/ec2-user/raisetech-live8-sample-app
+- name: Install Bundler
+  shell: bash -lc "bundle install"
+  args:
+    chdir: /home/ec2-user/raisetech-live8-sample-app/
 
-- name: Install application dependencies
-  become: yes
-  shell: . /home/ec2-user/.bash_profile && cd /home/ec2-user/raisetech-live8-sample-app && bundle install
-  become_user: ec2-user
-
-
-- name: puma.service.j2
-  template:
-    src: roles/08_app/templates/puma.service.j2
-    dest: /etc/systemd/system/puma.service
-
-
-- name: Reload systemd daemon
-  become: yes
-  command: systemctl daemon-reload
+- name: Run bin/setup
+  command: /home/ec2-user/.rbenv/shims/ruby bin/setup
+  args:
+    chdir: /home/ec2-user/raisetech-live8-sample-app/
 
 - name: Start Puma service
-  become: yes
+  become_user: root
   systemd:
     name: puma
     state: started
-
-- name: Enable Puma service
-  become: yes
-  systemd:
-    name: puma
-    enabled: yes
-
-- name: Change permissions of /home/ec2-user
-  become_user: root
-  file:
-    path: /home/ec2-user
-    mode: 0701
-
-- name: create tmp/sockets
-  become: true
-  become_method: sudo
-  become_user: root
-  ansible.builtin.file:
-    path: "{{ sample_app_dir }}/tmp/sockets"
-    state: directory
-    mode: "0755"
-    owner: ec2-user
-
-- name: create tmp/pids
-  become: true
-  become_method: sudo
-  become_user: root
-  ansible.builtin.file:
-    path: "{{ sample_app_dir }}/tmp/pids"
-    state: directory
-    mode: "0755"
-    owner: ec2-user
 
 - name: Install nginx
   become_user: root
