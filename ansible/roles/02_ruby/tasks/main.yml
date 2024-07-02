@@ -6,7 +6,7 @@
     version: master
 
 - name: Change ownership of .rbenv directory to ec2-user
-  become_user: ec2-user
+  become_user: root
   file:
     path: "/home/ec2-user/.rbenv"
     owner: ec2-user
