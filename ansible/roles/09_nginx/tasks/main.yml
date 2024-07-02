@@ -82,7 +82,6 @@
   become: yes
   become_user: ec2-user
   command: bash -lc "eval \"$(rbenv init -)\" && bundle install"
-  when: not bundler_check.stat.exists
 
 - name: Run bin/setup
   command: /home/ec2-user/.rbenv/shims/ruby bin/setup
