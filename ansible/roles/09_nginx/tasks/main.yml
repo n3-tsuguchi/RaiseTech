@@ -22,6 +22,7 @@
   command: cd /home/ec2-user/raisetech-live8-sample-app/
 
 - name: Install Bundler
+  command: /home/ec2-user/.rbenv/shims/gem install bundler
   shell: bash -lc "bundle install"
   args:
     chdir: /home/ec2-user/raisetech-live8-sample-app/
