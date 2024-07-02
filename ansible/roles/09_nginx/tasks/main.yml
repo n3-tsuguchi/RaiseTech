@@ -21,18 +21,34 @@
 - name: Change directory to your Rails app directory
   command: cd /home/ec2-user/raisetech-live8-sample-app/
 
-- name: Install Bundler
-  become_user: ec2-user
-  shell: bash -lc "bundle install"
-  args:
-    chdir: /home/ec2-user/raisetech-live8-sample-app/
-
 - name: Ensure db/schema.rb is writable
   file:
     path: /home/ec2-user/raisetech-live8-sample-app/db/schema.rb
     owner: ec2-user
     group: ec2-user
     mode: '0664'
+
+- name: Ensure tmp directory exists
+  file:
+    path: /home/ec2-user/raisetech-live8-sample-app/tmp
+    state: directory
+    owner: ec2-user
+    group: ec2-user
+    mode: '0755'
+
+- name: Ensure restart.txt is writable
+  file:
+    path: /home/ec2-user/raisetech-live8-sample-app/tmp/restart.txt
+    state: touch
+    owner: ec2-user
+    group: ec2-user
+    mode: '0664'
+
+- name: Install Bundler
+  become_user: ec2-user
+  shell: bash -lc "bundle install"
+  args:
+    chdir: /home/ec2-user/raisetech-live8-sample-app/
 
 - name: Run bin/setup
   become_user: ec2-user
