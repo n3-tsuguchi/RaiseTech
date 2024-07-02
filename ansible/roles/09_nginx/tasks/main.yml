@@ -27,6 +27,13 @@
   args:
     chdir: /home/ec2-user/raisetech-live8-sample-app/
 
+- name: Ensure db/schema.rb is writable
+  file:
+    path: /home/ec2-user/raisetech-live8-sample-app/db/schema.rb
+    owner: ec2-user
+    group: ec2-user
+    mode: '0664'
+
 - name: Run bin/setup
   become_user: ec2-user
   command: /home/ec2-user/.rbenv/shims/ruby bin/setup
