@@ -6,8 +6,8 @@
   roles:
     - { role: 01_yum, tags: yum }
     - { role: 02_ruby, tags: ruby }
-    - { role: 03_bundler, tags: bundler }
-    - { role: 04_rails, tags: rails }
+    - { role: 03_rails, tags: rails }
+    - { role: 04_bundler, tags: bundler }
     - { role: 05_node, tags: node }
     - { role: 06_yarn, tags: yarn }
     - { role: 07_mysql, tags: mysql }
