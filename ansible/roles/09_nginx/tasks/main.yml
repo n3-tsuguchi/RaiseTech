@@ -58,7 +58,7 @@
 
 - name: Install PolicyKit
   become: yes
-  apt:
+  yum:
     name: policykit-1
     state: present
 
