@@ -56,30 +56,36 @@
   args:
     chdir: /home/ec2-user/raisetech-live8-sample-app/
 
+- name: Install PolicyKit
+  become: yes
+  apt:
+    name: policykit-1
+    state: present
+
 - name: Start Puma service
-  become_user: ec2-user
+  become_user: root
   systemd:
     name: puma
     state: started
 
 - name: Install nginx
-  become_user: ec2-user
+  become_user: root
   command: amazon-linux-extras install nginx1 -y
 
 - name: create rails.conf
-  become_user: ec2-user
+  become_user: root
   template:
     src: roles/09_nginx/templates/rails.conf.j2
     dest: "/etc/nginx/rails.conf"
 
 - name: create rails.d.conf
-  become_user: ec2-user
+  become_user: root
   template:
     src: roles/09_nginx/templates/rails.conf.j2
     dest: "/etc/nginx/conf.d/rails.conf"
 
 - name: add server_names_hash_bucket_size to http block in nginx.conf
-  become_user: ec2-user
+  become_user: root
   ansible.builtin.lineinfile:
     path: /etc/nginx/rails.conf
     insertbefore: types_hash_max_size 4096;
