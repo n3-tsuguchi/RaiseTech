@@ -82,7 +82,7 @@
   shell: |
     export PATH="$HOME/.rbenv/bin:$PATH"
     eval "$(rbenv init -)"
-    gem install bundler
+    bundle install
   args:
     chdir: /home/ec2-user/raisetech-live8-sample-app/
   become: yes
