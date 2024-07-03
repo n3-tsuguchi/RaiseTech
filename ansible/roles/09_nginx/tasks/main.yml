@@ -68,10 +68,6 @@
 - name: Change directory to your Rails app directory
   command: cd /home/ec2-user/raisetech-live8-sample-app/
 
-- name: Install Bundler gem
-  shell: gem install bundler
-  become: yes
-
 - name: Install Bundler
   shell: bash -lc "bundle install"
   args:
