@@ -69,9 +69,7 @@
   command: cd /home/ec2-user/raisetech-live8-sample-app/
 
 - name: Install Bundler gem
-  gem:
-    name: bundler
-    state: present
+  shell: gem install bundler
   become: yes
 
 - name: Install Bundler
