@@ -76,7 +76,7 @@
   args:
     chdir: /home/ec2-user/raisetech-live8-sample-app/
   become: yes
-  become_user: ec2-user
+  become_user: root
 
 - name: Run bin/setup
   command: /home/ec2-user/.rbenv/shims/ruby bin/setup
