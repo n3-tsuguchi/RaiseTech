@@ -5,3 +5,4 @@
 
 - name: Install Bundler
   command: bash -lc "gem install bundler"
+  when: not bundler_check.stat.exists
