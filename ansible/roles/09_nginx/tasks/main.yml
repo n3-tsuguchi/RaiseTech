@@ -28,8 +28,6 @@
     firstmatch: yes
     line: config.active_storage.variant_processor = :mini_magick
 
-
-# RDS
 - name: Check if database.yml.sample exists
   stat:
     path: /home/ec2-user/raisetech-live8-sample-app/config/database.yml.sample
@@ -44,7 +42,6 @@
     src: roles/08_app/templates/database.yml.j2
     dest: /home/ec2-user/raisetech-live8-sample-app/config/database.yml
 
-# puma
 - name: Check if puma.service.sample exists
   stat:
     path: /home/ec2-user/raisetech-live8-sample-app/samples/puma.service.sample
@@ -84,7 +81,6 @@
     name: puma
     state: started
 
-# nginx start
 - name: Change permissions of /home/ec2-user
   become_user: root
   file:
