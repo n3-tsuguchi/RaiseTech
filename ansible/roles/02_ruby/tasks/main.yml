@@ -10,25 +10,42 @@
     dest: /home/ec2-user/.rbenv
   when: rbenv_exists is failed
 
-- name: Add /home/ec2-user.rbenv/bin to PATH
+- name: Add rbenv to PATH
   ansible.builtin.lineinfile:
     path: /home/ec2-user/.bashrc
     regexp: 'export PATH=/home/ec2-user/.rbenv/bin:$PATH'
-    line: export PATH=/home/ec2-user/.rbenv/bin:$PATH
+    line: 'export PATH=/home/ec2-user/.rbenv/bin:$PATH'
     state: present
   when: rbenv_exists is failed
 
-- name: Add /home/ec2-user.rbenv/bin to PATH 2
+- name: Initialize rbenv
   ansible.builtin.lineinfile:
     path: /home/ec2-user/.bashrc
     regexp: 'eval "$(rbenv init -)"'
-    line: eval "$(rbenv init -)"
+    line: 'eval "$(rbenv init -)"'
     state: present
   when: rbenv_exists is failed
 
 - name: source /home/ec2-user/.bashrc 
   ansible.builtin.command: bash -lc "source /home/ec2-user/.bashrc" 
   changed_when: false
+
+- name: check ruby install
+  ansible.builtin.command: bash -lc "rbenv version | grep {{ ruby_version }}"
+  register: ruby_exists
+  changed_when: false
+  ignore_errors: true
+
+- name: Install ruby-build
+  ansible.builtin.git:
+    repo: https://github.com/sstephenson/ruby-build.git
+    dest: /home/ec2-user/.rbenv/plugins/ruby-build
+  when: ruby_exists is failed
+
+- name: Run ruby-build install script
+  become: true
+  ansible.builtin.command: bash -lc "/home/ec2-user/.rbenv/plugins/ruby-build/install.sh"
+  when: ruby_exists is failed
 
 
 - name: check ruby install
