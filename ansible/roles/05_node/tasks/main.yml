@@ -1,25 +1,27 @@
-- name: check node.js install
-  ansible.builtin.command: bash -lc "node --version | grep {{ node_version }}"
-  register: nodejs_exists
+- name: check node exists
+  shell: node --version
+  register: node_exists
   changed_when: no
-  ignore_errors: true
+  ignore_errors: yes
 
-- name: Setup nvm and nodejs1
-  ansible.builtin.command: bash -lc "curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash"
-  when: nodejs_exists is failed
+- name: nvm script download
+  get_url:
+    url: https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh
+    dest: /home/ec2-user/nvm.sh
+    mode: '0775'
+  when: node_exists is failed
 
-- name: Setup nvm and nodejs2
-  ansible.builtin.command: bash -lc "source ~/.bashrc"
-  when: nodejs_exists is failed
+- name: nvm install
+  command: /bin/bash /home/ec2-user/nvm.sh
+  args:
+    creates: /home/ec2-user/.nvm
+  when: node_exists is failed
 
-- name: Setup nvm and nodejs3
-  ansible.builtin.command: bash -lc "nvm install {{ node_version }}"
-  when: nodejs_exists is failed
+- name: source .bashrc
+  shell: |
+    source ~/.bashrc
+  when: node_exists is failed
 
-- name: Setup nvm and nodejs4
-  ansible.builtin.command: bash -lc "nvm use {{ node_version }}"
-  when: nodejs_exists is failed
-
-- name: Setup nvm and nodejs
-  ansible.builtin.command: bash -lc "nvm alias default {{ node_version }}"
-  when: nodejs_exists is failed
+- name: node install
+  shell: bash -lc "nvm install {{ node_version }}"
+  when: node_exists is failed
