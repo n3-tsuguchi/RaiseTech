@@ -1,19 +1,13 @@
-- name: check yarn install
-  ansible.builtin.command: yarn --version
+- name: check yarn exists
+  shell: bash -lc "yarn --version | grep {{ yarn_version }}"
   register: yarn_exists
   changed_when: no
-  ignore_errors: true
+  ignore_errors: yes
 
 - name: yarn install
-  ansible.builtin.command: bash -lc "npm install --global yarn"
+  shell: bash -lc "npm install --global yarn"
   when: yarn_exists is failed
 
-- name: check yarn install version
-  ansible.builtin.command: bash -lc "yarn --version  | grep {{ yarn_version }}"
-  register: yarn_exists_wedefined_version
-  changed_when: no
-  ignore_errors: true
-
 - name: set yarn version
-  ansible.builtin.command: bash -lc "yarn set version {{ yarn_version }}"
-  when: yarn_exists_wedefined_version is failed
+  shell: bash -lc "yarn set version {{ yarn_version }}"
+  when: yarn_exists is failed
