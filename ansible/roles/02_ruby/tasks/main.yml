@@ -10,19 +10,19 @@
     dest: /home/ec2-user/.rbenv
   when: rbenv_exists is failed
 
-- name: Add rbenv to PATH
+- name: Add /home/ec2-user.rbenv/bin to PATH
   ansible.builtin.lineinfile:
     path: /home/ec2-user/.bashrc
-    regexp: 'export PATH=/home/ec2-user/.rbenv/bin:$PATH'
-    line: 'export PATH=/home/ec2-user/.rbenv/bin:$PATH'
+    search_string: 'export PATH=/home/ec2-user/.rbenv/bin:$PATH'
+    line: export PATH=/home/ec2-user/.rbenv/bin:$PATH
     state: present
   when: rbenv_exists is failed
 
-- name: Initialize rbenv
+- name: Add /home/ec2-user.rbenv/bin to PATH 2
   ansible.builtin.lineinfile:
     path: /home/ec2-user/.bashrc
-    regexp: 'eval "$(rbenv init -)"'
-    line: 'eval "$(rbenv init -)"'
+    search_string: 'eval "$(rbenv init -)"'
+    line: eval "$(rbenv init -)"
     state: present
   when: rbenv_exists is failed
 
@@ -36,22 +36,25 @@
   changed_when: false
   ignore_errors: true
 
-- name: Install ruby-build
+- name: Install ruby-build1
   ansible.builtin.git:
     repo: https://github.com/sstephenson/ruby-build.git
     dest: /home/ec2-user/.rbenv/plugins/ruby-build
   when: ruby_exists is failed
 
-- name: Run ruby-build install script
+- name: Install ruby-build2
   become: true
   ansible.builtin.command: bash -lc "/home/ec2-user/.rbenv/plugins/ruby-build/install.sh"
+  #-l：bashをログインシェルとした場合と同様に起動。-c：""内をコマンドとして実行する
   when: ruby_exists is failed
 
 - name: Install ruby
   ansible.builtin.command: bash -lc "rbenv install {{ ruby_version }} --skip-existing"
-  when: ruby_exists is failed
   timeout: 900
+  when: ruby_exists is failed
 
-- name: Set ruby global version
+- name: ruby grobal set
+  # become: true
   ansible.builtin.command: bash -lc "rbenv global {{ ruby_version }}"
+  #この段階でgemとbundlerがインストールされている状態（~/.rbenv/shims/にてパス通っている）
   when: ruby_exists is failed
