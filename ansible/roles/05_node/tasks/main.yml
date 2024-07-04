@@ -1,16 +1,25 @@
-- name: Check if Node.js Yum repo file exists
-  stat:
-    path: /etc/yum.repos.d/nodesource-el7.repo
-  register: nodesource_repo
+- name: check node.js install
+  ansible.builtin.command: bash -lc "node --version | grep {{ node_version }}"
+  register: nodejs_exists
+  changed_when: no
+  ignore_errors: true
 
-- name: Add Yum repo for Node.js
-  become_user: root
-  shell: "curl -fsSL https://rpm.nodesource.com/setup_14.x | sudo bash -"
-  when: not nodesource_repo.stat.exists
-  changed_when: false
+- name: Setup nvm and nodejs1
+  ansible.builtin.command: bash -lc "curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash"
+  when: nodejs_exists is failed
 
-- name: Install Node.js
-  become_user: root
-  yum:
-    name: nodejs
-    state: latest
+- name: Setup nvm and nodejs2
+  ansible.builtin.command: bash -lc "source ~/.bashrc"
+  when: nodejs_exists is failed
+
+- name: Setup nvm and nodejs3
+  ansible.builtin.command: bash -lc "nvm install {{ node_version }}"
+  when: nodejs_exists is failed
+
+- name: Setup nvm and nodejs4
+  ansible.builtin.command: bash -lc "nvm use {{ node_version }}"
+  when: nodejs_exists is failed
+
+- name: Setup nvm and nodejs
+  ansible.builtin.command: bash -lc "nvm alias default {{ node_version }}"
+  when: nodejs_exists is failed

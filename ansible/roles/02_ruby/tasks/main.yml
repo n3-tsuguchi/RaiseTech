@@ -1,66 +1,58 @@
-- name: Clone rbenv repository
-  become_user: ec2-user
-  git:
-    repo: "https://github.com/sstephenson/rbenv.git"
-    dest: "/home/ec2-user/.rbenv"
-    version: master
+- name: check rbenv install
+  ansible.builtin.command: bash -lc "rbenv --version"
+  register: rbenv_exists
+  changed_when: no
+  ignore_errors: true
 
-- name: Change ownership of .rbenv directory to ec2-user
-  become_user: root
-  file:
-    path: "/home/ec2-user/.rbenv"
-    owner: ec2-user
-    group: ec2-user
-    recurse: yes
-    state: directory
+- name: Install rbenv
+  ansible.builtin.git:
+    repo: https://github.com/sstephenson/rbenv.git
+    dest: /home/ec2-user/.rbenv
+  when: rbenv_exists is failed
 
-- name: Add rbenv path to .bash_profile
-  become_user: ec2-user
-  lineinfile:
-    path: /home/ec2-user/.bash_profile
-    line: 'export PATH="$HOME/.rbenv/bin:$PATH"'
-    create: yes
+- name: Add /home/ec2-user.rbenv/bin to PATH
+  ansible.builtin.lineinfile:
+    path: /home/ec2-user/.bashrc
+    search_string: 'export PATH=/home/ec2-user/.rbenv/bin:$PATH'
+    line: export PATH=/home/ec2-user/.rbenv/bin:$PATH
+    state: present
+  when: rbenv_exists is failed
 
-- name: Initialize rbenv
-  become_user: ec2-user
-  lineinfile:
-    path: /home/ec2-user/.bash_profile
-    line: 'eval "$(rbenv init -)"'
-    create: yes
+- name: Add /home/ec2-user.rbenv/bin to PATH 2
+  ansible.builtin.lineinfile:
+    path: /home/ec2-user/.bashrc
+    search_string: 'eval "$(rbenv init -)"'
+    line: eval "$(rbenv init -)"
+    state: present
+  when: rbenv_exists is failed
 
-- name: Add rbenv path to .bash_profile
-  become_user: ec2-user
-  lineinfile:
-    path: /home/ec2-user/.bash_profile
-    line: 'export PATH="$HOME/.rbenv/bin:$PATH"'
-    create: yes
+- name: source /home/ec2-user/.bashrc 
+  ansible.builtin.command: bash -lc "source /home/ec2-user/.bashrc" 
+  changed_when: false
 
-- name: Load .bash_profile
-  become_user: ec2-user
-  shell: bash -lc "source /home/ec2-user/.bash_profile"
 
-- name: Install rbenv plugins
-  become_user: ec2-user
-  git:
+- name: check ruby install
+  ansible.builtin.command: bash -lc "rbenv version | grep {{ ruby_version }}"
+  register: ruby_exists
+  changed_when: false
+  ignore_errors: true
+
+- name: Install ruby-build1
+  ansible.builtin.git:
     repo: https://github.com/sstephenson/ruby-build.git
-    dest: "/home/ec2-user/.rbenv/plugins/ruby-build"
+    dest: /home/ec2-user/.rbenv/plugins/ruby-build
+  when: ruby_exists is failed
 
+- name: Install ruby-build2
+  become: true
+  ansible.builtin.command: bash -lc "/home/ec2-user/.rbenv/plugins/ruby-build/install.sh"
+  when: ruby_exists is failed
 
-- name: Check if Ruby is installed
-  become_user: ec2-user
-  stat:
-    path: /home/ec2-user/.rbenv/versions/3.2.3
-  register: ruby_check
+- name: Install ruby
+  ansible.builtin.command: bash -lc "rbenv install {{ ruby_version }} --skip-existing"
+  timeout: 900
+  when: ruby_exists is failed
 
-- name: Install Ruby 3.2.3
-  become_user: ec2-user
-  shell: bash -lc "rbenv install 3.2.3"
-  when: not ruby_check.stat.exists
-
-- name: Rehash rbenv
-  become_user: ec2-user
-  shell: bash -lc "rbenv rehash"
-
-- name: Set global Ruby version to 3.2.3
-  become_user: ec2-user
-  shell: bash -lc "rbenv global 3.2.3"
+- name: ruby grobal set
+  ansible.builtin.command: bash -lc "rbenv global {{ ruby_version }}"
+  when: ruby_exists is failed

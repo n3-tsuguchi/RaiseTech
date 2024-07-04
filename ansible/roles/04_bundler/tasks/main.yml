@@ -1,8 +1,13 @@
-- name: Check if Bundler is installed
-  stat:
-    path: /home/ec2-user/.rbenv/versions/3.2.3/bin/bundle
-  register: bundler_check
+- name: check bundler install
+  ansible.builtin.command: bash -lc "bundler version | grep {{ bundler_version }}"
+  register: bundler_exists
+  changed_when: no
+  ignore_errors: true
 
-- name: Install Bundler
-  command: bash -lc "gem install bundler"
-  when: not bundler_check.stat.exists
+- name: "install bundler {{ bundler_version }}"
+  ansible.builtin.gem: 
+    name: bundler
+    version: "{{ bundler_version }}"
+    user_install: no
+  timeout: 300
+  when: bundler_exists is failed
