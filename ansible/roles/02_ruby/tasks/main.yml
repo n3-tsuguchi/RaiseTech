@@ -13,7 +13,7 @@
 - name: Add /home/ec2-user.rbenv/bin to PATH
   ansible.builtin.lineinfile:
     path: /home/ec2-user/.bashrc
-    search_string: 'export PATH=/home/ec2-user/.rbenv/bin:$PATH'
+    regexp: 'export PATH=/home/ec2-user/.rbenv/bin:$PATH'
     line: export PATH=/home/ec2-user/.rbenv/bin:$PATH
     state: present
   when: rbenv_exists is failed
@@ -21,7 +21,7 @@
 - name: Add /home/ec2-user.rbenv/bin to PATH 2
   ansible.builtin.lineinfile:
     path: /home/ec2-user/.bashrc
-    search_string: 'eval "$(rbenv init -)"'
+    regexp: 'eval "$(rbenv init -)"'
     line: eval "$(rbenv init -)"
     state: present
   when: rbenv_exists is failed
