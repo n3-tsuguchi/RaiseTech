@@ -1,27 +1,16 @@
-- name: check node exists
-  shell: node --version
-  register: node_exists
-  changed_when: no
-  ignore_errors: yes
+- name: Check if Node.js Yum repo file exists
+  stat:
+    path: /etc/yum.repos.d/nodesource-el7.repo
+  register: nodesource_repo
 
-- name: nvm script download
-  get_url:
-    url: https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh
-    dest: /home/ec2-user/nvm.sh
-    mode: '0775'
-  when: node_exists is failed
+- name: Add Yum repo for Node.js
+  become_user: root
+  shell: "curl -fsSL https://rpm.nodesource.com/setup_14.x | sudo bash -"
+  when: not nodesource_repo.stat.exists
+  changed_when: false
 
-- name: nvm install
-  command: /bin/bash /home/ec2-user/nvm.sh
-  args:
-    creates: /home/ec2-user/.nvm
-  when: node_exists is failed
-
-- name: source .bashrc
-  shell: |
-    source ~/.bashrc
-  when: node_exists is failed
-
-- name: node install
-  shell: bash -lc "nvm install {{ node_version }}"
-  when: node_exists is failed
+- name: Install Node.js
+  become_user: root
+  yum:
+    name: nodejs
+    state: latest
