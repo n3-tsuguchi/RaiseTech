@@ -28,6 +28,9 @@
     line: 'eval "$(rbenv init -)"'
   when: rbenv_exists is failed
 
+- name: execute $SHELL -l
+  shell: "exec $SHELL -l"
+  when: rbenv_exists is failed
 
 
 - name: check ruby exists
