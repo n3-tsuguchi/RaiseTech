@@ -53,6 +53,7 @@
 
 - name: Rehash rbenv
   shell: bash -lc "rbenv rehash"
+  when: ruby_check is failed
 
 - name: Set global Ruby version to 3.2.3
   shell: bash -lc "rbenv global 3.2.3"
