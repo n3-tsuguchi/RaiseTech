@@ -3,14 +3,12 @@
   stat:
     path: /home/ec2-user/raisetech-live8-sample-app
   register: folder_check
-  become_user: ec2-user
 
 - name: Clone repository
   git:
     repo: https://github.com/yuta-ushijima/raisetech-live8-sample-app.git
     dest: /home/ec2-user/raisetech-live8-sample-app
   when: not folder_check.stat.exists
-  become_user: ec2-user
 
 - name: Change directory
   shell: cd raisetech-live8-sample-app
@@ -47,12 +45,10 @@
   stat:
     path: /home/ec2-user/raisetech-live8-sample-app/config/database.yml.sample
   register: file_check
-  become_user: ec2-user
 
 - name: Rename database.yml.sample
   command: mv /home/ec2-user/raisetech-live8-sample-app/config/database.yml.sample /home/ec2-user/raisetech-live8-sample-app/config/database.yml
   when: file_check.stat.exists
-  become_user: ec2-user
 
 - name: Render database.yml from template
   template:
@@ -64,19 +60,16 @@
   stat:
     path: /home/ec2-user/raisetech-live8-sample-app/samples/puma.service.sample
   register: puma_service_check
-  become_user: ec2-user
 
 - name: Move puma.service
   become_user: root
   command: mv /home/ec2-user/raisetech-live8-sample-app/samples/puma.service.sample /etc/systemd/system/puma.service
   when: puma_service_check.stat.exists
-  become_user: root
 
 - name: Check if puma.rb exists
   stat:
     path: /home/ec2-user/raisetech-live8-sample-app/config/puma.rb
   register: puma_check
-  become_user: ec2-user
 
 - name: Generate puma.rb from template
   template:
@@ -90,13 +83,11 @@
   shell: bash -lc "bundle install"
   args:
     chdir: /home/ec2-user/raisetech-live8-sample-app/
-  become_user: ec2-user
 
 - name: Run bin/setup
   command: /home/ec2-user/.rbenv/shims/ruby bin/setup
   args:
     chdir: /home/ec2-user/raisetech-live8-sample-app/
-  become_user: ec2-user
 
 - name: Start Puma service
   become_user: root
