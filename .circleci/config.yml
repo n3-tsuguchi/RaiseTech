@@ -32,20 +32,6 @@ jobs:
       - ansible-playbook/playbook:
           playbook: ansible/playbook.yml
           playbook-options: '-u ec2-user -i ansible/inventory'
-          
-      - run:
-          name: Set permissions for log and tmp directories
-          command: |
-            touch /home/ec2-user/raisetech-live8-sample-app/log/development.log
-            chmod 0664 /home/ec2-user/raisetech-live8-sample-app/log/development.log
-            mkdir -p /home/ec2-user/raisetech-live8-sample-app/tmp/miniprofiler
-            chmod -R 0775 /home/ec2-user/raisetech-live8-sample-app/tmp
-      - run:
-          name: Install dependencies
-          command: bundle install
-      - run:
-          name: Setup database
-          command: bin/setup
 
   execute-serverspec:
     executor: ruby/default
