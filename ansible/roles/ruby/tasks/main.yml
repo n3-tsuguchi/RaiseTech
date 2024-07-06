@@ -3,7 +3,7 @@
   become_user: root
   git:
     repo: "https://github.com/sstephenson/rbenv.git"
-    dest: "/home/ec2-user/.rbenv"
+    dest: "{{ ansible_env.HOME }}/.rbenv"
     version: master
 
 - name: Change ownership of .rbenv directory to ec2-user
@@ -39,12 +39,12 @@
 - name: Install rbenv plugins
   git:
     repo: https://github.com/sstephenson/ruby-build.git
-    dest: "/home/ec2-user/.rbenv/plugins/ruby-build"
+    dest: "{{ ansible_env.HOME }}/.rbenv/plugins/ruby-build"
 
 # Install Ruby
 - name: Check if Ruby is installed
   stat:
-    path: /home/ec2-user/.rbenv/versions/3.2.3
+    path: "{{ ansible_env.HOME }}/.rbenv/versions/3.2.3"
   register: ruby_check
 
 - name: Install Ruby 3.2.3
