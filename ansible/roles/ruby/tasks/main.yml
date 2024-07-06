@@ -49,14 +49,13 @@
 
 - name: Install Ruby 3.2.3
   shell: bash -lc "rbenv install 3.2.3"
-  when: ruby_check is failed
 
 - name: Rehash rbenv
   shell: bash -lc "rbenv rehash"
-  when: ruby_check is failed
 
 - name: Set global Ruby version to 3.2.3
   shell: bash -lc "rbenv global 3.2.3"
+  when: not ruby_check.stat.exists
 
 
 # Install Rails
