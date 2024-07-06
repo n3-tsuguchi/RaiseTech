@@ -3,17 +3,6 @@
   remote_user: ec2-user
   become: yes
 
-  roles:
-    - { role: 01_yum, tags: yum }
-    - { role: 02_ruby, tags: ruby }
-    - { role: 03_rails, tags: rails }
-    - { role: 04_bundler, tags: bundler }
-    - { role: 05_node, tags: node }
-    - { role: 06_yarn, tags: yarn }
-    - { role: 07_mysql, tags: mysql }
-    - { role: 08_app, tags: app }
-    - { role: 09_nginx, tags: nginx }
-
   vars:
     ansible_become_method: sudo
     sample_app_dir: /home/ec2-user/raisetech-live8-sample-app
@@ -26,5 +15,10 @@
     aws_db_host : "{{ (lookup('env','AWS_DB_HOST')) }}"
     aws_s3_bucket: "{{ (lookup('env','AWS_S3_BUCKET')) }}"
 
-
-
+  roles:
+    - general
+    - node_yarn
+    - ruby
+    - nginx
+    - mysql
+    - setup_server
