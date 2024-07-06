@@ -1,83 +1,71 @@
-# Install rvenv   
-  - name: Clone rbenv repository
-    become_user: root
-    git:
-      repo: "https://github.com/sstephenson/rbenv.git"
-      dest: "/home/ec2-user/.rbenv"
-      version: master
+- name: Clone rbenv repository
+  git:
+    repo: 'https://github.com/rbenv/rbenv.git'
+    dest: /home/ec2-user/.rbenv
+    version: master
+  become_user: ec2-user
 
-  - name: Change ownership of .rbenv directory to ec2-user
-    become_user: root
-    file:
-      path: "/home/ec2-user/.rbenv"
-      owner: ec2-user
-      group: ec2-user
-      recurse: yes
-      state: directory
+- name: Clone ruby-build repository
+  git:
+    repo: 'https://github.com/rbenv/ruby-build.git'
+    dest: /home/ec2-user/.rbenv/plugins/ruby-build
+    version: master
+  become_user: ec2-user
 
-  - name: Add rbenv path to .bash_profile
-    lineinfile:
-      path: /home/ec2-user/.bash_profile
-      line: 'export PATH="$HOME/.rbenv/bin:$PATH"'
-      create: yes
+- name: Add rbenv path to .bash_profile
+  lineinfile:
+    path: /home/ec2-user/.bash_profile
+    line: 'export PATH="$HOME/.rbenv/bin:$PATH"'
+    create: yes
+  become_user: ec2-user
 
-  - name: Initialize rbenv
-    lineinfile:
-      path: /home/ec2-user/.bash_profile
-      line: 'eval "$(rbenv init -)"'
-      create: yes
+- name: Initialize rbenv
+  lineinfile:
+    path: /home/ec2-user/.bash_profile
+    line: 'eval "$(rbenv init -)"'
+    create: yes
+  become_user: ec2-user
 
-  - name: Add rbenv path to .bash_profile
-    lineinfile:
-      path: /home/ec2-user/.bash_profile
-      line: 'export PATH="$HOME/.rbenv/bin:$PATH"'
-      create: yes
+- name: Load .bash_profile
+  shell: source /home/ec2-user/.bash_profile
+  args:
+    executable: /bin/bash
+  become_user: ec2-user
 
-  - name: Load .bash_profile
-    shell: bash -lc "source /home/ec2-user/.bash_profile"
+- name: Install Ruby 3.2.3
+  shell: /home/ec2-user/.rbenv/bin/rbenv install 3.2.3
+  become_user: ec2-user
 
-  - name: Install rbenv plugins
-    git:
-      repo: https://github.com/sstephenson/ruby-build.git
-      dest: "/home/ec2-user/.rbenv/plugins/ruby-build"
+- name: Rehash rbenv
+  shell: /home/ec2-user/.rbenv/bin/rbenv rehash
+  become_user: ec2-user
 
-# Install Ruby
-  - name: Check if Ruby is installed
-    stat:
-      path: /home/ec2-user/.rbenv/versions/3.2.3
-    register: ruby_check
+- name: Set global Ruby version to 3.2.3
+  shell: /home/ec2-user/.rbenv/bin/rbenv global 3.2.3
+  become_user: ec2-user
 
-  - name: Install Ruby 3.2.3
-    shell: bash -lc "rbenv install 3.2.3"
-    when: not ruby_check.stat.exists
+- name: Check if Rails is installed
+  shell: /home/ec2-user/.rbenv/shims/gem list -e rails | grep 7.1.3.2
+  register: rails_check
+  changed_when: no
+  ignore_errors: true
+  become_user: ec2-user
 
-  - name: Rehash rbenv
-    shell: bash -lc "rbenv rehash"
+- name: Install Rails 7.1.3.2
+  gem:
+    name: rails
+    version: 7.1.3.2
+    user_install: no
+    executable: /home/ec2-user/.rbenv/shims/gem
+  when: rails_check is failed
+  become_user: ec2-user
 
-  - name: Set global Ruby version to 3.2.3
-    shell: bash -lc "rbenv global 3.2.3"
+- name: Check if Bundler is installed
+  stat:
+    path: /home/ec2-user/.rbenv/versions/3.2.3/bin/bundle
+  register: bundler_check
+  become_user: ec2-user
 
-
-# Install Rails
-  - name: Check if Rails is installed
-    shell: bash -lc "gem list -e rails | grep 7.1.3.2"
-    register: rails_check
-    changed_when: no
-    ignore_errors: true
-
-  - name: Install Rails 7.1.3.2
-    gem:
-      name: rails
-      version: 7.1.3.2
-      user_install: no
-      executable: /home/ec2-user/.rbenv/shims/gem
-    when: rails_check is failed
-
-# Install Bundler
-  - name: Check if Bundler is installed
-    stat:
-      path: /home/ec2-user/.rbenv/versions/3.2.3/bin/bundle
-    register: bundler_check
-
-  - name: Install Bundler
-    command: bash -lc "gem install bundler"
+- name: Install Bundler
+  shell: /home/ec2-user/.rbenv/shims/gem install bundler
+  become_user: ec2-user
