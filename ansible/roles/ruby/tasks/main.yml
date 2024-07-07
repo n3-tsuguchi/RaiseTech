@@ -42,12 +42,10 @@
     dest: "/home/ec2-user/.rbenv/plugins/ruby-build"
 
 # Install Ruby
-- name: Install Ruby 3.2.3
-  shell: |
-    source /home/ec2-user/.bash_profile
-    rbenv install 3.2.3
-  args:
-    executable: /bin/bash
+- name: Check if Ruby is installed
+  stat:
+    path: /home/ec2-user/.rbenv/versions/3.2.3
+  register: ruby_check
 
 - name: Install Ruby 3.2.3
   shell: bash -lc "rbenv install 3.2.3"
