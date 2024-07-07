@@ -15,20 +15,20 @@
     recurse: yes
     state: directory
 
-- name: Add rbenv path to .bash_profile
+- name: Add rbenv path to .bashrc
   lineinfile:
-    path: /home/ec2-user/.bash_profile
+    path: /home/ec2-user/.bashrc
     line: 'export PATH="$HOME/.rbenv/bin:$PATH"'
     create: yes
 
 - name: Initialize rbenv
   lineinfile:
-    path: /home/ec2-user/.bash_profile
+    path: /home/ec2-user/.bashrc
     line: 'eval "$(rbenv init -)"'
     create: yes
 
 - name: Load .bash_profile
-  shell: bash -lc "source /home/ec2-user/.bash_profile"
+  shell: bash -lc "source /home/ec2-user/.bashrc"
 
 - name: Install rbenv plugins
   git:
