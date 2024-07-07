@@ -42,10 +42,12 @@
   register: ruby_check
 
 - name: Install Ruby 3.2.3
+  become_user: ec2-user
   shell: bash -lc "rbenv install 3.2.3"
   when: not ruby_check.stat.exists
 
 - name: Rehash rbenv
+  become_user: ec2-user
   shell: bash -lc "rbenv rehash"
 
 - name: Set global Ruby version to 3.2.3
