@@ -36,20 +36,6 @@
 - name: Load .bash_profile
   shell: bash -lc "source /home/ec2-user/.bash_profile"
 
-
-
-- name: Print PATH
-  shell: bash -lc "echo $PATH"
-
-- name: Check rbenv directory
-  command: ls -la /home/ec2-user/.rbenv
-
-- name: Wait for path changes to take effect
-  pause:
-    seconds: 5
-
-
-
 - name: Install rbenv plugins
   git:
     repo: https://github.com/sstephenson/ruby-build.git
