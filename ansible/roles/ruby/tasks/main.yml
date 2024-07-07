@@ -38,6 +38,7 @@
 
 - name: Initialize anyenv definitions
   shell: bash -lc "/home/ec2-user/.anyenv/bin/anyenv install --init"
+  when: not anyenv_init.stat.exists
 
 - name: Initialize anyenv
   shell: bash -lc "/home/ec2-user/.anyenv/bin/anyenv init"
