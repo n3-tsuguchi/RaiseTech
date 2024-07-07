@@ -36,9 +36,6 @@
 - name: Load .bash_profile
   shell: bash -lc "source /home/ec2-user/.bash_profile"
 
-- name: execute exec $SHELL -l
-  shell: "exec $SHELL -l"
-
 - name: Install anyenv
   shell: bash -lc "anyenv install init"
 
