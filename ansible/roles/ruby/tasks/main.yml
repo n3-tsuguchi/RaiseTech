@@ -24,7 +24,7 @@
 - name: Initialize rbenv
   lineinfile:
     path: /home/ec2-user/.bash_profile
-    line: 'eval "$(rbenv init - bash)"'
+    line: 'eval "$(rbenv init -)"'
     create: yes
 
 - name: Add rbenv path to .bash_profile
