@@ -37,13 +37,11 @@
   shell: bash -lc "source /home/ec2-user/.bash_profile"
   args:
     executable: /bin/bash
-  become_user: root
 
 - name: Install rbenv plugins
   git:
     repo: https://github.com/sstephenson/ruby-build.git
     dest: "/home/ec2-user/.rbenv/plugins/ruby-build"
-  become_user: root
 
 # Install Ruby
 - name: Check if Ruby is installed
@@ -54,15 +52,15 @@
 - name: Install Ruby 3.2.3
   shell: bash -lc "rbenv install 3.2.3"
   when: not ruby_check.stat.exists
-  become_user: root
+  
 
 - name: Rehash rbenv
   shell: bash -lc "rbenv rehash"
-  become_user: root
+
 
 - name: Set global Ruby version to 3.2.3
   shell: bash -lc "rbenv global 3.2.3"
-  become_user: root
+
 
 
 # Install Rails
@@ -88,5 +86,3 @@
 
 - name: Install Bundler
   command: bash -lc "gem install bundler"
-  when: not bundler_check.stat.exists
-  become_user: root
