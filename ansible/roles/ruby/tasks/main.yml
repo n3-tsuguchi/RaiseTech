@@ -27,7 +27,7 @@
     line: 'eval "$(rbenv init -)"'
     create: yes
 
-- name: Load .bash_profile
+- name: Load .bashrc
   shell: bash -lc "source /home/ec2-user/.bashrc"
 
 - name: Install rbenv plugins
