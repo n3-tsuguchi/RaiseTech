@@ -51,6 +51,7 @@
   shell: bash -lc "rbenv rehash"
 
 - name: Set global Ruby version to 3.2.3
+  become_user: ec2-user
   shell: bash -lc "rbenv global 3.2.3"
 
 
