@@ -48,8 +48,11 @@
   register: ruby_check
 
 - name: Install Ruby 3.2.3
-  shell: bash -lc "rbenv install 3.2.3"
-  when: not ruby_check.stat.exists
+  shell: |
+    source /home/ec2-user/.bash_profile
+    rbenv install 3.2.3
+  args:
+    executable: /bin/bash
 
 - name: Rehash rbenv
   shell: bash -lc "rbenv rehash"
