@@ -35,11 +35,15 @@
 
 - name: Load .bash_profile
   shell: bash -lc "source /home/ec2-user/.bash_profile"
+  args:
+    executable: /bin/bash
+  become_user: ec2-user
 
 - name: Install rbenv plugins
   git:
     repo: https://github.com/sstephenson/ruby-build.git
     dest: "/home/ec2-user/.rbenv/plugins/ruby-build"
+  become_user: ec2-user
 
 # Install Ruby
 - name: Check if Ruby is installed
@@ -48,14 +52,16 @@
   register: ruby_check
 
 - name: Install Ruby 3.2.3
-  shell: sudo -i "rbenv install 3.2.3"
+  shell: bash -lc "rbenv install 3.2.3"
   when: not ruby_check.stat.exists
+  become_user: ec2-user
 
 - name: Rehash rbenv
   shell: bash -lc "rbenv rehash"
 
 - name: Set global Ruby version to 3.2.3
   shell: bash -lc "rbenv global 3.2.3"
+  become_user: ec2-user
 
 
 # Install Rails
