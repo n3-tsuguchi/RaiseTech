@@ -34,7 +34,10 @@
     create: yes
 
 - name: Load .bash_profile
+  become: yes
   shell: bash -lc "source /home/ec2-user/.bash_profile"
+  args:
+    executable: /bin/bash
 
 - name: Install rbenv plugins
   git:
