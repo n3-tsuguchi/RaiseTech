@@ -37,7 +37,7 @@
   shell: bash -lc "source /home/ec2-user/.bash_profile"
 
 - name: Initialize anyenv definitions
-  shell: bash -lc "/home/ec2-user/.anyenv/bin/anyenv install --init https://github.com/foo/anyenv-install.git"
+  shell: bash -lc "anyenv install --init https://github.com/foo/anyenv-install.git"
 
 - name: Initialize anyenv
   shell: bash -lc "/home/ec2-user/.anyenv/bin/anyenv init"
