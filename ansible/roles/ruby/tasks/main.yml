@@ -77,4 +77,5 @@
   register: bundler_check
 
 - name: Install Bundler
+  become_user: ec2-user
   command: bash -lc "gem install bundler"
