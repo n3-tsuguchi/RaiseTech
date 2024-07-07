@@ -1,5 +1,5 @@
 # Install rvenv   
-- name: Clone rbenv repository
+- name: Clone anyenv repository
   become_user: root
   git:
     repo: "https://github.com/anyenv/anyenv.git"
