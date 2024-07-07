@@ -80,7 +80,7 @@
   command: cd /home/ec2-user/raisetech-live8-sample-app/
 
 - name: Install Bundler
-  command: /home/ec2-user/.rbenv/shims/gem install bundler
+  shell: bash -lc "bundle install"
   args:
     chdir: /home/ec2-user/raisetech-live8-sample-app/
   become_user: root
@@ -91,7 +91,7 @@
     chdir: /home/ec2-user/raisetech-live8-sample-app/
 
 - name: Start Puma service
-  become_user: ec2-user
+  become_user: root
   systemd:
     name: puma
     state: started
