@@ -91,7 +91,7 @@
     chdir: /home/ec2-user/raisetech-live8-sample-app/
 
 - name: Start Puma service
-  become_user: root
+  become_user: ec2-user
   systemd:
     name: puma
     state: started
