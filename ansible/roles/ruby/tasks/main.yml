@@ -41,9 +41,6 @@
     repo: https://github.com/sstephenson/ruby-build.git
     dest: "/home/ec2-user/.rbenv/plugins/ruby-build"
 
-- name: execute $SHELL -l
-  shell: "exec $SHELL -l"
-
 # Install Ruby
 - name: Check if Ruby is installed
   stat:
