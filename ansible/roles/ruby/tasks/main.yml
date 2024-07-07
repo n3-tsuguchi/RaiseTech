@@ -1,45 +1,33 @@
-# Install rvenv   
-- name: Clone rbenv repository
-  become_user: root
+- name: check rbenv install # rubyのバージョン管理ツールであるrbenvがインストールされているか確認
+  shell: bash -lc "rbenv --version"
+  register: rbenv_exists
+  changed_when: no
+  ignore_errors: yes # タスクがエラーになった場合でも、スクリプトの実行を中断せずに続行させる
+
+- name: Install rbenv
   git:
-    repo: "https://github.com/sstephenson/rbenv.git"
-    dest: "/home/ec2-user/.rbenv"
-    version: master
+    repo: https://github.com/sstephenson/rbenv.git
+    dest: /home/ec2-user/.rbenv
+  when: rbenv_exists is failed
 
-- name: Change ownership of .rbenv directory to ec2-user
-  become_user: root
-  file:
-    path: "/home/ec2-user/.rbenv"
-    owner: ec2-user
-    group: ec2-user
-    recurse: yes
-    state: directory
-
-- name: Add rbenv path to .bash_profile
-  lineinfile:
+- name: Add rbenv to PATH
+  lineinfile: # ファイルないの特定の行に変更を加えるためのモジュール
     path: /home/ec2-user/.bash_profile
     line: 'export PATH="$HOME/.rbenv/bin:$PATH"'
-    create: yes
 
-- name: Initialize rbenv
+- name: Enable shims and autocompletion for rbenv
   lineinfile:
     path: /home/ec2-user/.bash_profile
     line: 'eval "$(rbenv init -)"'
-    create: yes
 
-- name: Add rbenv path to .bash_profile
-  lineinfile:
-    path: /home/ec2-user/.bash_profile
-    line: 'export PATH="$HOME/.rbenv/bin:$PATH"'
-    create: yes
+- name: Reload bash profile
+  shell: source /home/ec2-user/.bash_profile
 
-- name: Load .bash_profile
-  shell: bash -lc "source /home/ec2-user/.bash_profile"
-
-- name: Install rbenv plugins
+- name: Install ruby-build
   git:
     repo: https://github.com/sstephenson/ruby-build.git
-    dest: "/home/ec2-user/.rbenv/plugins/ruby-build"
+    dest: /home/ec2-user/.rbenv/plugins/ruby-build
+
 
 # Install Ruby
 - name: Check if Ruby is installed
