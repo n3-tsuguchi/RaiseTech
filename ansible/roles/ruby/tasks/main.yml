@@ -36,6 +36,11 @@
 - name: Load .bash_profile
   shell: bash -lc "source /home/ec2-user/.bash_profile"
 
+- name: Check if anyenv is installed
+  stat:
+    path: /home/ec2-user/.anyenv/bin/anyenv-install
+  register: anyenv_init
+
 - name: Initialize anyenv definitions
   shell: bash -lc "/home/ec2-user/.anyenv/bin/anyenv install --init"
   when: not anyenv_init.stat.exists
