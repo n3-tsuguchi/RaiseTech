@@ -39,9 +39,6 @@
 - name: Initialize anyenv
   shell: bash -lc "/home/ec2-user/.config/anyenv/anyenv-install --init"
 
-- name: Initialize anyenv
-  shell: bash -lc "/home/ec2-user/.anyenv/bin/anyenv/anyenv init"
-
 - name: Install rbenv
   shell: bash -lc "anyenv install rbenv"
 
