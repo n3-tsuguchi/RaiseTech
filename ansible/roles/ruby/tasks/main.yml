@@ -37,7 +37,7 @@
   shell: bash -lc "source /home/ec2-user/.bash_profile"
 
 - name: Initialize anyenv
-  shell: bash -lc "/home/ec2-user/.config/anyenv/anyenv-install --init"
+  shell: bash -lc "/home/ec2-user/.anyenv/anyenv/anyenv-install --init"
 
 - name: Install rbenv
   shell: bash -lc "anyenv install rbenv"
