@@ -27,11 +27,11 @@
 - name: Source bash_profile
   shell: source /home/ec2-user/.bash_profile
 
-- name: exec $SHELL
-  shell: bash -lc "exec $SHELL"
-
 - name: Install rbenv
   shell: bash -lc "anyenv install rbenv"
+
+- name: exec $SHELL
+  shell: bash -lc "exec $SHELL"
 
 # Install Ruby
 - name: Check if Ruby is installed
