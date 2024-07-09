@@ -1,36 +1,46 @@
-# Install rvenv
-- name: check rbenv install
-  ansible.builtin.command: bash -lc "rbenv --version"
-  # ansible.builtin.command: bash -lc "/home/ec2-user/.rbenv/bin/rbenv --version"
-  register: rbenv_exists
-  changed_when: no
-  ignore_errors: true
+# Install rvenv   
+- name: Clone anyenv repository
+  ansible.builtin.git:
+    repo: "https://github.com/anyenv/anyenv.git"
+    dest: "/home/ec2-user/.anyenv"
+
+- name: Change ownership of .anyenv directory to ec2-user
+  file:
+    path: "/home/ec2-user/.anyenv"
+    owner: ec2-user
+    group: ec2-user
+    recurse: yes
+    state: directory
+
+- name: Add .anyenv path to .bash_profile
+  lineinfile:
+    path: /home/ec2-user/.bash_profile
+    line: 'export PATH="$HOME/.anyenv/bin:$PATH"'
+    create: yes
+
+- name: Initialize anyenv
+  lineinfile:
+    path: /home/ec2-user/.bash_profile
+    line: 'eval "$(anyenv init -)"'
+    create: yes
+
+- name: Source bash_profile
+  shell: source /home/ec2-user/.bash_profile
+
+- name: init rbenv
+  ansible.builtin.git:
+    repo: "https://github.com/rbenv/rbenv.git"
+    dest: "/home/ec2-user/.anyenv/envs/rbenv"
+
+- name: Install rbenv plugin
+  ansible.builtin.git:
+    repo: "https://github.com/rbenv/ruby-build.git"
+    dest: "/home/ec2-user/.anyenv/plugins/ruby-build"
 
 - name: Install rbenv
-  ansible.builtin.git:
-    repo: https://github.com/sstephenson/rbenv.git
-    dest: /home/ec2-user/.rbenv
-  when: rbenv_exists is failed
+  shell: bash -lc "anyenv install rbenv"
 
-- name: Add /home/ec2-user.rbenv/bin to PATH
-  ansible.builtin.lineinfile:
-    path: /home/ec2-user/.bashprofile
-    line: export PATH=/home/ec2-user/.rbenv/bin:$PATH
-    state: present
-  when: rbenv_exists is failed
-
-- name: Add /home/ec2-user.rbenv/bin to PATH 2
-  ansible.builtin.lineinfile:
-    path: /home/ec2-user/.bashprofile
-    line: eval "$(rbenv init -)"
-    state: present
-  when: rbenv_exists is failed
-
-- name: source /home/ec2-user/.bashprofile
-  ansible.builtin.command: bash -lc "source /home/ec2-user/.bashprofile"
-  when: rbenv_exists is failed
-  changed_when: false
-
+# Install Ruby
 - name: Check if Ruby is installed
   stat:
     path: /home/ec2-user/.rbenv/versions/3.2.3
@@ -45,6 +55,7 @@
 
 - name: Set global Ruby version to 3.2.3
   shell: bash -lc "rbenv global 3.2.3"
+
 
 # Install Rails
 - name: Check if Rails is installed
