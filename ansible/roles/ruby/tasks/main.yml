@@ -31,8 +31,20 @@
 
 - name: Run anyenv init
   shell: bash -lc "/home/ec2-user/.anyenv/bin/anyenv init"
-  args:
-    executable: /bin/bash
+  register: result
+  ignore_errors: yes
+
+- name: Debug anyenv init result
+  debug:
+    var: result
+
+- name: Check if anyenv is in PATH
+  shell: echo $PATH
+  register: path_result
+
+- name: Debug PATH result
+  debug:
+    var: path_result
 
 - name: Install ruby-build
   ansible.builtin.git:
