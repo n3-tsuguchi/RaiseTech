@@ -31,13 +31,16 @@
     create: yes
 
 - name: Load .bash_profile
-  ansible.bultin.command: bash -lc "source /home/ec2-user/.bash_profile"
+  ansible.builtin.shell: source /home/ec2-user/.bash_profile
 
 - name: Initialize anyenv
-  ansible.builtin.command: bash -lc "anyenv init -"
+  shell: bash -lc "anyenv init -"
 
 - name: Install rbenv
-  ansible.builtin.command: bash -lc "anyenv install rbenv"
+  ansible.builtin.anyenv:
+    env: rbenv
+    version: "3.2.3"
+    update: yes
 
 - name: Install ruby-build
   ansible.builtin.git:
