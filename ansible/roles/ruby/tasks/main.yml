@@ -31,10 +31,6 @@
   shell: bash -lc "anyenv install rbenv"
   ignore_errors: yes
 
-- name: exec $SHELL
-  shell: bash -lc "exec $SHELL"
-  ignore_errors: yes
-
 # Install Ruby
 - name: Check if Ruby is installed
   stat:
