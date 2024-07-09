@@ -13,28 +13,36 @@
     state: directory
 
 - name: Add .anyenv path to .bash_profile
-  ansible.builtin.lineinfile:
+  lineinfile:
     path: /home/ec2-user/.bash_profile
     line: 'export PATH="$HOME/.anyenv/bin:$PATH"'
     create: yes
 
 - name: Initialize anyenv
-  ansible.builtin.lineinfile:
+  lineinfile:
     path: /home/ec2-user/.bash_profile
     line: 'eval "$(anyenv init -)"'
     create: yes
 
 - name: Add anyenv path to .bash_profile
-  ansible.builtin.lineinfile:
+  lineinfile:
     path: /home/ec2-user/.bash_profile
     line: 'export PATH="$HOME/.anyenv/bin:$PATH"'
     create: yes
 
-- name: Load .bash_profile
-  ansible.builtin.shell: source /home/ec2-user/.bash_profile
+- name: Source bash_profile
+  shell: source /home/ec2-user/.bash_profile
+  args:
+    executable: /bin/bash
 
-- name: Initialize anyenv
+- name: Run anyenv init
   shell: bash -lc "/home/ec2-user/.anyenv/bin/anyenv init"
+  register: result
+  ignore_errors: yes
+
+- name: Debug anyenv init result
+  debug:
+    var: result
 
 - name: Install ruby-build
   ansible.builtin.git:
