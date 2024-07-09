@@ -31,9 +31,7 @@
   shell: bash -lc "/home/ec2-user/.anyenv/bin/anyenv install --force-init"
 
 - name: Install ruby-build
-  ansible.builtin.git:
-    repo: https://github.com/foo/anyenv-install.git
-    dest: /home/ec2-user/.anyenv/envs/rbenv/plugins/ruby-build
+  shell: bash -lc "anyenv install --init"
 
 - name: Install rbenv
   shell: bash -lc "anyenv install rbenv"
