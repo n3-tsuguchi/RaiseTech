@@ -28,7 +28,7 @@
   shell: source /home/ec2-user/.bash_profile
 
 - name: Run anyenv init
-  shell: bash -lc "anyenv install --init"
+  shell: bash -lc "/home/ec2-user/.anyenv/bin/anyenv install --force-init"
 
 - name: Install ruby-build
   ansible.builtin.git:
