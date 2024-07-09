@@ -30,7 +30,7 @@
 - name: init rbenv
   ansible.builtin.git:
     repo: "https://github.com/foo/anyenv-install.git"
-    dest: "/home/ec2-user/.anyenv/plugins/anyenv-install"
+    dest: "/home/ec2-user/.config/plugins/anyenv-install"
 
 - name: Install rbenv plugin
   ansible.builtin.git:
