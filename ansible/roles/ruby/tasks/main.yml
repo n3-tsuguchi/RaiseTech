@@ -1,37 +1,35 @@
 # Install rvenv
 - name: check rbenv install
-  shell: bash -lc "rbenv --version"
-  register: check_rbenv_installed
+  ansible.builtin.command: bash -lc "rbenv --version"
+  # ansible.builtin.command: bash -lc "/home/ec2-user/.rbenv/bin/rbenv --version"
+  register: rbenv_exists
   changed_when: no
-  ignore_errors: yes
+  ignore_errors: true
 
-- name: install rbenv
-  git:
+- name: Install rbenv
+  ansible.builtin.git:
     repo: https://github.com/sstephenson/rbenv.git
     dest: /home/ec2-user/.rbenv
-  when: check_rbenv_installed.failed
+  when: rbenv_exists is failed
 
-- name: Add rbenv to PATH
-  lineinfile: 
-    path: /home/ec2-user/.bash_profile
-    line: 'export PATH="$HOME/.rbenv/bin:$PATH"'
-  when: check_rbenv_installed.failed
+- name: Add /home/ec2-user.rbenv/bin to PATH
+  ansible.builtin.lineinfile:
+    path: /home/ec2-user/.bashprofile
+    line: export PATH=/home/ec2-user/.rbenv/bin:$PATH
+    state: present
+  when: rbenv_exists is failed
 
-- name: eval rbenv init
-  lineinfile: 
-    path: /home/ec2-user/.bash_profile
-    line: 'eval "$(rbenv init -)"'
-  when: check_rbenv_installed.failed
-  
-- name: load .bash_profile
-  shell: bash -lc "source ~/.bash_profile"
-  when: check_rbenv_installed.failed
+- name: Add /home/ec2-user.rbenv/bin to PATH 2
+  ansible.builtin.lineinfile:
+    path: /home/ec2-user/.bashprofile
+    line: eval "$(rbenv init -)"
+    state: present
+  when: rbenv_exists is failed
 
-- name: install ruby-build
-  git:
-    repo: https://github.com/sstephenson/ruby-build.git
-    dest: /home/ec2-user/.rbenv/plugins/ruby-build
-  when: check_rbenv_installed.failed
+- name: source /home/ec2-user/.bashprofile
+  ansible.builtin.command: bash -lc "source /home/ec2-user/.bashprofile"
+  when: rbenv_exists is failed
+  changed_when: false
 
 - name: Check if Ruby is installed
   stat:
