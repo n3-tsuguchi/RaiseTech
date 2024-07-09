@@ -37,9 +37,6 @@
     repo: "https://github.com/rbenv/ruby-build.git"
     dest: "/home/ec2-user/.anyenv/plugins/ruby-build"
 
-- name: Manifest anyenv
-  shell: bash -lc "install_env https://github.com/rbenv/rbenv.git"
-
 - name: Install rbenv
   shell: bash -lc "anyenv install rbenv"
 
