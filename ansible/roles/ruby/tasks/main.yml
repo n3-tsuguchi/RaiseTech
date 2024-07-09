@@ -27,6 +27,9 @@
 - name: Source bash_profile
   shell: source /home/ec2-user/.bash_profile
 
+- name: init rbenv
+  shell: bash -lc "anyenv init"
+
 - name: Install rbenv plugin
   ansible.builtin.git:
     repo: "https://github.com/rbenv/ruby-build.git"
