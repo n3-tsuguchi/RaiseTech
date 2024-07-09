@@ -24,6 +24,19 @@
     line: 'eval "$(anyenv init -)"'
     create: yes
 
+# test
+- name: Reload shell to apply anyenv settings
+  shell: source /home/ec2-user/.bash_profile
+  args:
+    executable: /bin/bash
+
+- name: Install rbenv using anyenv
+  shell: bash -lc "anyenv install rbenv"
+  environment:
+    PATH: "/home/ec2-user/.anyenv/bin:{{ ansible_env.PATH }}"
+
+# test
+
 - name: Source bash_profile
   shell: source /home/ec2-user/.bash_profile
 
