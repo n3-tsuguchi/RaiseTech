@@ -27,9 +27,13 @@
 - name: Source bash_profile
   shell: source /home/ec2-user/.bash_profile
 
+- name: Install rbenv plugin
+  ansible.builtin.git:
+    repo: "install_plugin ruby-build https://github.com/rbenv/ruby-build.git"
+    dest: "/home/ec2-user/.anyenv/plugins/ruby-build"
+
 - name: Install rbenv
   shell: bash -lc "anyenv install rbenv"
-  ignore_errors: yes
 
 # Install Ruby
 - name: Check if Ruby is installed
