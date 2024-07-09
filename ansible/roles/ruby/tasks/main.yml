@@ -27,9 +27,6 @@
 - name: Source bash_profile
   shell: source /home/ec2-user/.bash_profile
 
-- name: Initialize anyenv
-  shell: bash -lc "anyenv install --init"
-
 - name: Install rbenv
   shell: bash -lc "anyenv install rbenv"
 
