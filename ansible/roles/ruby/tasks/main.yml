@@ -28,7 +28,9 @@
   shell: source /home/ec2-user/.bash_profile
 
 - name: init rbenv
-  shell: bash -lc "/home/ec2-user/.anyenv/bin/anyenv init"
+  ansible.builtin.git:
+    repo: "https://github.com/foo/anyenv-install.git"
+    dest: "/home/ec2-user/.anyenv/plugins/anyenv-install"
 
 - name: Install rbenv plugin
   ansible.builtin.git:
