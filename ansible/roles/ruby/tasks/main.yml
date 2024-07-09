@@ -29,6 +29,7 @@
 
 - name: Run anyenv init
   shell: bash -lc "/home/ec2-user/.anyenv/bin/anyenv install --force-init"
+  ignore_errors: yes
 
 - name: Install ruby-build
   shell: bash -lc "anyenv install --init"
