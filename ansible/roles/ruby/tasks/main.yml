@@ -1,4 +1,10 @@
-# Install rvenv   
+# Install rvenv
+- name: check rbenv install
+  shell: bash -lc "rbenv --version"
+  register: rbenv_installed
+  changed_when: no
+  ignore_errors: yes
+
 - name: install rbenv
   git: 
     repo: https://github.com/sstephenson/rbenv.git 
