@@ -35,7 +35,7 @@
 - name: Run anyenv install --init
   shell: 'bash -lc "anyenv install --init"'
   environment:
-    PATH: '/home/ec2-user/.anyenv/bin:{{ ansible_env.PATH }}'
+    PATH: '/home/ec2-user/.anyenv/bin:$PATH'
 
 - name: Install rbenv
   shell: bash -lc "anyenv install rbenv"
