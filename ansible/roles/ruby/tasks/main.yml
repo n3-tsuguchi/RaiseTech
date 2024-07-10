@@ -32,8 +32,10 @@
 - name: Source bash_profile
   shell: source /home/ec2-user/.bash_profile
 
-- name: init rbenv
-  shell: bash -lc "~/.anyenv/bin/anyenv init"
+- name: Run anyenv install --init
+  shell: 'bash -lc "anyenv install --init"'
+  environment:
+    PATH: '/home/ec2-user/.anyenv/bin:{{ ansible_env.PATH }}'
 
 - name: Install rbenv
   shell: bash -lc "anyenv install rbenv"
