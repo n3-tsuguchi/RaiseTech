@@ -32,10 +32,11 @@
 - name: Source bash_profile
   shell: source /home/ec2-user/.bash_profile
 
+# test
 - name: Run anyenv install --init
   shell: 'bash -lc "anyenv install --init"'
-  environment:
-    PATH: '/home/ec2-user/.anyenv/bin:$PATH'
+  ignore_errors: yes
+# test
 
 - name: Install rbenv
   shell: bash -lc "anyenv install rbenv"
