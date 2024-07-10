@@ -32,16 +32,16 @@
 - name: Source bash_profile
   shell: source /home/ec2-user/.bash_profile
 
-- name: init rbenv
-  shell: bash -lc "~/.anyenv/bin/anyenv init"
-
-- name: Add rbenv path to .bash_profile
+- name: register path and update bash
   shell:  |
     echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bash_profile;
     echo 'export PATH="$HOME/.rbenv/plugins/ruby-build/bin:$PATH"' >> ~/.bash_profile;
     echo 'eval "$(rbenv init -)"' >> ~/.bash_profile;
     source /home/ec2-user/.bash_profile;
     rbenv rehash;
+
+- name: Install rbenv
+  shell: bash -lc "anyenv install rbenv"
 
 # Install Ruby
 - name: Check if Ruby is installed
