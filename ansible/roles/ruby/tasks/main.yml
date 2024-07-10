@@ -35,7 +35,6 @@
 # test
 - name: Run anyenv install --init
   shell: 'bash -lc "anyenv install --init"'
-  ignore_errors: yes
 # test
 
 - name: Install rbenv
