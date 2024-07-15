@@ -5,16 +5,18 @@
   register: folder_check
 
 - name: Clone repository
+  become_user: ec2-user
   git:
     repo: https://github.com/yuta-ushijima/raisetech-live8-sample-app.git
     dest: /home/ec2-user/raisetech-live8-sample-app
   when: not folder_check.stat.exists
 
 - name: Change directory
+  become_user: ec2-user
   shell: cd raisetech-live8-sample-app
 
 - name: add alb-dns to config/environments/development.rb
-  become_user: root
+  become_user: ec2-user
   ansible.builtin.lineinfile:
     path: /home/ec2-user/raisetech-live8-sample-app/config/environments/development.rb
     insertbefore: config.action_controller.raise_on_missing_callback_actions = true
@@ -22,7 +24,7 @@
     line: config.hosts << "{{ aws_ec2_host }}"
 
 - name: add mini_magick to config/application.rb
-  become_user: root
+  become_user: ec2-user
   ansible.builtin.lineinfile:
     path: /home/ec2-user/raisetech-live8-sample-app/config/application.rb
     insertbefore: config.generators.system_tests = nil
@@ -30,11 +32,13 @@
     line: config.active_storage.variant_processor = :mini_magick
 
 - name: Create tmp/sokets directory
+  become_user: ec2-user
   file:
     path: /home/ec2-user/raisetech-live8-sample-app/tmp/sokets
     state: directory
 
 - name: Create tmp/pids directory
+  become_user: ec2-user
   file:
     path: /home/ec2-user/raisetech-live8-sample-app/tmp/pids
     state: directory
@@ -42,48 +46,55 @@
 
 # RDS
 - name: Check if database.yml.sample exists
+  become_user: ec2-user
   stat:
     path: /home/ec2-user/raisetech-live8-sample-app/config/database.yml.sample
   register: file_check
 
 - name: Rename database.yml.sample
+  become_user: ec2-user
   command: mv /home/ec2-user/raisetech-live8-sample-app/config/database.yml.sample /home/ec2-user/raisetech-live8-sample-app/config/database.yml
   when: file_check.stat.exists
 
 - name: Render database.yml from template
+  become_user: ec2-user
   template:
     src: roles/setup_server/template/database.yml.j2
     dest: /home/ec2-user/raisetech-live8-sample-app/config/database.yml
 
 # puma
 - name: Check if puma.service.sample exists
+  become_user: ec2-user
   stat:
     path: /home/ec2-user/raisetech-live8-sample-app/samples/puma.service.sample
   register: puma_service_check
 
 - name: Move puma.service
-  become_user: root
+  become_user: ec2-user
   command: mv /home/ec2-user/raisetech-live8-sample-app/samples/puma.service.sample /etc/systemd/system/puma.service
   when: puma_service_check.stat.exists
 
 - name: Check if puma.rb exists
+  become_user: ec2-user
   stat:
     path: /home/ec2-user/raisetech-live8-sample-app/config/puma.rb
   register: puma_check
 
 - name: Generate puma.rb from template
+  become_user: ec2-user
   template:
     src: roles/setup_server/template/puma.rb.j2  
     dest: /home/ec2-user/raisetech-live8-sample-app/config/puma.rb
 
 - name: Change directory to your Rails app directory
-  command: cd /home/ec2-user/raisetech-live8-sample-app/
+  become_user: ec2-user
+  shell: cd /home/ec2-user/raisetech-live8-sample-app/
 
 - name: Install Bundler
   shell: bash -lc "bundle install"
   args:
     chdir: /home/ec2-user/raisetech-live8-sample-app/
-  become_user: root
+  become_user: ec2-user
 
 - name: Run bin/setup
   command: /home/ec2-user/.rbenv/shims/ruby bin/setup
@@ -91,20 +102,20 @@
     chdir: /home/ec2-user/raisetech-live8-sample-app/
 
 - name: Start Puma service
-  become_user: root
+  become_user: ec2-user
   systemd:
     name: puma
     state: started
 
 # nginx start
 - name: Start nginx service
-  become_user: root
+  become_user: ec2-user
   service:
     name: nginx
     state: started
 
 - name: Enable nginx service
-  become_user: root
+  become_user: ec2-user
   service:
     name: nginx
     enabled: yes
