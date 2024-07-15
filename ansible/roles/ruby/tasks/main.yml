@@ -33,8 +33,8 @@
   shell: source /home/ec2-user/.bash_profile
 
 # test
-- name: Run anyenv install --init
-  shell: 'bash -lc "anyenv install --init"'
+- name: Initialize anyenv installation
+  shell: bash -lc "anyenv install --init"
 # test
 
 - name: Install rbenv
