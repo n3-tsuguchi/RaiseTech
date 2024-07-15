@@ -1,44 +1,36 @@
-# Install rvenv   
-- name: Clone anyenv repository
+# Install rvenv
+- name: Clone rbenv repository
   ansible.builtin.git:
-    repo: "https://github.com/anyenv/anyenv.git"
-    dest: "/home/ec2-user/.anyenv"
+    repo: "https://github.com/sstephenson/rbenv.git"
+    dest: "/home/ec2-user/.rbenv"
 
 - name: Install rbenv plugin
   ansible.builtin.git:
-    repo: "https://github.com/rbenv/ruby-build.git"
-    dest: "/home/ec2-user/.anyenv/plugins/ruby-build"
+    repo: "https://github.com/sstephenson/ruby-build.git"
+    dest: "/home/ec2-user/.rbenv/plugins/ruby-build"
 
-- name: Change ownership of .anyenv directory to ec2-user
+- name: Change ownership of .rbenv directory to ec2-user
   file:
-    path: "/home/ec2-user/.anyenv"
+    path: "/home/ec2-user/.rbenv"
     owner: ec2-user
     group: ec2-user
     recurse: yes
     state: directory
 
-- name: Add .anyenv path to .bash_profile
+- name: Add .rbenv path to .bash_profile
   lineinfile:
     path: /home/ec2-user/.bash_profile
-    line: 'export PATH="$HOME/.anyenv/bin:$PATH"'
+    line: 'export PATH="$HOME/.rbenv/bin:$PATH"'
     create: yes
 
-- name: Initialize anyenv
+- name: Initialize rbenv
   lineinfile:
     path: /home/ec2-user/.bash_profile
-    line: 'eval "$(anyenv init -)"'
+    line: 'eval "$(rbenv init -)"'
     create: yes
 
 - name: Source bash_profile
   shell: source /home/ec2-user/.bash_profile
-
-# test
-- name: Initialize anyenv installation
-  shell: bash -lc "anyenv install --init"
-# test
-
-- name: Install rbenv
-  shell: bash -lc "anyenv install rbenv"
 
 # Install Ruby
 - name: Check if Ruby is installed
