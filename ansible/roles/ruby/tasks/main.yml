@@ -33,14 +33,8 @@
   shell: source /home/ec2-user/.bash_profile
 
 # test
-- name: Verify anyenv installation
-  shell: bash -lc "anyenv --version"
-  register: anyenv_version
-  failed_when: anyenv_version.rc != 0
-
 - name: Initialize anyenv installation
   shell: bash -lc "anyenv install --init"
-  when: anyenv_version.rc != 0
 # test
 
 - name: Install rbenv
