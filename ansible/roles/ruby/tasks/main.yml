@@ -1,4 +1,3 @@
-# Install rvenv
 - name: Clone rbenv repository
   ansible.builtin.git:
     repo: "https://github.com/sstephenson/rbenv.git"
@@ -9,34 +8,47 @@
     repo: "https://github.com/sstephenson/ruby-build.git"
     dest: "/home/ec2-user/.rbenv/plugins/ruby-build"
 
-- name: Change ownership of .rbenv directory to ec2-user
-  file:
-    path: "/home/ec2-user/.rbenv"
-    owner: ec2-user
-    group: ec2-user
-    recurse: yes
-    state: directory
+- name: Import GPG keys for rvm
+  ansible.builtin.command: 
+    cmd: gpg2 --keyserver keyserver.ubuntu.com --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
+  when: ruby_check.failed
+  changed_when: false
 
-- name: Add .rbenv path to .bash_profile
-  lineinfile:
-    path: /home/ec2-user/.bash_profile
-    line: 'export PATH="$HOME/.rbenv/bin:$PATH"'
-    create: yes
+- name: Install rvm
+  ansible.builtin.shell: 
+    cmd: curl -sSL https://get.rvm.io | bash -s stable
+  when: ruby_check.failed
+  changed_when: false
 
-- name: Initialize rbenv
-  lineinfile:
-    path: /home/ec2-user/.bash_profile
-    line: 'eval "$(rbenv init -)"'
-    create: yes
+- name: Source rvm script
+  ansible.builtin.lineinfile:
+    path: /home/ec2-user/.bashrc
+    line: 'if [[ -s $HOME/.rvm/scripts/rvm ]] ; then source $HOME/.rvm/scripts/rvm ; fi'
+    state: present
+  when: ruby_check.failed
+  changed_when: false
 
-- name: Source bash_profile
-  shell: source /home/ec2-user/.bash_profile
+- name: load .bashrc
+  ansible.builtin.shell:
+    cmd: /bin/bash -lc "source /home/ec2-user/.bashrc"
+  when: ruby_check.failed
+  changed_when: false
 
-# Install Ruby
-- name: Check if Ruby is installed
-  stat:
-    path: /home/ec2-user/.rbenv/versions/3.2.3
-  register: ruby_check
+- name: Install ruby
+  ansible.builtin.shell:
+    cmd: /bin/bash -lc "rvm install ruby-3.2.3"
+  when: ruby_check.failed
+  environment:
+    PATH: "{{ansible_env.PATH}}:/home/ec2-user/.rvm/bin"
+  register: ruby_install
+  changed_when: false
+
+- name: Set default ruby version
+  ansible.builtin.shell:
+    cmd: /bin/bash -lc "rvm use 3.2.3 --default"
+  environment:
+    PATH: "{{ansible_env.PATH}}:/home/ec2-user/.rvm/bin"
+  when: ruby_install.changed
 
 - name: Install Ruby 3.2.3
   shell: bash -lc "rbenv install 3.2.3"
@@ -64,7 +76,6 @@
     executable: /home/ec2-user/.rbenv/shims/gem
   when: rails_check is failed
 
-# Install Bundler
 - name: Check if Bundler is installed
   stat:
     path: /home/ec2-user/.rbenv/versions/3.2.3/bin/bundle
