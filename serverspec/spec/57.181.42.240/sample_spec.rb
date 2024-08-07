@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 set :backend, :ssh
-set :host, '18.183.221.138'
+set :host, '57.181.42.240'
 set :ssh_options, user: 'ec2-user', keys: ['kawakami.pem']
 
 listen_port = 80
